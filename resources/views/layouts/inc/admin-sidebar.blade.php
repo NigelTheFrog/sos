@@ -45,17 +45,17 @@
                     Kategori Produk
                 </a>            
                 <div class="sb-sidenav-menu-heading">Penjadwalan</div>
-                <a class="nav-link" href="charts.html">
-                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area" style="font-size: 20px"></i></div>
+                <a class="nav-link" href="../penjadwalan/impor-stok">
+                    <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-import" style="font-size: 20px"></i></div>
                     Impor Stok
                 </a>
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="../penjadwalan/impor-avalan">
                     <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-import" style="font-size: 20px"v></i></div>
                     Impor Avalan
                 </a>
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="../penjadwalan/pengaturan">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-bars-progress" style="font-size: 20px"></i></div>
-                    Pengaturan
+                    Pengaturan CSO
                 </a>
                 <div class="sb-sidenav-menu-heading">Konfirmasi</div>
                 <a class="nav-link" href="tables.html">

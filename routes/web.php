@@ -36,7 +36,11 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::get('keputusan',[App\Http\Controllers\Admin\Master\Keputusan::class,'index']);
         Route::get('kategori-produk',[App\Http\Controllers\Admin\Master\KategoriProduk::class,'index']);
     });
-
+    Route::prefix('penjadwalan')->group(function() {  
+        Route::get("impor-stok",[App\Http\Controllers\Admin\Penjadwalan\Impor::class, 'imporStok']);
+        Route::get('impor-avalan',[App\Http\Controllers\Admin\Penjadwalan\Impor::class,'imporAvalan']);
+        Route::get('pengaturan',[App\Http\Controllers\Admin\Penjadwalan\Pengaturan::class,'index']);
+    });
 });
 
 Route::get('/', function () {
