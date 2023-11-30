@@ -45,12 +45,11 @@
    <div id="layoutSidenav">
     @include('layouts.inc.admin-sidebar')
         <div id="layoutSidenav_content">
-            <main class="pb-3">
+            <main class="pb-3" style="background-color:rgb(234, 234, 234); height: 100%;">
                 @yield('content')
             </main>
             @include('layouts.inc.admin-footer')
-        </div>
-        
+        </div>        
     </div>
 </body>
 </html>
