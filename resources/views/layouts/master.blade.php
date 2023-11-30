@@ -19,8 +19,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <script src="{{asset("assets/js/scripts.js")}}"></script>
     <script src="{{asset("assets/js/ajax.js")}}"></script>
+
+    {{-- <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link href="{{asset("assets/css/fontsbunny.css")}}" rel="stylesheet">
+    <link href="{{asset("assets/css/style-min.css")}}" rel="stylesheet" />
+    <link href="{{asset("assets/css/styles.css")}}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <script src="{{asset("assets/js/jquery-3-3-1.js")}}"></script>
+    <script src="{{asset("assets/css/bootstrap.css")}}"></script>
+    <script src="{{asset("assets/css/bootstrap4-1-3.css")}}"></script>
+    <script src="{{asset("assets/js/popper.js")}}"></script>
+    <script src="{{asset("assets/css/bootstrap5-3-2.css")}}"></script>
+    <script src="{{asset("assets/js/fontawesom.js")}}"></script>
+    <script src="{{asset("assets/js/scripts.js")}}"></script>
+    <script src="{{asset("assets/js/ajax.js")}}"></script> --}}
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

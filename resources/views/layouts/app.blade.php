@@ -12,11 +12,11 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="{{asset("assets/css/style-min.css")}}" rel="stylesheet" />
     <link href="{{asset("assets/css/styles.css")}}" rel="stylesheet" />
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <script src="{{asset("assets/css/bootstrap.css")}}" crossorigin="anonymous"></script>
+    <script src="{{asset("assets/js/fontawesom.js")}}"></script>
     <script src="{{asset("assets/js/scripts.js")}}"></script>
+    <script src="{{asset("assets/css/bootstrap5-3-2.css")}}"></script>
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\Item;
 use App\Models\ViewDashboard;
+
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -14,5 +14,4 @@ class ItemController extends Controller
         $itemBlmProses = ViewDashboard::where('status','=', '0')->get();
         $itemSdgProses = ViewDashboard::where('status','!=', '0')->where('status','!=', '3')->get();
         return view("admin.dashboard.item", ['item'=>$item,"itemBlmProses"=>$itemBlmProses,"itemSdgProses"=>$itemSdgProses]);
-    }
-}
+    }}
