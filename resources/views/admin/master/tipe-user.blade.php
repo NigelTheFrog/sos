@@ -45,7 +45,8 @@
                     <h4 class="card-title mx-3 pt-2">Tambah Tipe User</h4>
                 </div>
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                    <form id="forminput" action="add-user.php" method="POST" class="needs-validation mx-3" novalidate >
+                    <form id="forminput" action="{{route("tipe-user.store")}}" method="POST" class="needs-validation mx-3" novalidate >
+                        @csrf 
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">

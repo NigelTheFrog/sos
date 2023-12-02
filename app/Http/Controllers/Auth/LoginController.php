@@ -31,7 +31,7 @@ class LoginController extends Controller
     public function authenticated() {
         $user = Auth::user();
         if($user->level == 1) {
-            return redirect('admin/dashboard')->with("status","Selamat datang $user->name");
+            return redirect('admin/dashboard/item')->with("status","Selamat datang $user->name");
         } else  {
             return redirect('/home')->with("status","Logged in");
         }

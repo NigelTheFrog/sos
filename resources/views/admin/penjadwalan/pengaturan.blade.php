@@ -3,6 +3,12 @@
 @section('title','Pengaturan CSO')
 
 @section('content')
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>   
+</head>
+
+
 
 <div class="container-fluid px-4">
     <div class="row justify-content-md-center">
@@ -12,6 +18,12 @@
                     <h4 class="card-title pt-2">Pengaturan CSO</h4>
                 </div>                   
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
+                    <p>Item yang di CSO :<strong> 
+                        CSO                                             
+                    </strong></p>                    
+                    <p>Item yang di CSO :<strong>                         
+                        Plat, As                                             
+                    </strong></p>
                     <table class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
                         <thead class="table-dark">
                             <tr class="text-center ">
@@ -45,66 +57,70 @@
             </div>
             <div class="card-body" style="background-color:rgb(248, 248, 248)">
                 <form id="forminput" action="add-user.php" method="POST" class="needs-validation mx-3" novalidate >
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="fas fa-id-card"></i></span>
+                    <div class="mb-2">
+                        <label for="" class="form-label">Tipe Cek Stok</label>
+                        <div class="row">
+                            <div style="width:70%" class="form-group">
+                                <select id="multipleSelect" class="form-control" name="typestock" placeholder="Tipe Cek Stok" data-search="true" data-silent-initial-value-set="true">
+                                    <option value="CSO">CSO</option>
+                                    <option value="CSS">CSS</option>
+                                </select>
                             </div>
-                            <input type="text" pattern="[a-zA-Z\s]+" name="nama" class="form-control" placeholder="Nama" required>
-                            <div class="invalid-feedback">
-                                Nama harus diisi, tidak boleh ada angka
+                            <div style="width:30%" class="">
+                                <button type="submit" name="submitTypeStock" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
+                    </div>
 
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="far fa-id-card"></i></span>
+                    <div class="mb-2">
+                        <label for="" class="form-label">Item yang di CSO</label>
+                        <div class="row">
+                            <div style="width:70%" class="form-group">
+                                <select class="form-control select2-multiple" multiple id="select2MultipleItem" name="pelaku[]" placeholder="Pilih Nama Checker" data-search="true" data-silent-initial-value-set="true">
+                                    @foreach ($category as $cat)
+                                    <option value="{{$cat->categorydesc}}">{{$cat->categorydesc}}</option>                                
+                                    @endforeach                                        
+                                </select>
                             </div>
-                            <input id="unik" type="text" pattern="[0-9]+" name="nik" class="form-control" placeholder="NIK" required>
-                            <div class="invalid-feedback">
-                                NIK harus diisi dengan angka
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="fa fa-user"></i></span>
-                            </div>
-                            <input id="uname" type="text" pattern="[0-9a-zA-Z]+" name="username" class="form-control" placeholder="Username" required>
-                            <div class="invalid-feedback">
-                                username harus diisi
+                            <div style="width:30%" class="">
+                                <button type="submit" name="setmaterial" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="fas fa-key"></i></span>
+
+                    <div class="mb-2">
+                        <label for="" class="form-label">Masukkan Nama Pelaku</label>
+                        <div class="row">
+                            <div style="width:70%" class="form-group">
+                                <select class="form-control select2-multiple" multiple id="select2MultiplePelaku" name="pelaku[]" placeholder="Pilih Nama Checker" data-search="true" data-silent-initial-value-set="true">
+                                    @foreach ($pelaku as $user)
+                                    <option value={{$user->userid}}>{{$user->nik}} - {{$user->name}}</option>                                
+                                    @endforeach    
+                                </select>
                             </div>
-                            <input type="password" minlength="4" name="password" class="form-control" placeholder="Password" required>
-                            <div class="invalid-feedback">
-                                Password harus diisi, minimal 4 digit
+                            <div style="width:30%" class="">
+                                <button type="submit" name="setpelaku" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="fas fa-signal"></i></span>
+
+                    <div class="mb-2">
+                        <label for="" class="form-label">Masukkan Nama Analisator</label>
+                        <div class="row">
+                            <div style="width:70%" class="form-group">
+                                <select class="form-control select2-multiple" multiple id="multipleSelectAnalisator" name="analisator[]" placeholder="Pilih Nama Analisator" data-search="true" data-silent-initial-value-set="true">
+                                    @foreach ($pelaku as $user)
+                                    <option value={{$user->userid}}>{{$user->nik}} - {{$user->name}}</option>                                
+                                    @endforeach   
+                                   
+                                </select>
+                                <div class="invalid-feedback">
+                                    pelaku harus dipilih
+                                </div>
+
                             </div>
-                            <select class="form-select text-secondary" name="level" aria-label="pilih level" required>
-                                <option selected value="" disabled>Pilih Level</option>
-                                <option value="1">Administrator</option>
-                                <option value="2">Super user</option>
-                                <option value="3">Analisator</option>
-                                <option value="4">Pelaku</option>
-                                <option value="5">Warehouse</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Level harus dipilih
+                            <div style="width:30%" class="">
+                                <button type="submit" name="setanalisator" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </div>
@@ -115,5 +131,6 @@
         </div>
     </div>   
 </div>
+
 
 @endsection

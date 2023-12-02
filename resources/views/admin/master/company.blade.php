@@ -45,13 +45,14 @@
                     <h4 class="card-title mx-3 pt-2">Tambah Company</h4>
                 </div>
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                    <form id="forminput" action="add-user.php" method="POST" class="needs-validation mx-3" novalidate >
+                    <form id="forminput" action="{{route("company.store")}}" method="POST" class="needs-validation mx-3" novalidate >
+                        @csrf 
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-key"></i></span>
                                 </div>
-                                <input type="text" name="usertype" class="form-control" id="usertype" placeholder="Kode Company" required>
+                                <input type="text" name="usertype" class="form-control" id="coycode" placeholder="Kode Company" required>
                                 <div class="invalid-feedback">
                                     Kode company harus diisi
                                 </div>

@@ -6,7 +6,7 @@
 
 <div class="container-fluid px-4">
     <div class="row justify-content-md-center">
-        <div class="col">
+        <div id="main" style="width: 95%">
             <div class="card mt-2">
                 <div class="card-header bg-secondary text-white">
                     <h4 class="card-title pt-2">Impor Stok</h4>
@@ -66,87 +66,134 @@
                             </tr>                                    
                             @endforeach                                
                         </tbody>
-                    </table>
-                               
-            </div>
+                    </table>                               
+                </div>
+            </div> 
         </div> 
-    </div> 
-    {{-- <div class="col-5">
-        <div class="card mt-2">
-            <div class="card-header bg-secondary text-white ">
-                <h4 class="card-title mx-3 pt-2">Tambah Pengguna</h4>
-            </div>
-            <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                <form id="forminput" action="add-user.php" method="POST" class="needs-validation mx-3" novalidate >
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="fas fa-id-card"></i></span>
-                            </div>
-                            <input type="text" pattern="[a-zA-Z\s]+" name="nama" class="form-control" placeholder="Nama" required>
-                            <div class="invalid-feedback">
-                                Nama harus diisi, tidak boleh ada angka
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="far fa-id-card"></i></span>
-                            </div>
-                            <input id="unik" type="text" pattern="[0-9]+" name="nik" class="form-control" placeholder="NIK" required>
-                            <div class="invalid-feedback">
-                                NIK harus diisi dengan angka
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="fa fa-user"></i></span>
-                            </div>
-                            <input id="uname" type="text" pattern="[0-9a-zA-Z]+" name="username" class="form-control" placeholder="Username" required>
-                            <div class="invalid-feedback">
-                                username harus diisi
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="fas fa-key"></i></span>
-                            </div>
-                            <input type="password" minlength="4" name="password" class="form-control" placeholder="Password" required>
-                            <div class="invalid-feedback">
-                                Password harus diisi, minimal 4 digit
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:15%">
-                                <span class="input-group-text w-100 d-flex justify-content-center"><i class="fas fa-signal"></i></span>
-                            </div>
-                            <select class="form-select text-secondary" name="level" aria-label="pilih level" required>
-                                <option selected value="" disabled>Pilih Level</option>
-                                <option value="1">Administrator</option>
-                                <option value="2">Super user</option>
-                                <option value="3">Analisator</option>
-                                <option value="4">Pelaku</option>
-                                <option value="5">Warehouse</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Level harus dipilih
-                            </div>
-                        </div>
-                    </div>
-                    <button type="reset" class="btn btn-danger" name="reset"><i class="bx bx-reset"></i> Reset</button>
-                    <button type="submit" class="btn btn-primary" name="simpan"><i class="bx bxs-save"></i> Simpan</button>
-                </form>
-            </div>               
+        
+        <div class="px-0 pt-2" id="push-btn" style="width:4%">
+            <button class="btn btn-secondary" type="button" id="openNav" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Buka Form Barang Temuan">
+                <i class="fas fa-angle-left"></i></button>
         </div>
-    </div>    --}}
+
+        <div id="mySidenav" class="pt-2 sidenav d-none" style="width:0%">
+            <div class="card card-secondary">
+                <div class="card-header d-flex flex-row">
+                    <a class="pr-3" href="javascript:void(0)" class="closebtn" id="closeNav" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tutup Form Barang Temuan"><i class="fas fa-angle-right"></i></a>
+                    <h3 class="card-title">Barang Temuan</h3>
+                </div>
+                <div class="card-body">
+                    <form action="add-import.php" method="POST" class="needs-validation" novalidate>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-keyboard"></i></span>
+                                </div>
+                                <input type="text" name="temuanname" class="form-control" id="temuanname" placeholder="Nama Item" required>
+                                <div class="invalid-feedback">
+                                    Nama Item harus diisi
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-keyboard"></i></span>
+                                </div>
+                                <input type="text" name="temuanheatno" class="form-control" id="temuanheatno" placeholder="Heat No">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-keyboard"></i></span>
+                                </div>
+                                <input type="text" name="temuandimension" class="form-control" id="temuandimension" placeholder="Dimensi">
+                            </div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-keyboard"></i></span>
+                                </div>
+                                <input type="text" name="temuantolerance" class="form-control" id="temuantolerance" placeholder="Toleransi">
+                            </div>
+                        </div> -->
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-keyboard"></i></span>
+                                </div>
+                                <input type="text" name="temuancondition" class="form-control" id="temuancondition" placeholder="Kondisi">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-boxes"></i></span>
+                                </div>
+                                <input type="text" pattern="[0-9]*\.?[0-9]+" name="temuanstok" class="form-control" id="temuanstok" placeholder="QTY" required>
+                                <div class="invalid-feedback">
+                                    Quantity harus diisi dan berupa angka
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-ruler-combined"></i></span>
+                                </div>
+                                <input type="text" pattern="[a-zA-Z]+" name="satuan" class="form-control" id="satuan" placeholder="Satuan" required>
+                                <div class="invalid-feedback">
+                                    satuan harus diisi dan berupa huruf
+                                </div>
+                            </div>
+                        </div>
+                        <button type="reset" class="btn btn-danger" name="reset" title="Kosongkan data"><i class="fas fa-undo-alt"></i><span class="ps-2">Reset</span></button>
+                        <button type="submit" class="btn btn-primary" name="simpan" title="Tambah barang temuan, pastikan pengisian sesuai SOP"><i class="ion ion-plus"></i><span class="ps-2">Tambah</span></button>
+                    </form>
+                </div>
+            </div>
+            <div class="card text-bg-light">
+                <!-- <div class="card-body "> -->
+                <div class="card-body">
+                    <span><i class="fas fa-info mr-2 mb-2"></i> Informasi Barang Temuan</span>
+                    <p class="small text-muted"><em>Jika di lapangan ditemukan barang diluar list <strong>Impor stok</strong>, pastikan barang diinput di form <strong>Barang Temuan</strong> diatas. <br />
+                            <span class="text-info">Barang temuan ditandai dengan background warna biru di list <strong>Impor Stok</strong> </span></em>
+                    </p>
+                </div>
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $("#openNav").click(function() {
+            $('#push-btn').addClass('d-none');
+            $("#mySidenav").removeClass('d-none');
+            $("#mySidenav").stop().animate({
+                width: "29%"
+            }, 500); // 500 milliseconds (0.5 seconds) animation duration
+            $("#main").stop().animate({
+                width: "70%"
+            }, 500); // 500 milliseconds (0.5 seconds) animation duration
+        });
+
+        /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+        $("#closeNav").click(function() {
+            $("#mySidenav").stop().animate({
+                width: "0%"
+            }, 500); // 500 milliseconds (0.5 seconds) animation duration
+            $("#main").stop().animate({
+                width: "96%"
+            }, 500); // 500 milliseconds (0.5 seconds) animation duration
+            setTimeout(function() {
+                $("#push-btn").removeClass('d-none');
+                $("#mySidenav").addClass('d-none');
+            }, 500); // Delay for 0.5 seconds (500 milliseconds)
+        });
+    });
+</script>
 
 @endsection
