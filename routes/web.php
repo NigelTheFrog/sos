@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Master\AreaLokasiController;
 use App\Http\Controllers\Admin\Master\CompanyController;
 use App\Http\Controllers\Admin\Master\GroupController;
 use App\Http\Controllers\Admin\Master\KategoriProduk;
+use App\Http\Controllers\Admin\Master\KategoriProdukController;
 use App\Http\Controllers\Admin\Master\KeputusanController;
 use App\Http\Controllers\Admin\Master\TipeUserController;
 use App\Http\Controllers\Admin\Master\User;
@@ -43,7 +44,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::resource('keputusan',KeputusanController::class);
         Route::resource('warna',WarnaController::class);
         Route::resource('group',GroupController::class);
-        Route::resource('kategori-produk',KategoriProduk::class);
+        Route::resource('kategori-produk',KategoriProdukController::class);
     });
     Route::prefix('penjadwalan')->group(function() {  
         Route::get("impor-stok",[App\Http\Controllers\Admin\Penjadwalan\Impor::class, 'imporStok']);

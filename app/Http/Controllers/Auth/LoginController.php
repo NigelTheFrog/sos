@@ -48,7 +48,7 @@ class LoginController extends Controller
     }
 
     public function username()
-    {        
+    { 
         return 'username';
     }
 
@@ -59,6 +59,6 @@ class LoginController extends Controller
 
     public function level()
     {
-        return bcrypt('level');
+        return 'level';
     }
 }

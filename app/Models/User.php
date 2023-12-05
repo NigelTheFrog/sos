@@ -25,15 +25,17 @@ class User extends Authenticatable
         'coyid',
         'level',
         'password',
-        'createdby',
+        'created_by',
+        'updated_by',
     ];
-    protected $username = "usernme";
-    protected $name = "name";
-    protected $nik = "nik";
-    protected $password = "password";
-    protected $level = "level";
-    protected $createdby = "createdby";
-    protected $coyid = "coyid";
+    // protected $username = "usernme";
+    // protected $name = "name";
+    // protected $nik = "nik";
+    // // protected $password = "password";
+    // protected $level = "level";
+    protected $created_by = "created_by";
+    // protected $coyid = "coyid";
+    protected $updated_by = "updated_by";
 
     /**
      * The attributes that should be hidden for serialization.
