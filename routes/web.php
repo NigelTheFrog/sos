@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Dashboard\AvalanController;
 use App\Http\Controllers\Admin\Master\AreaLokasiController;
 use App\Http\Controllers\Admin\Master\CompanyController;
 use App\Http\Controllers\Admin\Master\GroupController;
@@ -33,8 +34,10 @@ use Illuminate\Support\Facades\DB;
 
 Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
     Route::prefix('dashboard')->group(function() {          
+        Route::resource('avalan', AvalanController::class);
         Route::get("item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index']);
         Route::get('avalan',[App\Http\Controllers\Admin\Dashboard\AvalanController::class,'index']);
+        Route::get("main-table-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
     });
     Route::prefix('master')->group(function() {
         Route::resource('user', User::class);

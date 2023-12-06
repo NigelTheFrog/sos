@@ -19,6 +19,8 @@ class User extends Controller
         return view("admin.master.user", ["user" => $user]);
     }
 
+    
+
     /**
      * Show the form for creating a new resource.
      */
@@ -33,6 +35,7 @@ class User extends Controller
     public function store(Request $request)
     {
         $user = new ModelsUser;
+        $user->userid =rand ( 991000 , 999999 );
         $user->name = $request->nama;
         $user->nik = $request->nik;
         $user->username = $request->username;

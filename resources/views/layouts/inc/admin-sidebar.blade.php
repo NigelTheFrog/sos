@@ -4,7 +4,7 @@
             <div class="nav">
                 @if (Auth::user()->level == 1 || Auth::user()->level == 2)
                     <div class="sb-sidenav-menu-heading">Core</div>
-                    <a class="nav-link" href="{{ url('admin/dashboard/item') }}">
+                    <a class="nav-link" href="{{url("admin/dashboard/item")}}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
                         </div>
                         Dashboard Item
