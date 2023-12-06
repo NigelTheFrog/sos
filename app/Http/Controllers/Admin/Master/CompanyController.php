@@ -33,11 +33,11 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $data = new Company;
-        $data->coycode = $request->usertype;
+        $data->coycode = $request->coycode;
         $data->description = $request->deskripsi;        
         $data->created_by = Auth::user()->username;
         $data->save();
-        return redirect()->route("tipe-user.index");
+        return redirect()->route("company.index");
     }
 
     /**
@@ -61,7 +61,11 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+        $company->coycode = $request->coycode;
+        $company->description = $request->deskripsi;
+        $company->updated_by = Auth::user()->username;
+        $company->save();
+        return redirect()->route("company.index")->with('status', 'Data company berhasil diubah');
     }
 
     /**
@@ -69,6 +73,12 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        try {
+            $company->delete();
+            return redirect()->route("company.index")->with('status', 'Data company berhasil dihapus');
+        } catch(\PDOException $e) {
+            $msg = "Data gagal dihapus karena data ini merupakan data parent dari tabel lain";
+            return redirect()->route("company.index")->with('error', $msg);
+        }
     }
 }

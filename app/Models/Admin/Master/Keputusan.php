@@ -10,6 +10,6 @@ class Keputusan extends Model
     use HasFactory;
 
     public $table = "dbmkeputusan";
-
+    protected $primaryKey = "keputusanid";
     protected $keputusandesc = "keputusandesc";
 }

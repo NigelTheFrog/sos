@@ -33,23 +33,11 @@
                                 <td class="align-middle">{{$user->name}}</td>
                                 <td class="align-middle">{{$user->nik}}</td>
                                 <td class="align-middle">{{$user->username}}</td>
-                                <td class="align-middle">
-                                    @if ($user->level == 1)
-                                        Administrator
-                                    @elseif ($user->level == 2)
-                                        Super User
-                                    @elseif ($user->level == 3)
-                                        Analisator
-                                    @elseif ($user->level == 4)
-                                        Checker
-                                    @else
-                                        Warehouse
-                                    @endif
-                                </td>                                
+                                <td class="align-middle">{{$user->levelname}}</td>                                
                                 <td class="align-middle"> 
                                     <div class="row">
                                         <div class="col-2 ms-2">
-                                            <button onclick="passData(this)" class="btn btn-sm btn-primary edit" id="btnEditUser" ><i class="bi bi-pencil-square", style="color: white"></i></button>
+                                            <button onclick="openModalEdit(this)" class="btn btn-sm btn-primary edit" id="btnEditUser" ><i class="bi bi-pencil-square", style="color: white"></i></button>
                                         </div>
                                         <div class="col-2 ms-2">
                                             <button onclick="openModalDelete(this)" class="btn btn-danger btn-sm" title="Hapus User" id="btnHapus" data-id=""><i class="bi bi-trash-fill"></i></button>
@@ -150,7 +138,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="mdlMoreLabel">Ubah Data User</h1>
-                <button type="button" class="btn-close align-middle" onclick="closeModal(this)" aria-label="Close">
+                <button type="button" class="btn-close align-middle" onclick="closeModalEdit(this)" aria-label="Close">
                 </button>
             </div>
             <div class="modal-body">
@@ -236,18 +224,18 @@
 </div>
 
 <script>
-    function passData(button) {
+    function openModalEdit(button) {
         $('#ModalEditUser').modal('show');
         var row = $(button).closest('tr');
         var id = row.find('td:nth-child(8)').text();
-        document.getElementById("value-select").innerText = row.find('td:nth-child(5)').text();;
+        document.getElementById("value-select").innerText = row.find('td:nth-child(5)').text();
         $('#formnama').attr('value', row.find('td:nth-child(2)').text());
         $('#formnik').attr('value', row.find('td:nth-child(3)').text());
         $('#formusername').attr('value', row.find('td:nth-child(4)').text());       
         $('#value-select').attr('value', row.find('td:nth-child(7)').text());
         $('#editform').attr('action',`{{url('admin/master/user/${id}')}}`);
     }
-    function closeModal(button) {
+    function closeModalEdit(button) {
         $('#ModalEditUser').modal('hide');
     }
     function openModalDelete(button) {
@@ -256,7 +244,7 @@
         var nama = row.find('td:nth-child(2)').text();
         var username = row.find('td:nth-child(4)').text();
         var id = row.find('td:nth-child(8)').text();
-        document.getElementById("warning").innerText = `Data pengguna bername ${nama} dengan username ${username} akan dihapus. \n\nApakah anda akan melanjutkan penghapusan data?`;
+        document.getElementById("warning").innerText = `Apakah anda akan melanjutkan penghapusan data ${nama}?`;
         $('#deleteform').attr('action',`{{url('admin/master/user/${id}')}}`);    
     }
     function closeModalDelete(button) {

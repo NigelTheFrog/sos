@@ -53,7 +53,6 @@ class TipeUserController extends Controller
      */
     public function edit(TipeUser $tipeUser)
     {
-        //
     }
 
     /**
@@ -61,7 +60,12 @@ class TipeUserController extends Controller
      */
     public function update(Request $request, TipeUser $tipeUser)
     {
-        //
+        $tipeUser->jobtypecode = $request->usertype;
+        $tipeUser->jobtypename = $request->deskripsi;
+        $tipeUser->updated_by = Auth::user()->username;
+
+        $tipeUser->save();
+        return redirect()->route("tipe-user.index")->with('status', 'Data tipe-user berhasil diubah');
     }
 
     /**
@@ -69,6 +73,12 @@ class TipeUserController extends Controller
      */
     public function destroy(TipeUser $tipeUser)
     {
-        //
+        try {
+            $tipeUser->delete();
+            return redirect()->route("tipe-user.index")->with('status', 'Data tipe-user berhasil dihapus');
+        } catch(\PDOException $e) {
+            $msg = "Data gagal dihapus karena data ini merupakan data parent dari tabel lain";
+            return redirect()->route("tipe-user.index")->with('error', $msg);
+        }
     }
 }

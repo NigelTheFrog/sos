@@ -5,15 +5,15 @@ namespace App\Models\Admin\Master;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Warna extends Model
+class KategoriProduk extends Model
 {
     use HasFactory;
 
-    public $table = "dbmcolor";
     protected $fillable = [
-        'colordesc',
+        'categorydesc',
     ];
-    protected $primaryKey = "colorid";
 
-    protected $colordesc = "colordesc";
+    public $table = "dbmcategory";
+    protected $primaryKey = "categoryid";
+    protected $categorydesc = "categorydesc";
 }

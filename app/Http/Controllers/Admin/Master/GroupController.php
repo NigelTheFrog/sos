@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Master\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
@@ -30,7 +31,11 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = new Group;
+        $data->groupdesc = $request->deskripsi;        
+        $data->created_by = Auth::user()->username;
+        $data->save();
+        return redirect()->route("group.index");
     }
 
     /**
@@ -46,7 +51,7 @@ class GroupController extends Controller
      */
     public function edit(Group $group)
     {
-        //
+        
     }
 
     /**
@@ -54,7 +59,10 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        //
+        $group->groupdesc = $request->deskripsi;
+        $group->updated_by = Auth::user()->username;
+        $group->save();
+        return redirect()->route("group.index")->with('status', 'Data group berhasil diubah');
     }
 
     /**
@@ -62,6 +70,12 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        //
+        try {
+            $group->delete();
+            return redirect()->route("group.index")->with('status', 'Data group berhasil dihapus');
+        } catch(\PDOException $e) {
+            $msg = "Data gagal dihapus karena data ini merupakan data parent dari tabel lain";
+            return redirect()->route("group.index")->with('error', $msg);
+        }
     }
 }

@@ -9,6 +9,6 @@ class KategoriPorduk extends Model
 {
     use HasFactory;
     public $table = "dbmcategory";
-
+    protected $primaryKey = "categoryid";
     protected $categorydesc = "categorydesc";
 }

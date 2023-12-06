@@ -10,6 +10,6 @@ class Group extends Model
     use HasFactory;
 
     public $table = "dbmgroup";
-
+    protected $primaryKey = "groupid";
     protected $groupdesc = "groupdesc";
 }

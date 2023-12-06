@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Master\Warna;
 use Illuminate\Console\View\Components\Warn;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WarnaController extends Controller
 {
@@ -31,7 +32,11 @@ class WarnaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = new Warna;
+        $data->colordesc = $request->deskripsi;        
+        $data->created_by = Auth::user()->username;
+        $data->save();
+        return redirect()->route("warna.index");
     }
 
     /**
@@ -55,7 +60,10 @@ class WarnaController extends Controller
      */
     public function update(Request $request, Warna $warna)
     {
-        //
+        $warna->colordesc = $request->deskripsi;
+        $warna->updated_by = Auth::user()->username;
+        $warna->save();
+        return redirect()->route("warna.index")->with('status', 'Data warna berhasil diubah');
     }
 
     /**
@@ -63,6 +71,12 @@ class WarnaController extends Controller
      */
     public function destroy(Warna $warna)
     {
-        //
+        try {
+            $warna->delete();
+            return redirect()->route("warna.index")->with('status', 'Data warna berhasil dihapus');
+        } catch(\PDOException $e) {
+            $msg = "Data gagal dihapus karena data ini merupakan data parent dari tabel lain";
+            return redirect()->route("warna.index")->with('error', $msg);
+        }
     }
 }

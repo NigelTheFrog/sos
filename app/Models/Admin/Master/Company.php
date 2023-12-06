@@ -14,6 +14,7 @@ class Company extends Model
         'coycode',
         'description',
     ];
+    protected $primaryKey = "coyid";
     protected $coycode = "coycode";
     protected $description = "description";
 }

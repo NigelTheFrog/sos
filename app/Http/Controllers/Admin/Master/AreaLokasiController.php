@@ -32,11 +32,11 @@ class AreaLokasiController extends Controller
     public function store(Request $request)
     {
         $data = new AreaLokasi;
-        $data->locationcode = $request->usertype;
-        $data->locationname = $request->deskripsi;        
+        $data->locationcode = $request->locationcode;
+        $data->locationname = $request->namalokasi;        
         $data->created_by = Auth::user()->username;
         $data->save();
-        return redirect()->route("tipe-user.index");
+        return redirect()->route("area-lokasi.index");
     }
 
     /**
@@ -60,7 +60,11 @@ class AreaLokasiController extends Controller
      */
     public function update(Request $request, AreaLokasi $areaLokasi)
     {
-        //
+        $areaLokasi->locationcode = $request->locationcode;
+        $areaLokasi->locationname = $request->namalokasi;
+        $areaLokasi->updated_by = Auth::user()->username;
+        $areaLokasi->save();
+        return redirect()->route("area-lokasi.index")->with('status', 'Data lokasi berhasil diubah');
     }
 
     /**
@@ -68,6 +72,12 @@ class AreaLokasiController extends Controller
      */
     public function destroy(AreaLokasi $areaLokasi)
     {
-        //
+        try {
+            $areaLokasi->delete();
+            return redirect()->route("area-lokasi.index")->with('status', 'Data lokasi berhasil dihapus');
+        } catch(\PDOException $e) {
+            $msg = "Data gagal dihapus karena data ini merupakan data parent dari tabel lain";
+            return redirect()->route("area-lokasi.index")->with('error', $msg);
+        }
     }
 }

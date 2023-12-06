@@ -10,6 +10,7 @@ class AreaLokasi extends Model
     use HasFactory;
     public $table = "dbmlocation";
 
+    protected $primaryKey = "locationid";
     protected $locationcode = "locationcode";
     protected $locationname = "locationname";
 }

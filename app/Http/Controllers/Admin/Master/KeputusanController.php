@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Master\Keputusan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KeputusanController extends Controller
 {
@@ -30,7 +31,11 @@ class KeputusanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = new Keputusan;
+        $data->keputusandesc = $request->deskripsi;        
+        $data->created_by = Auth::user()->username;
+        $data->save();
+        return redirect()->route("keputusan.index");
     }
 
     /**
@@ -54,7 +59,10 @@ class KeputusanController extends Controller
      */
     public function update(Request $request, Keputusan $keputusan)
     {
-        //
+        $keputusan->keputusandesc = $request->deskripsi;
+        $keputusan->updated_by = Auth::user()->username;
+        $keputusan->save();
+        return redirect()->route("keputusan.index")->with('status', 'Data keputusan berhasil diubah');
     }
 
     /**
@@ -62,6 +70,12 @@ class KeputusanController extends Controller
      */
     public function destroy(Keputusan $keputusan)
     {
-        //
+        try {
+            $keputusan->delete();
+            return redirect()->route("keputusan.index")->with('status', 'Data keputusan berhasil dihapus');
+        } catch(\PDOException $e) {
+            $msg = "Data gagal dihapus karena data ini merupakan data parent dari tabel lain";
+            return redirect()->route("keputusan.index")->with('error', $msg);
+        }
     }
 }
