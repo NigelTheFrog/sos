@@ -32,10 +32,27 @@ class ItemController extends Controller
         ]);
     }
 
+    public function showBanner() {
+        $itemBlmProses = ViewDashboard::where('status','=', '0')->get();
+        $countItemBlmProses = count($itemBlmProses);
+        $itemSdgProses = ViewDashboard::where('status','!=', '0')->where('status','!=', '3')->get();
+        $countItemSdgProses = count($itemSdgProses);
+        $itemOk = ViewDashboard::where('status','=', '3')->get();
+        $countItemOk=count($itemOk);
+        $itemSelisih = ViewDashboard::where('selisih','>', '0')->get();
+        $countItemSelisih = count($itemSelisih);
+        return view("admin.dashboard.banner.banner-item", [
+            "countItemBlmProses"=>$countItemBlmProses,
+            "countItemSdgProses"=>$countItemSdgProses,
+            "countItemOk"=>$countItemOk,
+            "countItemSelisih"=>$countItemSelisih
+        ]);
+    }
+
     public function showMainTable()
     {
         $item = ViewDashboard::all();
-        return view("admin.dashboard.table.main-table-item", ["item" => $item]);
+        return view("admin.dashboard.table.item.main-table-item", ["item" => $item]);
     }
 
     public function showBannerTable(String $request) {
@@ -53,16 +70,7 @@ class ItemController extends Controller
             return view("admin.dashboard.table.item.item-selisih",["itemSelisih"=>$itemSelisih]);
         }
 
-        // $countItemBlmProses = count($itemBlmProses);
-        // $countItemSdgProses = count($itemSdgProses);
-        // $countItemOk=count($itemOk);
-        // $countItemSelisih = count($itemSelisih);
-        // return view("admin.dashboard.table.banner-item", [
-        //     "countItemBlmProses"=>$countItemBlmProses,"itemBlmProses"=>$itemBlmProses,
-        //     "countItemSdgProses"=>$countItemSdgProses,"itemSdgProses"=>$itemSdgProses,
-        //     "countItemOk"=>$countItemOk,"itemSelesai"=>$itemOk,
-        //     "countItemSelisih"=>$countItemSelisih,"itemSelisih"=>$itemSelisih
-        // ]);
+        
     }
 
     /**

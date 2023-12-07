@@ -37,7 +37,11 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::resource('avalan', AvalanController::class);
         Route::get("item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index']);
         Route::get('avalan',[App\Http\Controllers\Admin\Dashboard\AvalanController::class,'index']);
+        Route::get("main-table-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showMainTable']);
         Route::get("main-table-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
+        Route::get("banner-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBanner']);
+        Route::get('banner-avalan/{request}', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBannerTable'])->name('request');
+        Route::get("banner-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBanner']);
         Route::get('banner-item/{request}', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBannerTable'])->name('request');
     });
     Route::prefix('master')->group(function() {

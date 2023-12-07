@@ -9,60 +9,8 @@
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Dashboard Item</li>
         </ol>
-        <div class="row">
-            <div class="col-xl-3 col">
-                <div class="card bg-warning text-white mb-4">
-                    <div class="card-body" id="title">
-                        <h3 class="text-dark">{{ $countItemBlmProses }}</h3>
-                        <p class="text-dark">Item belum proses</p>
-                    </div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href=# id="btnItemBlmProses"
-                            data-bs-mytitle="Ini Modal Belum Proses" onclick="openModalBlmProses(this)"
-                            data-bs-target="#ModalItemBlmProses">View Details</a>
-                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3">
-                <div class="card bg-primary text-white mb-4">
-                    <div class="card-body" id="title">
-                        <h3>{{ $countItemSdgProses }}</h3>
-                        <p>Item sedang proses</p>
-                    </div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#" id="btnItemSdgProses"
-                            data-bs-toggle="modal" onclick="openModalSdgProses(this)">View Details</a>
-                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3">
-                <div class="card bg-success text-white mb-4">
-                    <div class="card-body">
-                        <h3>{{ $countItemOk }}</h3>
-                        <p>Item OK</p>
-                    </div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#" id="btnItemOk" data-bs-toggle="modal"
-                            onclick="openModalOk(this)">View Details</a>
-                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3">
-                <div class="card bg-danger text-white mb-4">
-                    <div class="card-body">
-                        <h3>{{ $countItemSelisih }}</h3>
-                        <p>Item Selisih</p>
-                    </div>
-                    <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#" id="btnItemBlmProses"
-                            data-bs-toggle="modal" onclick="openModalSelisih(this)">View Details</a>
-                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                    </div>
-                </div>
-            </div>
+        <div class="row" id="banner-item">
+            @include("admin.dashboard.banner.banner-item")
         </div>
         <div class="modal fade text-left" id="ModalItemBlmProses" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -136,8 +84,8 @@
                                 aria-label="Search">
                         </form>
                     </div>
-                    <div id="main-table-item">
-                        @include('admin.dashboard.table.main-table-item')
+                    <div class="card-body" id="main-table-item">
+                        @include('admin.dashboard.table.item.main-table-item')
                     </div>
                 </div>
             </div>
@@ -158,7 +106,19 @@
                     $('#main-table-item').html(data);
                 }
             });
+            
         }, 1000);
+
+        // setInterval(function(event) {
+        //     $.ajax({
+        //         url: "{{ url('admin/dashboard/banne-item') }}",
+        //         type: 'GET',
+        //         success: function(data) {
+        //             $('#banner-item').html(data);
+        //         }
+        //     });
+            
+        // }, 1000);
 
 
         function openModalBlmProses(button) {
