@@ -16,14 +16,53 @@ class ItemController extends Controller
     {
         $item = ViewDashboard::all();
         $itemBlmProses = ViewDashboard::where('status','=', '0')->get();
+        $countItemBlmProses = count($itemBlmProses);
         $itemSdgProses = ViewDashboard::where('status','!=', '0')->where('status','!=', '3')->get();
-        return view("admin.dashboard.item", ['item'=>$item,"itemBlmProses"=>$itemBlmProses,"itemSdgProses"=>$itemSdgProses]);
+        $countItemSdgProses = count($itemSdgProses);
+        $itemOk = ViewDashboard::where('status','=', '3')->get();
+        $countItemOk=count($itemOk);
+        $itemSelisih = ViewDashboard::where('selisih','>', '0')->get();
+        $countItemSelisih = count($itemSelisih);
+        return view("admin.dashboard.item", [
+            'item'=>$item,
+            "countItemBlmProses"=>$countItemBlmProses,"itemBlmProses"=>$itemBlmProses,
+            "countItemSdgProses"=>$countItemSdgProses,"itemSdgProses"=>$itemSdgProses,
+            "countItemOk"=>$countItemOk,"itemSelesai"=>$itemOk,
+            "countItemSelisih"=>$countItemSelisih,"itemSelisih"=>$itemSelisih
+        ]);
     }
 
     public function showMainTable()
     {
         $item = ViewDashboard::all();
         return view("admin.dashboard.table.main-table-item", ["item" => $item]);
+    }
+
+    public function showBannerTable(String $request) {
+        if($request == "1") {
+            $itemBlmProses = ViewDashboard::where('status','=', '0')->get();
+            return view("admin.dashboard.table.item.item-belum-proses",["itemBlmProses"=>$itemBlmProses]);
+        } else if($request == '2') {
+            $itemSdgProses = ViewDashboard::where('status','!=', '0')->where('status','!=', '3')->get();
+            return view("admin.dashboard.table.item.item-sedang-proses",["itemSdgProses"=>$itemSdgProses]);
+        } else if($request == '3') {
+            $itemOk = ViewDashboard::where('status','=', '3')->get();
+            return view("admin.dashboard.table.item.item-ok",["itemSelesai"=>$itemOk]);
+        } else {
+            $itemSelisih = ViewDashboard::where('selisih','>', '0')->get();
+            return view("admin.dashboard.table.item.item-selisih",["itemSelisih"=>$itemSelisih]);
+        }
+
+        // $countItemBlmProses = count($itemBlmProses);
+        // $countItemSdgProses = count($itemSdgProses);
+        // $countItemOk=count($itemOk);
+        // $countItemSelisih = count($itemSelisih);
+        // return view("admin.dashboard.table.banner-item", [
+        //     "countItemBlmProses"=>$countItemBlmProses,"itemBlmProses"=>$itemBlmProses,
+        //     "countItemSdgProses"=>$countItemSdgProses,"itemSdgProses"=>$itemSdgProses,
+        //     "countItemOk"=>$countItemOk,"itemSelesai"=>$itemOk,
+        //     "countItemSelisih"=>$countItemSelisih,"itemSelisih"=>$itemSelisih
+        // ]);
     }
 
     /**
@@ -47,7 +86,7 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        //
+        
     }
 
     /**

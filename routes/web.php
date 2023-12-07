@@ -38,6 +38,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::get("item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index']);
         Route::get('avalan',[App\Http\Controllers\Admin\Dashboard\AvalanController::class,'index']);
         Route::get("main-table-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
+        Route::get('banner-item/{request}', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBannerTable'])->name('request');
     });
     Route::prefix('master')->group(function() {
         Route::resource('user', User::class);
