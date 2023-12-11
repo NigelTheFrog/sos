@@ -10,7 +10,7 @@
             <li class="breadcrumb-item active">Dashboard Item</li>
         </ol>
         <div class="row" id="banner-item">
-            @include("admin.dashboard.banner.banner-item")
+            @include('admin.dashboard.banner.banner-item')
         </div>
         <div class="modal fade text-left" id="ModalItemBlmProses" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -21,8 +21,22 @@
                             data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
-                    <div class="modal-body" id="itemBlmProses">
-                        @include('admin.dashboard.table.item.item-belum-proses')
+                    <div class="modal-body">
+                        <div class="row justify-content-between mb-2">
+                            <div class="col-10">
+                                <button type="submit" class="btn btn-primary" name="simpan"><i
+                                        class="bi bi-floppy-fill"></i>
+                                    Simpan</button>
+                            </div>
+                            <div class="col ms-3">
+                                <button type="submit" class="btn btn-primary" name="simpan"><i
+                                        class="bi bi-printer-fill"></i>
+                                    Cetak</button>
+                            </div>
+                        </div>
+                        <div id="itemBlmProses">
+                            @include('admin.dashboard.table.item.item-belum-proses')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,8 +50,23 @@
                             onclick="closeModalSdgProses(this)" aria-label="Close">
                         </button>
                     </div>
-                    <div class="modal-body" id="itemSdgProses">
-                        @include('admin.dashboard.table.item.item-sedang-proses')
+                    <div class="modal-body">
+                        <div class="row justify-content-between mb-2">
+                            <div class="col-10">
+                                <button type="submit" class="btn btn-primary" name="simpan"><i
+                                        class="bi bi-floppy-fill"></i>
+                                    Simpan</button>
+                            </div>
+                            <div class="col ms-3">
+                                <button type="submit" class="btn btn-primary" name="simpan"><i
+                                        class="bi bi-printer-fill"></i>
+                                    Cetak</button>
+                            </div>
+                        </div>
+
+                        <div id="itemSdgProses">
+                            @include('admin.dashboard.table.item.item-sedang-proses')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -46,13 +75,28 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Belum Proses</h1>
+                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Ok</h1>
                         <button type="button" class="btn-close align-middle" data-bs-dismiss="modal"
                             onclick="closeModalOk(this)" aria-label="Close">
                         </button>
                     </div>
-                    <div class="modal-body" id="itemOk">
-                        @include('admin.dashboard.table.item.item-ok')
+                    <div class="modal-body">
+                        <div class="row justify-content-between mb-2">
+                            <div class="col-10">
+                                <button type="submit" class="btn btn-primary" name="simpan"><i
+                                        class="bi bi-floppy-fill"></i>
+                                    Simpan</button>
+                            </div>
+                            <div class="col ms-3">
+                                <button type="submit" class="btn btn-primary" name="simpan"><i
+                                        class="bi bi-printer-fill"></i>
+                                    Cetak</button>
+                            </div>
+                        </div>
+
+                        <div id="itemOk">
+                            @include('admin.dashboard.table.item.item-ok')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,13 +105,27 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Belum Proses</h1>
+                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Selisih</h1>
                         <button type="button" class="btn-close align-middle" data-bs-dismiss="modal"
                             onclick="closeModalSelisih(this)" aria-label="Close">
                         </button>
                     </div>
-                    <div class="modal-body" id="itemSelisih">
-                        @include('admin.dashboard.table.item.item-selisih')
+                    <div class="modal-body">
+                        <div class="row justify-content-between mb-2">
+                            <div class="col-10">
+                                <button type="submit" class="btn btn-primary" name="simpan"><i
+                                        class="bi bi-floppy-fill"></i>
+                                    Simpan</button>
+                            </div>
+                            <div class="col ms-3">
+                                <button type="submit" class="btn btn-primary" name="simpan"><i
+                                        class="bi bi-printer-fill"></i>
+                                    Cetak</button>
+                            </div>
+                        </div>
+                        <div id="itemSelisih">
+                            @include('admin.dashboard.table.item.item-selisih')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,10 +142,11 @@
                                 aria-label="Search">
                         </form>
                     </div>
-                    <div class="card-body" id="main-table-item">
-                        @include('admin.dashboard.table.item.main-table-item')
-                    </div>
+
                 </div>
+            </div>
+            <div class="card-body ms-4 me-3" id="main-table-item">
+                @include('admin.dashboard.table.item.main-table-item')
             </div>
         </div>
     </div>
@@ -106,7 +165,7 @@
                     $('#main-table-item').html(data);
                 }
             });
-            
+
         }, 1000);
 
         // setInterval(function(event) {
@@ -117,7 +176,7 @@
         //             $('#banner-item').html(data);
         //         }
         //     });
-            
+
         // }, 1000);
 
 
