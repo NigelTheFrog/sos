@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Dashboard\Item;
+use App\Models\Admin\Master\Group;
 use App\Models\ViewDashboard;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use LaravelDaily\Invoices\Classes\Buyer;
 use LaravelDaily\Invoices\Classes\InvoiceItem;
 use \NumberFormatter;
 use Barryvdh\Snappy\Facades\SnappyPdf;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
@@ -28,14 +30,19 @@ class ItemController extends Controller
         $countItemSdgProses = count($itemSdgProses);
         $itemOk = ViewDashboard::where('status', '=', '3')->get();
         $countItemOk = count($itemOk);
-        $itemSelisih = ViewDashboard::where('selisih', '>', '0')->get();
-        $countItemSelisih = count($itemSelisih);
+        $itemSelisihPlus = ViewDashboard::where('selisih', '>', '0')->get();
+        $countItemSelisihPlus = count($itemSelisihPlus);
+        $itemSelisihMinus = ViewDashboard::where('selisih', '<', '0')->get();
+        $countItemSelisihMinus = count($itemSelisihMinus);
+        $dbxjob = DB::table('dbxjob')->where('jobtypeid','=',2)->get();
+        $group = Group::all();
         return view("admin.dashboard.item", [
             'item' => $item,
             "countItemBlmProses" => $countItemBlmProses, "itemBlmProses" => $itemBlmProses,
             "countItemSdgProses" => $countItemSdgProses, "itemSdgProses" => $itemSdgProses,
             "countItemOk" => $countItemOk, "itemSelesai" => $itemOk,
-            "countItemSelisih" => $countItemSelisih, "itemSelisih" => $itemSelisih
+            "countItemSelisih" => ($countItemSelisihPlus + $countItemSelisihMinus), "itemSelisihPlus" => $itemSelisihPlus, "itemSelisihMinus" => $itemSelisihMinus,
+            "dbxjob" => $dbxjob, "dbmgroup" => $group
         ]);
     }
 
@@ -57,13 +64,25 @@ class ItemController extends Controller
         ]);
     }
 
-    public function print(Request $request)
+    public function print(String $request)
     {
 
         $pdf = App::make('dompdf.wrapper');
-        $data = ViewDashboard::where('status', '=', '0')->get();
-        // if($request =="1")
-        $view = view("admin.dashboard.pdf", ["itemBlmProses" => $data, "type"=>"1"]);
+        
+        if($request =="1") {
+            $data = ViewDashboard::where('status', '=', '0')->get();
+            $view = view("admin.dashboard.pdf-item", ["itemBlmProses" => $data, "type"=>1]);
+        } elseif($request =="2") {
+            $data = ViewDashboard::where('status', '!=', '0')->where('status', '!=', '3')->get();
+            $view = view("admin.dashboard.pdf-item", ["itemSdgProses" => $data, "type"=>2]);
+        } elseif($request =="3") {
+            $data =  ViewDashboard::where('status', '=', '3')->get();
+            $view = view("admin.dashboard.pdf-item", ["itemSelesai" => $data, "type"=>3]);
+        } else {
+            $dataPlus = ViewDashboard::where('selisih', '>', '0')->get();
+            $dataMinus = ViewDashboard::where('selisih', '<', '0')->get();
+            $view = view("admin.dashboard.pdf-item", ["itemSelisihPlus" => $dataPlus, "itemSelisihMinus" => $dataMinus, "type"=>4]);
+        }
         $pdf->loadHTML($view);
         return $pdf->stream();
     }
@@ -76,19 +95,35 @@ class ItemController extends Controller
 
     public function showBannerTable(String $request)
     {
+        $dbxjob = DB::table('dbxjob')->where('jobtypeid','=',2)->get();
+        $group = Group::all();
         if ($request == "1") {
             $itemBlmProses = ViewDashboard::where('status', '=', '0')->get();
-            return view("admin.dashboard.table.item.item-belum-proses", ["itemBlmProses" => $itemBlmProses]);
+            $view = view("admin.dashboard.table.item.item-belum-proses", [
+                "itemBlmProses" => $itemBlmProses,
+                "dbxjob" => $dbxjob, "dbmgroup" => $group
+            ]);
         } else if ($request == '2') {
             $itemSdgProses = ViewDashboard::where('status', '!=', '0')->where('status', '!=', '3')->get();
-            return view("admin.dashboard.table.item.item-sedang-proses", ["itemSdgProses" => $itemSdgProses]);
+            $view = view("admin.dashboard.table.item.item-sedang-proses", [
+                "itemSdgProses" => $itemSdgProses,
+                "dbxjob" => $dbxjob, "dbmgroup" => $group
+            ]);
         } else if ($request == '3') {
             $itemOk = ViewDashboard::where('status', '=', '3')->get();
-            return view("admin.dashboard.table.item.item-ok", ["itemSelesai" => $itemOk]);
+            $view = view("admin.dashboard.table.item.item-ok", [
+                "itemSelesai" => $itemOk, 
+                "dbxjob" => $dbxjob, "dbmgroup" => $group
+            ]);
         } else {
-            $itemSelisih = ViewDashboard::where('selisih', '>', '0')->get();
-            return view("admin.dashboard.table.item.item-selisih", ["itemSelisih" => $itemSelisih]);
+            $itemSelisihPlus = ViewDashboard::where('selisih', '>', '0')->get();
+            $itemSelisihMinus = ViewDashboard::where('selisih', '<', '0')->get();
+            $view = view("admin.dashboard.table.item.item-selisih", [
+                "itemSelisihPlus" => $itemSelisihPlus, "itemSelisihMinus" => $itemSelisihMinus, 
+                "dbxjob" => $dbxjob, "dbmgroup" => $group
+            ]);
         }
+        return $view;       
     }
 
     /**

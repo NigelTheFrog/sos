@@ -33,58 +33,113 @@
         </div>
     </div>
     <div class="modal fade text-left" id="ModalAvalanBlmProses" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Belum Proses</h1>
+                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Belum Proses</h1>
                     <button type="button" onclick="closeModalBlmProses(this)" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <div class="modal-body" id="avalanBlmProses">
-                    @include('admin.dashboard.table.avalan.avalan-belum-proses')
+                
+                <div class="modal-body">
+                    <div class="row justify-content-between mb-2">
+                        <div class="col-1">
+                            <button type="submit" class="btn btn-primary" name="simpan"><i
+                                    class="bi bi-floppy-fill"></i>
+                                Simpan</button>
+                        </div>
+                        <div class="col-1 me-3">
+                            <a href="{{url("admin/dashboard/print-avalan/1")}}"class="btn btn-primary bi bi-printer-fill"> </i>
+                                Cetak</button></a>                                                               
+                        </div>
+                    </div>
+
+                    <div id="avalanBlmProses">
+                        @include('admin.dashboard.table.avalan.avalan-belum-proses')
+                    </div>                    
                 </div>
             </div>
         </div>
     </div>
 
     <div class="modal fade text-left" id="ModalAvalanSdgProses" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Sedang Proses</h1>
+                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Sedang Proses</h1>
                     <button type="button" onclick="closeModalSdgProses(this)" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <div class="modal-body" id="avalanSdgProses">
-                    @include('admin.dashboard.table.avalan.avalan-sedang-proses')
+                <div class="modal-body" >
+                    <div class="row justify-content-between mb-2">
+                        <div class="col-1">
+                            <button type="submit" class="btn btn-primary" name="simpan"><i
+                                    class="bi bi-floppy-fill"></i>
+                                Simpan</button>
+                        </div>
+                        <div class="col-1 me-3">
+                                <a href="{{url("admin/dashboard/print-avalan/2")}}"class="btn btn-primary bi bi-printer-fill"> </i>
+                                    Cetak</button></a>                                
+                        </div>
+                    </div>
+                    <div id="avalanSdgProses">
+                        @include('admin.dashboard.table.avalan.avalan-sedang-proses')
+                    </div>
+                    
                 </div>
             </div>
         </div>
     </div>
     <div class="modal fade text-left" id="ModalAvalanOk" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Selesai</h1>
+                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Selesai</h1>
                     <button type="button" onclick="closeModalOk(this)" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <div class="modal-body" id="avalanOk">
-                    @include("admin.dashboard.table.avalan.avalan-ok")                      
+                <div class="modal-body">
+                    <div class="row justify-content-between mb-2">
+                        <div class="col-1">
+                            <button type="submit" class="btn btn-primary" name="simpan"><i
+                                    class="bi bi-floppy-fill"></i>
+                                Simpan</button>
+                        </div>
+                        <div class="col-1 me-3">
+                                <a href="{{url("admin/dashboard/print-avalan/3")}}"class="btn btn-primary bi bi-printer-fill"> </i>
+                                    Cetak</button></a>                                
+                        </div>
+                    </div>
+                    <div id="avalanOk">
+                        @include("admin.dashboard.table.avalan.avalan-ok")    
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal fade text-left" id="ModalAvalanSelisih" tabindex="-1">
-        <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl  modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Selisih</h1>
+                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Selisih</h1>
                     <button type="button" onclick="closeModalSelisih(this)" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <div class="modal-body" id="avalanSelisih">
-                    @include("admin.dashboard.table.avalan.avalan-selisih")                      
+                <div class="modal-body">
+                    <div class="row justify-content-between mb-2">
+                        <div class="col-1">
+                            <button type="submit" class="btn btn-primary" name="simpan"><i
+                                    class="bi bi-floppy-fill"></i>
+                                Simpan</button>
+                        </div>
+                        <div class="col-1 me-3">
+                                <a href="{{url("admin/dashboard/print-avalan/4")}}"class="btn btn-primary bi bi-printer-fill"> </i>
+                                    Cetak</button></a>                                
+                        </div>
+                    </div>
+                    <div id="avalanSelisih">
+                        @include("admin.dashboard.table.avalan.avalan-selisih")                      
+                    </div>                    
                 </div>
             </div>
         </div>

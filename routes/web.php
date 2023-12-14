@@ -42,7 +42,8 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::get("banner-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBanner']);
         Route::get('banner-avalan/{request}', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBannerTable'])->name('request');
         Route::get("banner-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBanner']);
-        Route::get("print",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'print']);
+        Route::get('print-item/{request}', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'print'])->name('request');
+        Route::get('print-avalan/{request}', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'print'])->name('request');
         Route::get('banner-item/{request}', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBannerTable'])->name('request');
     });
     Route::prefix('master')->group(function() {

@@ -13,7 +13,7 @@
             @include('admin.dashboard.banner.banner-item')
         </div>
         <div class="modal fade text-left" id="ModalItemBlmProses" tabindex="-1">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Belum Proses</h1>
@@ -23,15 +23,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="row justify-content-between mb-2">
-                            <div class="col-10">
+                            <div class="col-1">
                                 <button type="submit" class="btn btn-primary" name="simpan"><i
                                         class="bi bi-floppy-fill"></i>
                                     Simpan</button>
                             </div>
-                            <div class="col ms-3">
-                                <button type="submit" class="btn btn-primary" name="simpan"><i
-                                        class="bi bi-printer-fill"></i>
-                                    Cetak</button>
+                            <div class="col-1 me-3">
+                                    <a href="{{url("admin/dashboard/print-item/1")}}"class="btn btn-primary bi bi-printer-fill"> </i>
+                                        Cetak</button></a>                                
                             </div>
                         </div>
                         <div id="itemBlmProses">
@@ -42,7 +41,7 @@
             </div>
         </div>
         <div class="modal fade text-left" id="ModalItemSdgProses" tabindex="-1">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Sedang Proses</h1>
@@ -52,15 +51,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="row justify-content-between mb-2">
-                            <div class="col-10">
+                            <div class="col-1">
                                 <button type="submit" class="btn btn-primary" name="simpan"><i
                                         class="bi bi-floppy-fill"></i>
                                     Simpan</button>
                             </div>
-                            <div class="col ms-3">
-                                <button type="submit" class="btn btn-primary" name="simpan"><i
-                                        class="bi bi-printer-fill"></i>
-                                    Cetak</button>
+                            <div class="col-1 me-3">
+                                <a href="{{url("admin/dashboard/print-item/2")}}"class="btn btn-primary bi bi-printer-fill"> </i>
+                                    Cetak</button></a>                                                               
                             </div>
                         </div>
 
@@ -72,7 +70,7 @@
             </div>
         </div>
         <div class="modal fade text-left" id="ModalItemOk" tabindex="-1">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Ok</h1>
@@ -82,15 +80,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="row justify-content-between mb-2">
-                            <div class="col-10">
+                            <div class="col-1">
                                 <button type="submit" class="btn btn-primary" name="simpan"><i
                                         class="bi bi-floppy-fill"></i>
                                     Simpan</button>
                             </div>
-                            <div class="col ms-3">
-                                <button type="submit" class="btn btn-primary" name="simpan"><i
-                                        class="bi bi-printer-fill"></i>
-                                    Cetak</button>
+                            <div class="col-1 me-3">
+                                <a href="{{url("admin/dashboard/print-item/3")}}"class="btn btn-primary bi bi-printer-fill"> </i>
+                                    Cetak</button></a>                                
                             </div>
                         </div>
 
@@ -102,7 +99,7 @@
             </div>
         </div>
         <div class="modal fade text-left" id="ModalItemSelisih" tabindex="-1">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Selisih</h1>
@@ -112,15 +109,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="row justify-content-between mb-2">
-                            <div class="col-10">
+                            <div class="col-1">
                                 <button type="submit" class="btn btn-primary" name="simpan"><i
                                         class="bi bi-floppy-fill"></i>
                                     Simpan</button>
                             </div>
-                            <div class="col ms-3">
-                                <button type="submit" class="btn btn-primary" name="simpan"><i
-                                        class="bi bi-printer-fill"></i>
-                                    Cetak</button>
+                            <div class="col-1 me-3">
+                                <a href="{{url("admin/dashboard/print-item/4")}}"class="btn btn-primary bi bi-printer-fill"> </i>
+                                    Cetak</button></a>                                
                             </div>
                         </div>
                         <div id="itemSelisih">
