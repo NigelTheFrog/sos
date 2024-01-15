@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Dashboard\AvalanController;
+use App\Http\Controllers\Admin\Dashboard\ItemController;
 use App\Http\Controllers\Admin\Master\AreaLokasiController;
 use App\Http\Controllers\Admin\Master\CompanyController;
 use App\Http\Controllers\Admin\Master\GroupController;
@@ -35,7 +36,10 @@ use Illuminate\Support\Facades\DB;
 Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
     Route::prefix('dashboard')->group(function() {          
         Route::resource('avalan', AvalanController::class);
-        Route::get("item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index']);
+        Route::resource('item', ItemController::class);
+        // Route::get("item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index']);
+        Route::get("stop-cso-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'stopCsoItem']);
+        Route::get("end-cso-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'endCSOItem']);
         Route::get('avalan',[App\Http\Controllers\Admin\Dashboard\AvalanController::class,'index']);
         Route::get("main-table-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showMainTable']);
         Route::get("main-table-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
@@ -69,5 +73,7 @@ Route::get('/', function () {
 });        
 
 Auth::routes();
+Route::get("/",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index'])->middleware(['auth','isAdmin']);
+Route::get("home",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index'])->middleware(['auth','isAdmin']);
 
-Route::get('/home'  , [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

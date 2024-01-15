@@ -5,7 +5,34 @@
 @section('content')
 
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Dashboard Item</h1>
+        <div class="row justify-content-between align-items-center mt-4">
+            <div class="col-4">
+                <h1>Dashboard Item</h1>
+            </div>
+            <div class="col-4">
+                @if ($countCsoActive > 0 && $countCsoFinal == 0)
+                    {{-- <form action="{{ url('admin/dashboard/stop-cso-item') }}"> --}}
+                    <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1">
+                        <i class="bi bi-stopwatch-fill"></i> Tutup CSO Item
+                    </button>
+                    {{-- </form> --}}
+                @elseif ($countCsoEnd > 0 && $countCsoFinal == 0)
+                    {{-- <form action="{{ url('admin/dashboard/stop-cso-item') }}"> --}}
+                    <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end" value="2">
+                        <i class="bi bi-stopwatch-fill"></i> Akhiri CSO Item
+                    </button>
+                    {{-- </form> --}}
+                @else
+                    {{-- <form action="{{ url('admin/dashboard/stop-cso-item') }}"> --}}
+                    <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end" value="3">
+                        <i class="bi bi-stopwatch-fill"></i> Mulai CSO Item
+                    </button>
+                    {{-- </form> --}}
+                @endif
+
+                {{-- <h1 class="text-end">Dashboard Item</h1> --}}
+            </div>
+        </div>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Dashboard Item</li>
         </ol>
@@ -29,8 +56,10 @@
                                     Simpan</button>
                             </div>
                             <div class="col-1 me-3">
-                                    <a href="{{url("admin/dashboard/print-item/1")}}"class="btn btn-primary bi bi-printer-fill"> </i>
-                                        Cetak</button></a>                                
+                                <a
+                                    href="{{ url('admin/dashboard/print-item/1') }}"class="btn btn-primary bi bi-printer-fill">
+                                    </i>
+                                    Cetak</button></a>
                             </div>
                         </div>
                         <div id="itemBlmProses">
@@ -57,8 +86,10 @@
                                     Simpan</button>
                             </div>
                             <div class="col-1 me-3">
-                                <a href="{{url("admin/dashboard/print-item/2")}}"class="btn btn-primary bi bi-printer-fill"> </i>
-                                    Cetak</button></a>                                                               
+                                <a
+                                    href="{{ url('admin/dashboard/print-item/2') }}"class="btn btn-primary bi bi-printer-fill">
+                                    </i>
+                                    Cetak</button></a>
                             </div>
                         </div>
 
@@ -86,8 +117,10 @@
                                     Simpan</button>
                             </div>
                             <div class="col-1 me-3">
-                                <a href="{{url("admin/dashboard/print-item/3")}}"class="btn btn-primary bi bi-printer-fill"> </i>
-                                    Cetak</button></a>                                
+                                <a
+                                    href="{{ url('admin/dashboard/print-item/3') }}"class="btn btn-primary bi bi-printer-fill">
+                                    </i>
+                                    Cetak</button></a>
                             </div>
                         </div>
 
@@ -108,33 +141,39 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row justify-content-between mb-2">
-                            <div class="col-1">
-                                <button type="submit" class="btn btn-primary" name="simpan"><i
-                                        class="bi bi-floppy-fill"></i>
-                                    Simpan</button>
+                        <form action="">
+                            @csrf
+                            @method('PUT')
+                            <div class="row justify-content-between mb-2">
+                                <div class="col-1">
+                                    <button type="submit" class="btn btn-primary" name="simpan"><i
+                                            class="bi bi-floppy-fill"></i>
+                                        Simpan</button>
+                                </div>
+                                <div class="col-1 me-3">
+                                    <a
+                                        href="{{ url('admin/dashboard/print-item/4') }}"class="btn btn-primary bi bi-printer-fill">
+                                        </i>
+                                        Cetak</button></a>
+                                </div>
                             </div>
-                            <div class="col-1 me-3">
-                                <a href="{{url("admin/dashboard/print-item/4")}}"class="btn btn-primary bi bi-printer-fill"> </i>
-                                    Cetak</button></a>                                
+                            <div id="itemSelisih">
+                                @include('admin.dashboard.table.item.item-selisih')
                             </div>
-                        </div>
-                        <div id="itemSelisih">
-                            @include('admin.dashboard.table.item.item-selisih')
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
         <div class="card mt-2">
             <div class="card-header">
-                <div class="row justify-content-between pt-2 ps-4 pe-3">
+                <div class="row justify-content-between mt-2 ms-4 me-3">
                     <div class="col">
                         <h3 class="card-title">Hasil Stock Opname</h3>
                     </div>
-                    <div class="col-3">
-                        <form class="d-flex" role="search">
-                            <input class="form-control me-2" id="searchModItem" type="search" placeholder="Search"
+                    <div class="col-4 float-end">
+                        <form class="" role="search">
+                            <input class="form-control" id="searchModItem" type="search" placeholder="Search"
                                 aria-label="Search">
                         </form>
                     </div>
@@ -143,6 +182,25 @@
             </div>
             <div class="card-body ms-4 me-3" id="main-table-item">
                 @include('admin.dashboard.table.item.main-table-item')
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade text-left" id="ModalCSO" tabindex="-1">
+        <div class="modal-dialog modal modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalHeader"></h1>
+                </div>
+                <div class="modal-body">
+                    <form id="modalActionCSO" action="" class="needs-validation" novalidate>
+                        <p id="warning"></p>
+                        <button type="submit" class="btn btn-danger" name="simpan"><i
+                                class="bx bxs-save"></i>Iya</button>
+                        <button type="button" onclick="closeModalCSO(this)" class="btn btn-primary" name="simpan"><i
+                                class="bx bxs-save"></i>Batal</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -163,18 +221,6 @@
             });
 
         }, 1000);
-
-        // setInterval(function(event) {
-        //     $.ajax({
-        //         url: "{{ url('admin/dashboard/banne-item') }}",
-        //         type: 'GET',
-        //         success: function(data) {
-        //             $('#banner-item').html(data);
-        //         }
-        //     });
-
-        // }, 1000);
-
 
         function openModalBlmProses(button) {
             $('#ModalItemBlmProses').modal('show');
@@ -250,6 +296,28 @@
         function closeModalSelisih(button) {
             if (typeof myTimeout != undefined) clearTimeout(intervalItemSelisih);
             $('#ModalItemSelisih').modal('hide');
+        }
+
+        function openModalCSO(button, type) {
+            $('#ModalCSO').modal('show');
+            if (type == 1) {
+                document.getElementById("modalHeader").innerText = `Menghentikan CSO`;
+                document.getElementById("warning").innerText =
+                    `Apakah anda yakin akan menghentikan proses penghitungan cek stok item?`;
+                $('#modalActionCSO').attr('action', `{{ url('admin/dashboard/stop-cso-item') }}`);
+            } else if (type == 2) {
+                document.getElementById("modalHeader").innerText = `Mengakhiri CSO`;
+                document.getElementById("warning").innerText = `Apakah anda yakin akan mengakhiri cek stok Item?`;
+                $('#modalActionCSO').attr('action', `{{ url('admin/dashboard/stop-cso-item') }}`);
+            } else {
+                document.getElementById("modalHeader").innerText = `Memulai CSO`;
+                document.getElementById("warning").innerText = `Apakah anda yakin akan memulai cek stok item?`;
+                $('#modalActionCSO  ').attr('action', `{{ url('admin/dashboard/stop-cso-item') }}`);
+            }
+        }
+
+        function closeModalCSO(button) {
+            $('#ModalCSO').modal('hide');
         }
     </script>
 @endsection
