@@ -56,12 +56,12 @@
                         Kategori Produk
                     </a>
                     <div class="sb-sidenav-menu-heading">Penjadwalan</div>
-                    <a class="nav-link" href="{{ url('admin/penjadwalan/impor-stok') }}">
+                    <a class="nav-link" href="{{ route('import-stok.index') }}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-import"
                                 style="font-size: 20px"></i></div>
                         Impor Stok
                     </a>
-                    <a class="nav-link" href="{{ url('admin/penjadwalan/impor-avalan') }}">
+                    <a class="nav-link" href="{{ route('import-avalan.index') }}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-import"
                                 style="font-size: 20px"v></i></div>
                         Impor Avalan

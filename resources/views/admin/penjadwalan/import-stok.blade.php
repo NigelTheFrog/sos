@@ -3,14 +3,12 @@
 @section('title', 'Impor Stok')
 
 @section('content')
-
     <style>
         .vscomp-toggle-button {
             padding: 10px 30px 10px 10px;
             border-radius: 7px
         }
     </style>
-
     <div class="container-fluid px-4">
         <div class="row justify-content-md-center">
             <div id="main" style="width: 95%">
@@ -19,7 +17,7 @@
                         <h4 class="card-title pt-2">Impor Stok</h4>
                     </div>
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                        <div class="d-flex justify-content-between mb-3" style="width: 25%">
+                        <div class="d-flex justify-content-between mb-2" style="width: 25%">
                             <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal"
                                 data-bs-target="#modalImportItem">
                                 <i class="nav-icon fas fa-file-import"></i> Import Item
@@ -29,66 +27,108 @@
                                 <i class="nav-icon fas fa-file-import"></i> Import Batch
                             </button>
                         </div>
-                        <table class="table table-sm table-bordered table-hover table-responsive small table-striped"
-                            style="background-color:rgb(255, 255, 255)">
-                            <thead class="table-dark">
-                                <tr class="text-center">
-                                    <th style="width: 2%"></th>
-                                    <th class="align-middle" style="width: 2%">No</th>
-                                    <th class="align-middle" style="width: 10%">Kode Item</th>
-                                    <th class="align-middle" style="width: 8%">Nama Item</th>
-                                    <th class="align-middle" style="width: 8%">Heat No</th>
-                                    <th class="align-middle" style="width: 5%">Dimension</th>
-                                    <th class="align-middle" style="width: 5%">Tolerance</th>
-                                    <th class="align-middle" style="width: 5%">Condition</th>
-                                    <th class="align-middle" style="width: 5%">Jumlah</th>
-                                    <th class="align-middle" style="width: 5%">Satuan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($stok as $index => $stok)
+                        <form id="deleteform" action="{{ route('import-stok.destroy', 'checkboxDelete') }}" method="POST"
+                            class="needs-validation mx-3" novalidate>
+                            @csrf
+                            @method('DELETE')
+                            <div class="modal fade text-left" id="modalDeleteItem" tabindex="-1">
+                                <div class="modal-dialog modal modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="mdlMoreLabel">Konfirmasi</h1>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Apakah Anda yakin hendak menghapus item yang sudah dipilih?</p>
+                                            <button type="submit" class="btn btn-danger" name="simpan"><i
+                                                    class="bx bxs-save"></i>Iya</button>
+                                            <button type="button" data-bs-dismiss="modal" class="btn btn-primary"
+                                                name="simpan"><i class="bx bxs-save"></i>Batal</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="form-group form-check ">
+                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete">
+                                    <label class="form-check-label" for="cekdelete">
+                                        Centang Semua
+                                    </label>
+                                </div>
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#modalDeleteItem"
+                                    class="btn btn-danger" title="Hapus Centang" id="btnHapus" data-id=""><i
+                                        class="fas fa-trash-alt"></i>
+                                    Hapus Checklist</button>
+                            </div>
+                            <table class="table table-sm table-bordered table-hover table-responsive small table-striped"
+                                style="background-color:rgb(255, 255, 255)">
+                                <thead class="table-dark">
                                     <tr class="text-center">
-                                        <td class="align-middle"></td>
-                                        <td class="align-middle">{{ $index + 1 }}</td>
-                                        <td class="align-middle">{{ $stok->itemcode }}</td>
-                                        <td class="align-middle">{{ $stok->itemname }}</td>
-                                        <td class="align-middle">
-                                            @if ($stok->heatno == null)
-                                                -
-                                            @else
-                                                {{ $stok->heatno }}
-                                            @endif
-                                        </td>
-                                        <td class="align-middle">
-                                            @if ($stok->dimension == null)
-                                                -
-                                            @else
-                                                {{ $stok->dimension }}
-                                            @endif
-                                        </td>
-                                        <td class="align-middle">
-                                            @if ($stok->tolerance == null)
-                                                -
-                                            @elseif ($stok->tolerance == '.')
-                                                -
-                                            @else
-                                                {{ $stok->tolerance }}
-                                            @endif
-                                        </td>
-                                        <td class="align-middle">
-                                            @if ($stok->kondisi == null)
-                                                -
-                                            @else
-                                                {{ $stok->kondisi }}
-                                            @endif
-                                        </td>
-                                        <td class="align-middle">{{ number_format((float) $stok->qty, 2, '.', '') }}</td>
-                                        <td class="align-middle">{{ $stok->uom }}</td>
-
+                                        <th style="width: 2%"></th>
+                                        <th class="align-middle" style="width: 2%">No</th>
+                                        <th class="align-middle" style="width: 10%">Kode Item</th>
+                                        <th class="align-middle" style="width: 8%">Nama Item</th>
+                                        <th class="align-middle" style="width: 8%">Heat No</th>
+                                        <th class="align-middle" style="width: 5%">Dimension</th>
+                                        <th class="align-middle" style="width: 5%">Tolerance</th>
+                                        <th class="align-middle" style="width: 5%">Condition</th>
+                                        <th class="align-middle" style="width: 5%">Jumlah</th>
+                                        <th class="align-middle" style="width: 5%">Satuan</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($stok as $index => $stok)
+                                        <tr
+                                            class="text-center 
+                                        @if ($stok->statusitem == 'T') table-info @endif">
+                                            <td class="align-middle">
+                                                <div class="form-check">
+                                                    <input type="checkbox" name="checkboxDelete[]"
+                                                        class="form-check-input cekboxdelete"
+                                                        value={{ $stok->itembatchid }}>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">{{ $index + 1 }}</td>
+                                            <td class="align-middle">{{ $stok->itemcode }}</td>
+                                            <td class="align-middle">{{ $stok->itemname }}</td>
+                                            <td class="align-middle">
+                                                @if ($stok->heatno == null)
+                                                    -
+                                                @else
+                                                    {{ $stok->heatno }}
+                                                @endif
+                                            </td>
+                                            <td class="align-middle">
+                                                @if ($stok->dimension == null)
+                                                    -
+                                                @else
+                                                    {{ $stok->dimension }}
+                                                @endif
+                                            </td>
+                                            <td class="align-middle">
+                                                @if ($stok->tolerance == null)
+                                                    -
+                                                @elseif ($stok->tolerance == '.')
+                                                    -
+                                                @else
+                                                    {{ $stok->tolerance }}
+                                                @endif
+                                            </td>
+                                            <td class="align-middle">
+                                                @if ($stok->kondisi == null)
+                                                    -
+                                                @else
+                                                    {{ $stok->kondisi }}
+                                                @endif
+                                            </td>
+                                            <td class="align-middle">{{ number_format((float) $stok->qty, 2, '.', '') }}
+                                            </td>
+                                            <td class="align-middle">{{ $stok->uom }}</td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -102,13 +142,16 @@
             <div id="mySidenav" class="pt-2 sidenav d-none" style="width:0%">
                 <div class="card card-secondary">
                     <div class="card-header d-flex flex-row">
-                        <a class="pr-3" href="javascript:void(0)" class="closebtn" id="closeNav" data-bs-toggle="tooltip"
-                            data-bs-placement="left" data-bs-title="Tutup Form Barang Temuan"><i
+                        <a class="pr-3" href="javascript:void(0)" class="closebtn" id="closeNav"
+                            data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tutup Form Barang Temuan"><i
                                 class="fas fa-angle-right"></i></a>
                         <h3 class="card-title">Barang Temuan</h3>
                     </div>
                     <div class="card-body">
-                        <form action="add-import.php" method="POST" class="needs-validation" novalidate>
+                        <form action="{{ route('import-stok.store') }}" method="POST" class="needs-validation"
+                            novalidate>
+                            @csrf
+                            <input type="text" name="type" value="3" hidden>
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -139,14 +182,6 @@
                                         id="temuandimension" placeholder="Dimensi">
                                 </div>
                             </div>
-                            <!-- <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-keyboard"></i></span>
-                                    </div>
-                                    <input type="text" name="temuantolerance" class="form-control" id="temuantolerance" placeholder="Toleransi">
-                                </div>
-                            </div> -->
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -210,9 +245,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="mdlMoreLabel">Data Stok ERP</h1>
-                    {{-- <button type="button" onclick="closeModalBlmProses(this)" class="btn-close align-middle"
-                    data-bs-dismiss="modal" aria-label="Close">
-                </button> --}}
+
                     <button type="button" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
@@ -222,7 +255,7 @@
                         <div class="col">
                             <div class="d-flex justify-content-between" style="width: 50%">
                                 <b class="mt-1">Pilih Gudang:</b>
-                                <select id="itemSelect" multiple name="gudang[]" placeholder="Native Select"
+                                <select id="itemSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
                                     data-search="true" data-silent-initial-value-set="true">
                                     @foreach ($response_wrh['data'] as $wrh)
                                         <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }}</option>
@@ -233,25 +266,19 @@
                         <div class="col-4">
                             <div class="d-flex justify-content-between">
                                 <form class="" role="search">
-                                    <input class="form-control" id="searchModItem" type="search" placeholder="Search"
+                                    <input class="form-control" id="searchItem" type="search" placeholder="Search"
                                         aria-label="Search">
                                 </form>
-                                <button type="button" class="btn btn-primary float-end">
+                                <button type="button" id="tarikitem" class="btn btn-primary float-end"
+                                    onclick="tarikItem(this)">
                                     Tarik Data
                                 </button>
                             </div>
                         </div>
                     </div>
                     <hr>
-                    <div class="container-lg" style="height: 60vh">
-                        <div style="overflow: auto; max-height: 60vh;">
-                           
-                        </div>                        
-                    </div>
-                    <hr>
-                    <div class="float-end d-flex justify-content-between" style="width: 13%">
-                        <button type="button" class="btn btn-primary float-end">Impor</button>
-                        <button type="button" class="btn btn-primary float-end">Keluar</button>
+                    <div id="tableItem">
+                        @include('admin.penjadwalan.item.table-pull-import')
                     </div>
                 </div>
             </div>
@@ -263,24 +290,114 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="mdlMoreLabel">Data Stok Batch</h1>
-                    {{-- <button type="button" onclick="closeModalBlmProses(this)" class="btn-close align-middle"
-                    data-bs-dismiss="modal" aria-label="Close">
-                </button> --}}
                     <button type="button" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body">
-
+                    <div class="row justify-content-between ps-2 mb-2 pe-2 bg-light align-items-center"
+                        style="height: 50px">
+                        <div class="col">
+                            <div class="d-flex justify-content-between" style="width: 50%">
+                                <b class="mt-1">Pilih Gudang:</b>
+                                <select id="batchSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
+                                    data-search="true" data-silent-initial-value-set="true">
+                                    @foreach ($response_wrh['data'] as $wrh)
+                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex justify-content-between">
+                                <form class="" role="search">
+                                    <input class="form-control" id="searchBatch" type="search" placeholder="Search"
+                                        aria-label="Search">
+                                </form>
+                                <button type="button" id="tarikbatch" class="btn btn-primary float-end"
+                                    onclick="tarikBatch(this)">
+                                    Tarik Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="tableBatch">
+                        @include('admin.penjadwalan.item.table-pull-import-batch')
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     <script>
         VirtualSelect.init({
             ele: '#itemSelect'
         });
 
+        VirtualSelect.init({
+            ele: '#batchSelect'
+        });
+
+        function tarikItem(button) {
+            var selectedGudang = $("#itemSelect").val(); // Get the selected gudang values
+            var search = $("#searchItem").val();
+            // Make an AJAX request to fetch data from the server
+            $.ajax({
+                url: "{{ url('admin/penjadwalan/import-stok/pull-import') }}",
+                method: "POST",
+                data: {
+                    gudang: selectedGudang,
+                    search: search,
+                    type: 1
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    $('#tableItem').html(data);
+                },
+                error: function() {
+                    // Handle error cases if necessary
+                    alert("Error fetching data from the server.");
+                }
+            });
+        }
+
+        function tarikBatch(button) {
+            var selectedGudang = $("#batchSelect").val(); // Get the selected gudang values
+            var search = $("#searchBatch").val();
+            // Make an AJAX request to fetch data from the server
+            $.ajax({
+                url: "{{ url('admin/penjadwalan/import-stok/pull-import') }}",
+                method: "POST",
+                data: {
+                    gudang: selectedGudang,
+                    search: search,
+                    type: 2
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    // console.log(data);
+                    $('#tableBatch').html(data);
+                },
+                error: function() {
+                    // Handle error cases if necessary
+                    alert("Error fetching data from the server.");
+                }
+            });
+        }
+
         $(document).ready(function() {
+            $(".cekdelete").click(function() {
+                if ($(".cekboxdelete").prop("checked")) {
+                    $(".cekboxdelete").prop("checked", false);
+                } else {
+                    $(".cekboxdelete").prop("checked", true);
+                }
+            });
             $("#openNav").click(function() {
                 $('#push-btn').addClass('d-none');
                 $("#mySidenav").removeClass('d-none');

@@ -13,6 +13,10 @@ use App\Http\Controllers\Admin\Master\User;
 use App\Http\Controllers\Admin\Master\UserController;
 use App\Http\Controllers\Admin\Master\WarnaController;
 use App\Models\Item;
+use App\Http\Controllers\Admin\Penjadwalan\Impor;
+use App\Http\Controllers\Admin\Penjadwalan\ImportAvalanController;
+use App\Http\Controllers\Admin\Penjadwalan\ImportItemController;
+use App\Models\Admin\Penjadwalan\ImportAvalan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,8 +40,7 @@ use Illuminate\Support\Facades\DB;
 Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
     Route::prefix('dashboard')->group(function() {          
         Route::resource('avalan', AvalanController::class);
-        Route::resource('item', ItemController::class);
-        // Route::get("item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index']);
+        Route::get("item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index']);
         Route::get("stop-cso-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'stopCsoItem']);
         Route::get("end-cso-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'endCSOItem']);
         Route::get('avalan',[App\Http\Controllers\Admin\Dashboard\AvalanController::class,'index']);
@@ -60,17 +63,16 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::resource('group',GroupController::class);
         Route::resource('kategori-produk',KategoriProdukController::class);
     });
-    Route::prefix('penjadwalan')->group(function() {  
-        Route::get("impor-stok",[App\Http\Controllers\Admin\Penjadwalan\Impor::class, 'imporStok']);
-        Route::get('impor-avalan',[App\Http\Controllers\Admin\Penjadwalan\Impor::class,'imporAvalan']);
+    Route::prefix('penjadwalan')->group(function() { 
+        Route::resource('import-stok', ImportItemController::class) ;
+        Route::post('import-stok/pull-import',[App\Http\Controllers\Admin\Penjadwalan\ImportItemController::class, 'showTable']);
+        Route::resource('import-avalan', ImportAvalanController::class) ;
+        Route::post('import-avalan/pull-import',[App\Http\Controllers\Admin\Penjadwalan\ImportAvalanController::class, 'showTable']);        
         Route::get('pengaturan',[App\Http\Controllers\Admin\Penjadwalan\Pengaturan::class,'index']);
         // Route::post('pengaturan/',["type"=>])
     });
 });
-
-Route::get('/', function () {
-    dd(DB::table('viewdashboard')->where('itemname','LIKE', '%%')->orWhere('analisator','LIKE','%%')->get());
-});        
+       
 
 Auth::routes();
 Route::get("/",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index'])->middleware(['auth','isAdmin']);
