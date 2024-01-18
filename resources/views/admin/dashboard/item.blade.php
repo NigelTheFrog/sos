@@ -10,32 +10,33 @@
                 <h1>Dashboard Item</h1>
             </div>
             <div class="col-4">
-                @if ($countCsoActive > 0 && $countCsoFinal == 0)
-                    {{-- <form action="{{ url('admin/dashboard/stop-cso-item') }}"> --}}
+                @if ($countCsoActive > 0)
                     <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1">
                         <i class="bi bi-stopwatch-fill"></i> Tutup CSO Item
                     </button>
-                    {{-- </form> --}}
-                @elseif ($countCsoEnd > 0 && $countCsoFinal == 0)
-                    {{-- <form action="{{ url('admin/dashboard/stop-cso-item') }}"> --}}
+                @elseif ($countCsoEnd > 0)
                     <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end" value="2">
                         <i class="bi bi-stopwatch-fill"></i> Akhiri CSO Item
                     </button>
-                    {{-- </form> --}}
                 @else
-                    {{-- <form action="{{ url('admin/dashboard/stop-cso-item') }}"> --}}
                     <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end" value="3">
                         <i class="bi bi-stopwatch-fill"></i> Mulai CSO Item
                     </button>
-                    {{-- </form> --}}
                 @endif
-
-                {{-- <h1 class="text-end">Dashboard Item</h1> --}}
             </div>
         </div>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Dashboard Item</li>
-        </ol>
+        <div class="row justify-content-between align-items-center mb-2">
+            <div class="col-4">
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard Item</li>
+                </ol>
+            </div>
+            <div class="col-4">
+                <input class=" form-control col-9 text-center bg-dark-subtle float-end" type="text" placeholder="{{ $csodate }}"
+                    aria-label="Disabled input example" style="width: 200px" disabled>
+            </div>
+        </div>
+
         <div class="row" id="banner-item">
             @include('admin.dashboard.banner.banner-item')
         </div>
@@ -193,7 +194,13 @@
                     <h1 class="modal-title fs-5" id="modalHeader"></h1>
                 </div>
                 <div class="modal-body">
-                    <form id="modalActionCSO" action="" class="needs-validation" novalidate>
+                    <form id="modalActionCSO" action="" method="POST" class="needs-validation" novalidate>
+                        @csrf
+                        @if ($countCsoActive > 0)
+                            @method('PUT')
+                        @elseif ($countCsoEnd > 0)
+                            @method('DELETE')
+                        @endif
                         <p id="warning"></p>
                         <button type="submit" class="btn btn-danger" name="simpan"><i
                                 class="bx bxs-save"></i>Iya</button>
@@ -304,15 +311,15 @@
                 document.getElementById("modalHeader").innerText = `Menghentikan CSO`;
                 document.getElementById("warning").innerText =
                     `Apakah anda yakin akan menghentikan proses penghitungan cek stok item?`;
-                $('#modalActionCSO').attr('action', `{{ url('admin/dashboard/stop-cso-item') }}`);
+                $('#modalActionCSO').attr('action', `{{ route('item.update','item') }}`);
             } else if (type == 2) {
                 document.getElementById("modalHeader").innerText = `Mengakhiri CSO`;
                 document.getElementById("warning").innerText = `Apakah anda yakin akan mengakhiri cek stok Item?`;
-                $('#modalActionCSO').attr('action', `{{ url('admin/dashboard/stop-cso-item') }}`);
+                $('#modalActionCSO').attr('action', `{{ route('item.destroy','item') }}`);
             } else {
                 document.getElementById("modalHeader").innerText = `Memulai CSO`;
                 document.getElementById("warning").innerText = `Apakah anda yakin akan memulai cek stok item?`;
-                $('#modalActionCSO  ').attr('action', `{{ url('admin/dashboard/stop-cso-item') }}`);
+                $('#modalActionCSO').attr('action', `{{ route('item.store') }}`);
             }
         }
 

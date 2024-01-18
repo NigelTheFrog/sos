@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Dashboard\Item;
+use App\Models\Admin\Master\Company;
 use App\Models\Admin\Master\Group;
+use App\Models\Admin\Penjadwalan\ImportItem;
 use App\Models\ViewDashboard;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
@@ -15,6 +17,7 @@ use LaravelDaily\Invoices\Classes\InvoiceItem;
 use \NumberFormatter;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Carbon\Carbon;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -26,21 +29,19 @@ class ItemController extends Controller
     public function index()
     {
         $item = ViewDashboard::all();
-        $checkCsoActive = DB::table('dbtcsohed')
-            ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbtcsohed.trsid')
-            ->where('dbtcsohed.status', '=', 'A')
-            ->where('dbttrshed.statusdoc', '=', 'A')
-            // ->whereNot('dbttrshed.statusdoc','=','P')
-            ->get();
+        $checkCsoActive = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'A')->get();
 
-        $checkCsoEnd = DB::table('dbtcsohed')
-            ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbtcsohed.trsid')
-            ->where('dbtcsohed.status', '=', 'P')
-            ->where('dbttrshed.statusdoc', '=', 'E')
-            // ->whereNot('dbttrshed.statusdoc','=','P')
-            ->get();
+        $checkCsoEnd = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'E')->get();
 
         $checkCsoFinal = DB::table('dbttrshed')->where('statusdoc', '=', 'P')->get();
+
+        $getCsoDate = DB::table('dbttrshed')->select('startcsodate')->orderByDesc('trsid')->limit(1)->get();
+
+        if(count($getCsoDate) > 0) {
+            $csoDate = Carbon::parse($getCsoDate[0]->startcsodate)->format('d M Y');
+        } else {
+            $csoDate = "";
+        }
 
         $itemBlmProses = ViewDashboard::where('status', '=', '0')->get();
         $itemSdgProses = ViewDashboard::where('status', '!=', '0')->where('status', '!=', '3')->get();
@@ -49,13 +50,14 @@ class ItemController extends Controller
         $itemSelisihMinus = ViewDashboard::where('selisih', '<', '0')->get();
         $dbxjob = DB::table('dbxjob')->where('jobtypeid', '=', 2)->get();
         $group = Group::all();
+
         return view("admin.dashboard.item", [
             'countCsoActive' => count($checkCsoActive), 'countCsoEnd' => count($checkCsoEnd), 'countCsoFinal' => count($checkCsoFinal), 'item' => $item,
             "countItemBlmProses" => count($itemBlmProses), "itemBlmProses" => $itemBlmProses,
             "countItemSdgProses" => count($itemSdgProses), "itemSdgProses" => $itemSdgProses,
             "countItemOk" => count($itemOk), "itemSelesai" => $itemOk,
             "countItemSelisih" => (count($itemSelisihPlus) + count($itemSelisihMinus)), "itemSelisihPlus" => $itemSelisihPlus, "itemSelisihMinus" => $itemSelisihMinus,
-            "dbxjob" => $dbxjob, "dbmgroup" => $group
+            "dbxjob" => $dbxjob, "dbmgroup" => $group, "csodate" => $csoDate
         ]);
     }
 
@@ -102,6 +104,8 @@ class ItemController extends Controller
         return view("admin.dashboard.table.item.main-table-item", ["item" => $item]);
     }
 
+
+
     public function showBannerTable(String $request)
     {
         $dbxjob = DB::table('dbxjob')->where('jobtypeid', '=', 2)->get();
@@ -140,15 +144,105 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+       
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+        DB::beginTransaction();
+
+        $checkDbxImport = ImportItem::all();
+
+        if(count($checkDbxImport) > 0) {
+            $checkCsoMaterial = DB::table('dbxmaterial')->limit(1)->get();
+            $checkCsoType = DB::table('dbxcsotype')->limit(1)->get();
+            $getCoy = Company::select('coycode')->where('coyid','=','1')->get();
+
+            if(count($checkCsoMaterial) > 0 && count($checkCsoType) > 0) {
+                $checkMonth = DB::table('dbttrshed')
+                ->select(DB::raw("DATE_FORMAT(startcsodate, '%m') as monthbefore"),'idxno')
+                ->orderByDesc('trsid')
+                ->limit(1)
+                ->get();
+                $idxno = 0;
+
+                if(count($checkMonth) > 0 && $checkMonth[0]->monthbefore == Carbon::now()->month) {
+                    $idxno = $checkMonth[0]->idxno + 1;
+                } else {
+                    $idxno = 1;
+                }
+                $today=Carbon::now()->format('Y-m-d');
+
+                $doccsoid = "{$checkCsoType[0]->csotype}{$getCoy[0]->coycode}{$today}-{$idxno}";
+
+                $insertDbttrshed = DB::table('dbttrshed')->insert([
+                    'doccsoid' => $doccsoid,
+                    'startcsodate' => $today,
+                    'idxno' => $idxno,
+                    'csomaterial' => $checkCsoMaterial[0]->csomaterial,
+                    'statusdoc' => 'A'
+                ]);
+
+                if($insertDbttrshed == true) {
+                    $getTrsHedId = DB::table('dbttrshed')->select('trsid')->where('statusdoc','=','A')->limit(1)->get();
+                    $selectDbxImporDet = DB::table('dbximpordet')->select('itembatchid',DB::raw('sum(qty)as qty'))->groupBy('itembatchid');
+
+                    $selectDbxImpor = DB::table('dbximpor')
+                    ->leftJoinSub($selectDbxImporDet, 'dbximpordet', function (JoinClause $join) {
+                        $join->on('dbximpor.itembatchid', '=', 'dbximpordet.itembatchid');
+                    })
+                    ->select([DB::raw($getTrsHedId[0]->trsid),"dbximpor.itemid","dbximpor.itembatchid","itemcode","itemname",
+                    DB::raw("case when dbximpor.batchid =0 then 0 else 1 end as isbatch"),
+                    "batchid","heatno","dimension","tolerance","kondisi","qty","uom","cogs","statusitem",DB::raw(1)]);
+                    
+                    $insertDbttrsdet = DB::table('dbttrsdet')->insertUsing(["trsid","itemid","itembatchid","itemcode","itemname","isbatch","batchno","heatno","dimension","tolerance","kondisi","onhand","uom","cogs","statusitem","statuscso"],$selectDbxImpor);
+
+                    if($insertDbttrsdet == true) {
+                        $getTrsDet2 = DB::table('dbttrsdet')
+                        ->join('dbttrshed','dbttrshed.trsid','=','dbttrsdet.trsid')
+                        ->select('trsdetid','itemid','itembatchid')
+                        ->where('dbttrshed.statusdoc','=','A')
+                        ->get();
+
+                        foreach($getTrsDet2 as $trsDet2) {
+                            $selectDbxImporDet2 = DB::table('dbximpordet')
+                            ->select(DB::raw($trsDet2->trsdetid),"itemid","itembatchid","batchid","wrh","qty")
+                            ->where('itembatchid','=',$trsDet2->itembatchid);
+                            
+                            DB::table('dbttrsdet2')->insertUsing(["trsdetid","itemid","itembatchid","batchno","wrh","qty"],$selectDbxImporDet2);
+                        }
+
+                        DB::table('dbtcsoprsn')
+                        ->where('trsid','=',$getTrsHedId[0]->trsid)
+                        ->update(["status"=>"P"]);
+
+                        $finalise = DB::table("dbxsetdate")->insert(["date"=>Carbon::now(),"tipe"=>"I"]);
+                        if($finalise == true) {
+                            DB::commit();
+                            return redirect()->route("item.index")->with('status', "Berhasil memulai CSO");   
+                        } else {
+                            DB::rollBack();
+                            return redirect()->route("item.index")->with('error', "Gagal memulai CSO, silahkan ulangi"); 
+                        }
+                    } else {
+                        DB::rollBack();
+                        return redirect()->route("item.index")->with('error', "Gagal memulai CSO, silahkan ulangi"); 
+                    }
+                } else {
+                    DB::rollBack();
+                    return redirect()->route("item.index")->with('error', "Gagal memulai CSO, silahkan ulangi"); 
+                }                
+            } else {
+                DB::rollBack();
+                return redirect()->route("pengaturan.index")->with('error', "Harap lakukan input tipe CSO dan Materialnya terlebih dahulu");  
+            }                     
+        } else {
+            DB::rollBack();
+            return redirect()->route("import-stok.index")->with('error', "Harap lakukan import item terlebih dahulu");            
+        }
     }
 
     /**
@@ -166,7 +260,24 @@ class ItemController extends Controller
         //
     }
 
+    public function startCSOItem() {
+        
+    }
+
     public function stopCSOItem()
+    {
+        
+    }
+
+    public function endCSOItem()
+    {
+        
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update()
     {
         DB::beginTransaction();
 
@@ -174,44 +285,46 @@ class ItemController extends Controller
             ->where('statusdoc', '=', 'A')
             ->update(['endcsodate' => Carbon::now(), 'statusdoc' => 'E']);
 
-        $updateDbtCsoHed = DB::table('dbtcsohed')
+        DB::table('dbtcsohed')
             ->where('status', '=', 'A')
             ->update(['status' => 'P',]);
 
-        $subquery = DB::table('dbttrshed')
-            ->select('trsid')
-            ->where('statusdoc', 'statusdoc', 'P')
-            ->orderByDesc('trsid')
-            ->limit(1);
+        // $subquery = DB::table('dbttrshed')
+        //     ->select('trsid')
+        //     ->where('statusdoc', 'statusdoc', 'P')
+        //     ->orderByDesc('trsid')
+        //     ->limit(1);
 
-        $selectDbtCsoHed = DB::table('dbxjob')        
-        ->join('dbtcsohed', 'dbxjob.userid', '=', 'dbtcsohed.pelakuid')
-        ->selectRaw('DISTINCT dbtcsohed.trsid,userid,username,name,dbxjob.coyid,jobtypeid,"D" as status')
-        ->where('dbtcsohed.trsid', '=', $subquery);
+        // $selectDbtCsoHed = DB::table('dbxjob')        
+        // ->join('dbtcsohed', 'dbxjob.userid', '=', 'dbtcsohed.pelakuid')
+        // ->selectRaw('DISTINCT dbtcsohed.trsid,userid,username,name,dbxjob.coyid,jobtypeid,"D" as status')
+        // ->where('dbtcsohed.trsid', '=', $subquery);
 
-        $selectDbtTrsDet = DB::table('dbxjob')        
-        ->join('dbttrsdet', 'dbttrsdet.analisatorid', '=', 'dbxjob.userid')
-        ->selectRaw('DISTINCT dbttrsdet.trsid,userid,username,name,dbxjob.coyid,jobtypeid,"D" as status')
-        ->where('dbttrsdet.trsid', '=', $subquery);
+        // $selectDbtTrsDet = DB::table('dbxjob')        
+        // ->join('dbttrsdet', 'dbttrsdet.analisatorid', '=', 'dbxjob.userid')
+        // ->selectRaw('DISTINCT dbttrsdet.trsid,userid,username,name,dbxjob.coyid,jobtypeid,"D" as status')
+        // ->where('dbttrsdet.trsid', '=', $subquery);
 
-        $unionQuery = $selectDbtCsoHed->union($selectDbtTrsDet);
+        // $unionQuery = $selectDbtCsoHed->union($selectDbtTrsDet);
 
-        $inserDbtCsoPrsn = DB::table('dbtcsoprsn')->insertUsing(['trsid', 'userid', 'username', 'name', 'coyid', 'jobtypeid', 'status'],$unionQuery);
+        // $inserDbtCsoPrsn = DB::table('dbtcsoprsn')->insertUsing(['trsid', 'userid', 'username', 'name', 'coyid', 'jobtypeid', 'status'],$unionQuery);
 
-        dd($updateDbtTrsHed);
 
-        // if ($updateDbtTrsHed == true && $updateDbtCsoHed == true && $inserDbtCsoPrsn == true) {
-        //     DB::commit();
-        //     return redirect()->route("item.index")->with('status', 'CSO berhasil diberhentikan');
-        // } else {
+        if ($updateDbtTrsHed == true ) {
+            DB::commit();
+            return redirect()->route("item.index")->with('status', 'CSO Item berhasil diberhentikan');
+        } else {
             DB::rollBack();
-        //     return redirect()->route("item.index")->with('error', 'Gagal memberhentikan CSO');
-        // }
+            return redirect()->route("item.index")->with('error', 'Gagal memberhentikan CSO Item');
+        }
     }
 
-    public function endCSOItem()
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy()
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
         $updateDbtTrsHed = DB::table('dbttrshed')
             ->where('statusdoc', '=', 'E')
@@ -220,38 +333,23 @@ class ItemController extends Controller
         DB::table('dbximpor')->truncate();
         DB::table('dbximpordet')->truncate();
 
-        // $deleteDbxSetDate = DB::
+        DB::table('dbxsetdate')->where('tipe','=','I')->delete();
 
         DB::table('dbxmaterial')->truncate();
 
-        $updateDbtCsoPrsn = DB::table('dbtcsoprsn')
+        DB::table('dbtcsoprsn')
             ->update(['status' => 'P']);
 
         DB::table('dbxjob')->truncate();
         DB::table('dbxcsotype')->truncate();
-    }
 
-    public function startCSOItem()
-    {
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Item $item)
-    {
-
-        // $keputusan->keputusandesc = $request->deskripsi;
-        // $keputusan->updated_by = Auth::user()->username;
-        // $keputusan->save();
-        // return redirect()->route("keputusan.index")->with('status', 'Data keputusan berhasil diubah');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Item $item)
-    {
-        //
+        // if($updateDbtTrsHed == true ) {
+            DB::commit();
+            return redirect()->route("item.index")->with('status', 'CSO berhasil diakhiri');
+        // } else {
+        //     DB::rollBack();
+        //     return redirect()->route("item.index")->with('error', 'Gagal mengakhiri CSO');
+        // }
+        
     }
 }

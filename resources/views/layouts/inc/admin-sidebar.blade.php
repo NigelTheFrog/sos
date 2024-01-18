@@ -4,12 +4,12 @@
             <div class="nav">
                 @if (Auth::user()->level == 1 || Auth::user()->level == 2)
                     <div class="sb-sidenav-menu-heading">Core</div>
-                    <a class="nav-link" href="{{url("admin/dashboard/item")}}">
+                    <a class="nav-link" href="{{ route('item.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
                         </div>
                         Dashboard Item
                     </a>
-                    <a class="nav-link" href="{{ url('admin/dashboard/avalan') }}">
+                    <a class="nav-link" href="{{ route('avalan.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
                         </div>
                         Dashboard Avalan
@@ -66,7 +66,7 @@
                                 style="font-size: 20px"v></i></div>
                         Impor Avalan
                     </a>
-                    <a class="nav-link" href="{{ url('admin/penjadwalan/pengaturan') }}">
+                    <a class="nav-link" href="{{ route('pengaturan.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-bars-progress" style="font-size: 20px"></i>
                         </div>
                         Pengaturan CSO

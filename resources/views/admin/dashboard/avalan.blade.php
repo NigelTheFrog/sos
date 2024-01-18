@@ -5,10 +5,37 @@
 @section('content')
 
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Dashboard Avalan</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Dashboard Avalan</li>
-        </ol>
+        <div class="row justify-content-between align-items-center mt-4">
+            <div class="col-4">
+                <h1>Dashboard Avalan</h1>
+            </div>
+            <div class="col-4">
+                @if ($countCsoActive > 0)
+                    <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1">
+                        <i class="bi bi-stopwatch-fill"></i> Tutup CSO Avalan
+                    </button>
+                @elseif ($countCsoEnd > 0)
+                    <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end" value="2">
+                        <i class="bi bi-stopwatch-fill"></i> Akhiri CSO Avalan
+                    </button>
+                @else
+                    <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end" value="3">
+                        <i class="bi bi-stopwatch-fill"></i> Mulai CSO Avalan
+                    </button>
+                @endif
+            </div>
+        </div>
+        <div class="row justify-content-between align-items-center mb-2">
+            <div class="col-4">
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard Avalan</li>
+                </ol>
+            </div>
+            <div class="col-4">
+                <input class=" form-control col-9 text-center bg-dark-subtle float-end" type="text" placeholder="{{ $csodate }}"
+                    aria-label="Disabled input example" style="width: 200px" disabled>
+            </div>
+        </div>
         <div class="row">
             @include("admin.dashboard.banner.banner-avalan")
         </div>
@@ -145,6 +172,31 @@
         </div>
     </div>
 
+    <div class="modal fade text-left" id="ModalCSO" tabindex="-1">
+        <div class="modal-dialog modal modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalHeader"></h1>
+                </div>
+                <div class="modal-body">
+                    <form id="modalActionCSO" action="" method="POST" class="needs-validation" novalidate>
+                        @csrf
+                        @if ($countCsoActive > 0)
+                            @method('PUT')
+                        @elseif ($countCsoEnd > 0)
+                            @method('DELETE')
+                        @endif
+                        <p id="warning"></p>
+                        <button type="submit" class="btn btn-danger" name="simpan"><i
+                                class="bx bxs-save"></i>Iya</button>
+                        <button type="button" onclick="closeModalCSO(this)" class="btn btn-primary" name="simpan"><i
+                                class="bx bxs-save"></i>Batal</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         var intervalAvalanBlmProses = undefined;
         var intervalAvalanSdgProses = undefined;
@@ -161,6 +213,24 @@
             });
             
         }, 1000);
+
+        function openModalCSO(button, type) {
+            $('#ModalCSO').modal('show');
+            if (type == 1) {
+                document.getElementById("modalHeader").innerText = `Menghentikan CSO`;
+                document.getElementById("warning").innerText =
+                    `Apakah anda yakin akan menghentikan proses penghitungan cek stok avalan?`;
+                $('#modalActionCSO').attr('action', `{{ route('avalan.update','item') }}`);
+            } else if (type == 2) {
+                document.getElementById("modalHeader").innerText = `Mengakhiri CSO`;
+                document.getElementById("warning").innerText = `Apakah anda yakin akan mengakhiri cek stok avalan?`;
+                $('#modalActionCSO').attr('action', `{{ route('avalan.destroy','item') }}`);
+            } else {
+                document.getElementById("modalHeader").innerText = `Memulai CSO`;
+                document.getElementById("warning").innerText = `Apakah anda yakin akan memulai cek stok avalan?`;
+                $('#modalActionCSO').attr('action', `{{ route('avalan.store') }}`);
+            }
+        }
 
 
         function openModalBlmProses(button) {

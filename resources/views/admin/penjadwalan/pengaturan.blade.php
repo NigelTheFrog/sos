@@ -8,7 +8,13 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>   
 </head>
 
-
+<style>
+    .vscomp-toggle-button {
+            padding: 10px 30px 10px 10px;
+            border-radius: 7px;
+            /* width: 60vh */
+        }
+</style>
 
 <div class="container-fluid px-4">
     <div class="row justify-content-md-center">
@@ -18,11 +24,11 @@
                     <h4 class="card-title pt-2">Pengaturan CSO</h4>
                 </div>                   
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                    <p>Item yang di CSO :<strong> 
-                        CSO                                             
+                    <p>Tipe Cek Stok :<strong> 
+                        {{ $csotype }}                                           
                     </strong></p>                    
                     <p>Item yang di CSO :<strong>                         
-                        Plat, As                                             
+                        {{ $csoitem }}                                                 
                     </strong></p>
                     <table class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
                         <thead class="table-dark">
@@ -40,13 +46,13 @@
                                 <td class="align-middle">{{$jobtype->name}}</td>
                                 <td class="align-middle">{{$jobtype->jobtypename}}</td>
                                 <td class="align-middle"> 
-                                    <button type="button" class="btn btn-danger btn-sm" title="Hapus User" id="btnHapus" data-id=""><i class="bi bi-trash-fill"></i></button>
+                                    <button type="button" onclick="openModalDelete(this)" class="btn btn-danger btn-sm" title="Hapus User" id="btnHapus" data-id=""><i class="bi bi-trash-fill"></i></button>
                                 </td>
+                                <td class="align-middle" hidden>{{$jobtype->jobid}}</td>
                             </tr>                                    
                             @endforeach                                
                         </tbody>
-                    </table>
-                                
+                    </table>                                
             </div>
         </div> 
     </div> 
@@ -56,12 +62,14 @@
                 <h4 class="card-title mx-3 pt-2">Atur Rencana CSO</h4>
             </div>
             <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                <form id="forminput" action="add-user.php" method="POST" class="needs-validation mx-3" novalidate >
+                <form id="forminput" action="{{route('pengaturan.store')}}" method="POST" class="needs-validation mx-3" novalidate >
+                    @csrf
+                    <input type="text" name="type" value="1" hidden>
                     <div class="mb-2">
                         <label for="" class="form-label">Tipe Cek Stok</label>
                         <div class="row">
                             <div style="width:70%" class="form-group">
-                                <select id="multipleSelect" class="form-control" name="typestock" placeholder="Tipe Cek Stok" data-search="true" data-silent-initial-value-set="true">
+                                <select id="multipleSelect" name="typestock" placeholder="Tipe Cek Stok" data-search="true" data-silent-initial-value-set="true">
                                     <option value="CSO">CSO</option>
                                     <option value="CSS">CSS</option>
                                 </select>
@@ -71,28 +79,34 @@
                             </div>
                         </div>
                     </div>
-
+                </form>
+                <form id="forminput" action="{{route('pengaturan.store')}}" method="POST" class="needs-validation mx-3" novalidate >
+                    @csrf
+                    <input type="text" name="type" value="2" hidden>
                     <div class="mb-2">
                         <label for="" class="form-label">Item yang di CSO</label>
                         <div class="row">
-                            <div style="width:70%" class="form-group">
-                                <select class="form-control select2-multiple" multiple id="select2MultipleItem" name="pelaku[]" placeholder="Pilih Nama Checker" data-search="true" data-silent-initial-value-set="true">
+                            <div style="width:70%">
+                                <select multiple id="multipleItem" name="itemcso[]" placeholder="Item yang ada di CSO" data-search="true" data-silent-initial-value-set="true" style="width: 10">
                                     @foreach ($category as $cat)
                                     <option value="{{$cat->categorydesc}}">{{$cat->categorydesc}}</option>                                
                                     @endforeach                                        
                                 </select>
                             </div>
                             <div style="width:30%" class="">
-                                <button type="submit" name="setmaterial" class="btn btn-primary">Submit</button>
+                                <button type="submit" name="setMaterial" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </div>
-
+                </form>
+                <form id="forminput" action="{{route('pengaturan.store')}}" method="POST" class="needs-validation mx-3" novalidate >
+                    @csrf
+                    <input type="text" name="type" value="3" hidden>
                     <div class="mb-2">
                         <label for="" class="form-label">Masukkan Nama Pelaku</label>
                         <div class="row">
                             <div style="width:70%" class="form-group">
-                                <select class="form-control select2-multiple" multiple id="select2MultiplePelaku" name="pelaku[]" placeholder="Pilih Nama Checker" data-search="true" data-silent-initial-value-set="true">
+                                <select multiple id="multiplePelaku" name="pelaku[]" placeholder="Pilih Nama Checker" data-search="true" data-silent-initial-value-set="true">
                                     @foreach ($pelaku as $user)
                                     <option value={{$user->userid}}>{{$user->nik}} - {{$user->name}}</option>                                
                                     @endforeach    
@@ -103,12 +117,15 @@
                             </div>
                         </div>
                     </div>
-
+                </form>
+                <form id="forminput" action="{{route('pengaturan.store')}}" method="POST" class="needs-validation mx-3" novalidate >
+                    @csrf
+                    <input type="text" name="type" value="4" hidden>
                     <div class="mb-2">
                         <label for="" class="form-label">Masukkan Nama Analisator</label>
                         <div class="row">
                             <div style="width:70%" class="form-group">
-                                <select class="form-control select2-multiple" multiple id="multipleSelectAnalisator" name="analisator[]" placeholder="Pilih Nama Analisator" data-search="true" data-silent-initial-value-set="true">
+                                <select multiple id="multipleAnalisator" name="analisator[]" placeholder="Pilih Nama Analisator" data-search="true" data-silent-initial-value-set="true">
                                     @foreach ($pelaku as $user)
                                     <option value={{$user->userid}}>{{$user->nik}} - {{$user->name}}</option>                                
                                     @endforeach   
@@ -123,14 +140,57 @@
                                 <button type="submit" name="setanalisator" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
-                    </div>
-                    <button type="reset" class="btn btn-danger" name="reset"><i class="bx bx-reset"></i> Reset</button>
-                    <button type="submit" class="btn btn-primary" name="simpan"><i class="bx bxs-save"></i> Simpan</button>
+                    </div>                    
                 </form>
             </div>               
         </div>
     </div>   
 </div>
+
+<div class="modal fade text-left" id="ModalDeleteCso" tabindex="-1">
+    <div class="modal-dialog modal modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="mdlMoreLabel">Hapus Data User</h1>
+            </div>
+            <div class="modal-body">
+                <form id="deleteform" action="" method="POST" class="needs-validation mx-3" novalidate>
+                    @csrf
+                    @method('DELETE')
+                    <p id="warning"></p>
+                    <button type="submit" class="btn btn-danger" name="simpan"><i
+                            class="bx bxs-save"></i>Iya</button>
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-primary"
+                        name="simpan"><i class="bx bxs-save"></i>Batal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    VirtualSelect.init({
+        ele: '#multipleSelect',
+    });
+    VirtualSelect.init({
+        ele: '#multipleItem',
+    });
+    VirtualSelect.init({
+            ele: '#multiplePelaku'
+    });
+    VirtualSelect.init({
+            ele: '#multipleAnalisator'
+    });
+
+    function openModalDelete(button) {
+                $('#ModalDeleteCso').modal('show');
+                var row = $(button).closest('tr');
+                var nama = row.find('td:nth-child(2)').text();
+                var id = row.find('td:nth-child(5)').text();
+                document.getElementById("warning").innerText = `Apakah anda menghapus ${nama} dari CSO?`;
+                $('#deleteform').attr('action', `{{url('admin/penjadwalan/pengaturan/${id}')}}`);
+            }
+</script>
 
 
 @endsection
