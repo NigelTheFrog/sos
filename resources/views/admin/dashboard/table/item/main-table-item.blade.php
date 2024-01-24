@@ -17,35 +17,52 @@
     </thead>
     <tbody>
         @foreach ($item as $barang)
-            <tr 
-            @if ($barang->selisih != 0)
-                class="table-danger"
+            <tr
+                @if ($barang->selisih != 0) class="table-danger"
             @else
-                class = "table-light"
-            @endif>
-                <td>{{$barang->itemname}}</td>
-                <td class="text-center">{{$barang->dimension}}</td>
-                <td class="text-center">{{$barang->tolerance}}</td>
-                <td class="text-center">                                     
+                class = "table-light" @endif>
+                <td hidden>
+                    {{ $barang->itemid }}
+                </td>
+                <td hidden>
+                    {{ $barang->batchno }}
+                </td>
+                <td hidden>
+                    {{ $barang->itemname }}
+                </td>
+                <td class="align-middle">
+                    <div class="d-flex my-0 align-items-center">
+                        <div class="mr-3">
+                            <button type="button" class="btn btn-sm" id="detailcsoitem"
+                                onclick="openModalDetailCSO(this)" style="color: rgb(81, 81, 81)" id="viewlistcso"><i
+                                    class="fas fa-eye"></i></button>
+                        </div>
+                        <div>{{ $barang->itemname }}</div>
+                    </div>
+                </td>
+                <td class="align-middle text-center">{{ $barang->dimension }}</td>
+                <td class="align-middle text-center">{{ $barang->tolerance }}</td>
+                <td class="align-middle text-center">
                     @if ($barang->status == 1)
                         <span class='badge rounded-pill text-bg-info text-wrap' style='width: 5rem'>proses
-                    @elseif ($barang->status == 2)
-                        <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih +
-                    @elseif ($barang->status == 3)
-                        <span class='badge rounded-pill text-bg-success text-wrap' style='width: 5rem'>selesai
-                    @else 
-                        <span class='badge rounded-pill text-bg-warning text-wrap' style='width: 5rem'>belum proses
+                        @elseif ($barang->status == 2)
+                            <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih +
+                            @elseif ($barang->status == 3)
+                                <span class='badge rounded-pill text-bg-success text-wrap' style='width: 5rem'>selesai
+                                @else
+                                    <span class='badge rounded-pill text-bg-warning text-wrap' style='width: 5rem'>belum
+                                        proses
                     @endif
-                    </span>                                    
+                    </span>
                 </td>
-                <td class="text-center">{{$barang->selisih}}</td>
-                <td class="text-center">{{$barang->onhand}}</td>
-                <td class="text-center">{{$barang->totalcso}}</td>
-                <td class="text-center">{{$barang->koreksi}}</td>
-                <td class="text-center">{{$barang->deviasi}}</td>
-                <td class="text-center">{{$barang->statuscso}}</td>
-                <td class="text-center">{{$barang->groupid}}</td>
-                <td class="text-center">{{$barang->analisator}}</td>
+                <td class="align-middle text-center">{{ $barang->selisih }}</td>
+                <td class="align-middle text-center">{{ $barang->onhand }}</td>
+                <td class="align-middle text-center">{{ $barang->totalcso }}</td>
+                <td class="align-middle text-center">{{ $barang->koreksi }}</td>
+                <td class="align-middle text-center">{{ $barang->deviasi }}</td>
+                <td class="align-middle text-center">{{ $barang->statuscso }}</td>
+                <td class="align-middle text-center">{{ $barang->groupid }}</td>
+                <td class="align-middle text-center">{{ $barang->analisator }}</td>
             </tr>
         @endforeach
     </tbody>

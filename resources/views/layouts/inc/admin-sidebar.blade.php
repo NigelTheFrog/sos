@@ -72,17 +72,17 @@
                         Pengaturan CSO
                     </a>
                     <div class="sb-sidenav-menu-heading">Konfirmasi</div>
-                    <a class="nav-link" href="tables.html">
+                    <a class="nav-link" href="{{route("konfirmasi-wrh.index")}}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-user-check" style="font-size: 20px"></i>
                         </div>
                         Konfirmasi WRH
                     </a>
                     <div class="sb-sidenav-menu-heading">Resume</div>
-                    <a class="nav-link" href="tables.html">
+                    <a class="nav-link" href="{{route('susunan-tim-cso.index')}}">
                         <div class="sb-nav-link-icon"><i class="bi bi-people-fill" style="font-size: 20px"></i></div>
                         Susunan Tim CSO
                     </a>
-                    <a class="nav-link" href="tables.html">
+                    <a class="nav-link" href="{{route('barang-selisih.index')}}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard-list" style="font-size: 20px"></i>
                         </div>
                         List Barang Selisih
@@ -95,26 +95,26 @@
                     </a>
                 @elseif(Auth::user()->level == 3)
                     <div class="sb-sidenav-menu-heading">Core</div>
-                    <a class="nav-link" href="{{ url('admin/dashboard/item') }}">
+                    <a class="nav-link" href="{{ route('item.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
                         </div>
                         Dashboard Item
                     </a>
-                    <a class="nav-link" href="{{ url('admin/dashboard/avalan') }}">
+                    <a class="nav-link" href="{{ route('avalan.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
                         </div>
                         Dashboard Avalan
                     </a>
                 @elseif(Auth::user()->level == 4)
                 <div class="sb-sidenav-menu-heading">CEK STOK</div>
-                    <a class="nav-link" href="{{ url('admin/dashboard/item') }}">
-                        <div class="sb-nav-link-icon"><i class="nav-icon fas fa-calculator" style="font-size: 20px"></i>
-                        </div>
-                        Penghitungan
-                    </a>                   
+                <a class="nav-link" href="{{ route('item.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
+                    </div>
+                    Dashboard Item
+                </a>                 
                 @else
                     <div class="sb-sidenav-menu-heading">Konfirmasi</div>
-                    <a class="nav-link" href="tables.html">
+                    <a class="nav-link" href="{{route("konfirmasi-wrh.index")}}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-user-check" style="font-size: 20px"></i>
                         </div>
                         Konfirmasi WRH

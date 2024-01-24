@@ -19,7 +19,7 @@
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
                         <div class="d-flex ">
                             <button type="button" class="btn btn-primary float-start mb-3" data-bs-toggle="modal"
-                                data-bs-target="#modalImportAvalan">
+                                data-bs-target="#modalImportAvalan" @if ($csoActive > 0) disabled @endif>
                                 <i class="nav-icon fas fa-file-import"></i> Import Avalan
                             </button>
                         </div>
@@ -44,14 +44,14 @@
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div class="form-group form-check ">
-                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete">
+                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete" @if ($csoActive > 0) disabled @endif>
                                     <label class="form-check-label" for="cekdelete">
                                         Centang Semua
                                     </label>
                                 </div>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#modalDeleteAvalan" title="Hapus Centang" id="btnHapus"
-                                    data-id=""><i class="fas fa-trash-alt"></i>
+                                    data-id="" @if ($csoActive > 0) disabled @endif><i class="fas fa-trash-alt"></i>
                                     Hapus Checklist</button>
                             </div>
                             <table class="table table-sm table-bordered table-hover table-responsive small table-striped"
@@ -79,7 +79,7 @@
                                                 <div class="form-check">
                                                     <input type="checkbox" name="checkboxDelete[]"
                                                         class="form-check-input cekboxdelete"
-                                                        value={{ $avalan->itembatchid }}>
+                                                        value={{ $avalan->itembatchid }} @if ($csoActive > 0) disabled @endif>
                                                 </div>
                                             </td>
                                             <td class="align-middle">{{ $index + 1 }}</td>
@@ -134,7 +134,7 @@
             </div>
             <div id="mySidenav" class="pt-2 sidenav d-none" style="width:0%">
                 <div class="card card-secondary">
-                    <div class="card-header d-flex flex-row">
+                    <div class="card-header bg-secondary text-white d-flex flex-row">
                         <a class="pr-3" href="javascript:void(0)" class="closebtn" id="closeNav"
                             data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tutup Form Barang Temuan"><i
                                 class="fas fa-angle-right"></i></a>
@@ -248,7 +248,7 @@
                                 <select id="wrhSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
                                     data-search="true" data-silent-initial-value-set="true">
                                     @foreach ($response_wrh['data'] as $wrh)
-                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }}</option>
+                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }} - {{ $wrh['NameName'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -282,6 +282,7 @@
         function tarikAvalan(button) {
             var selectedGudang = $("#wrhSelect").val(); // Get the selected gudang values
             var search = $("#searchAvalan").val();
+
             // Make an AJAX request to fetch data from the server
             $.ajax({
                 url: "{{ url('admin/penjadwalan/import-avalan/pull-import') }}",
@@ -297,8 +298,11 @@
                     $('#tableAvalan').html(data);
                 },
                 error: function() {
-                    // Handle error cases if necessary
-                    alert("Error fetching data from the server.");
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Tidak terdapat avalan pada gudang tersebut",
+                    });
                 }
             });
         }

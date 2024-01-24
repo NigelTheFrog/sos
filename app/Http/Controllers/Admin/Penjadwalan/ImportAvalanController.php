@@ -24,6 +24,9 @@ class ImportAvalanController extends Controller
                 $join->on('dbximporavalan.itemid', '=', 'avalanBatch.itemid')->on('dbximporavalan.batchid', '=', 'avalanBatch.batchiddet');
             })->get();
 
+        $startDate = DB::table('dbttrsheda')->select('startcsodate')->where('statusdoc','!=','P')->get();
+
+
         error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE ^ E_DEPRECATED);
 
         //GET TOKEN
@@ -83,7 +86,8 @@ class ImportAvalanController extends Controller
 
         return view("admin.penjadwalan.import-avalan", [
             "avalan" => $avalan,
-            "response_wrh" => json_decode($responsewrh, true)
+            "response_wrh" => json_decode($responsewrh, true),
+            "csoActive" => count($startDate)
         ]);
     }
 

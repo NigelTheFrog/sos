@@ -28,14 +28,11 @@ class AddController extends Controller
         return response()->json(['data'=>$warna]); 
     }
 
-
-    // public function avalan() {
-    //     $item = DB::table('dbttrsdet')
-    //     ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
-    //     ->where('dbttrshed.statusdoc', '=', 'A')
-    //     ->get();
-    //     return response()->json(['data'=>$item]); 
-    // }
-
-    
+    public function avalan() {
+        $avalan= DB::table('dbttrsdeta')
+        ->join('dbttrsheda', 'dbttrsheda.trsid', '=', 'dbttrsdeta.trsid')
+        ->where('dbttrsheda.statusdoc', '=', 'A')
+        ->get();
+        return response()->json(['data'=>$avalan]); 
+    }    
 }

@@ -23,6 +23,9 @@ class ImportItemController extends Controller
             ->leftJoinSub($itembatch, 'itembatch', function (JoinClause $join) {
                 $join->on('dbximpor.itembatchid', '=', 'itembatch.itembid');
             })->get();
+
+        $startDate = DB::table('dbttrshed')->select('startcsodate')->where('statusdoc','!=','P')->get();
+
         error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE ^ E_DEPRECATED);
 
         //GET TOKEN
@@ -85,7 +88,8 @@ class ImportItemController extends Controller
             "importedItem" => 0,
             "stok" => $stok,
             "response_wrh" =>
-            json_decode($responsewrh, true)
+            json_decode($responsewrh, true),
+            "csoActive" => count($startDate)
         ]);
     }
 
@@ -198,7 +202,7 @@ class ImportItemController extends Controller
                                 if ($insertDbxImpor == true) {
                                     $keys = array_keys($item);
                                     $count = count($keys);
-                                    for ($i = 17; $i < $count; $i++) {
+                                    for ($i = 10; $i < $count; $i++) {
                                         $key = $keys[$i];
                                         if ($item[$key] != 0) {
                                             $insertDbxImporDet = DB::table('dbximpordet')->insert([
@@ -541,12 +545,10 @@ class ImportItemController extends Controller
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST'
             ));
-            //curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $token )); 
             $responsebatch = curl_exec($curl);
 
             curl_close($curl);
             $data = json_decode($responsebatch, true);
-            // return response()->json(["importedBatch" => count($data['data']), "gudang" => $request->gudang, "responsebatch" => $data]);
             return view("admin.penjadwalan.item.table-pull-import-batch", [
                 "importedBatch" => count($data['data']),
                 "gudang" => $request->gudang,

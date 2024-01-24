@@ -26,6 +26,7 @@ Route::post('login',[AccountController::class,'login']);
 Route::post('mulai-cso',[AccountController::class,'mulaiCSO']);
 
 Route::get('item-list',[AddController::class,'item']);
+Route::get('avalan-list',[AddController::class,'avalan']);
 Route::get('location-list',[AddController::class,'lokasi']);
 Route::get('color-list',[AddController::class,'warna']);
 
@@ -33,6 +34,7 @@ Route::post('add-item',[ProcessController::class,'addItem']);
 Route::post('tambah-perhitungan',[ProcessController::class,'addHitung']);
 Route::post('simpan-perhitungan',[ProcessController::class,'simpanHitung']);
 Route::post('add-temuan-item',[ProcessController::class,'addTemuanItem']);
+Route::post('add-temuan-avalan',[ProcessController::class,'addTemuanAvalan']);
 
 Route::post('daftar-item',[HomeController::class,'listItem']);
 Route::post('submit-item',[HomeController::class,'submitItem']);

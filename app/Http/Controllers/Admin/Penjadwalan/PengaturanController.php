@@ -30,13 +30,13 @@ class PengaturanController extends Controller
 
         $fetchcsotype = DB::table('dbxcsotype')->select('csotype')->limit(1)->get();
 
-        if(count($fetchcsoitem) > 0) {
+        if (count($fetchcsoitem) > 0) {
             $csoitem = $fetchcsoitem[0]->csomaterial;
         } else {
             $csoitem = "";
         }
 
-        if(count($fetchcsotype) > 0){
+        if (count($fetchcsotype) > 0) {
             $csotype = $fetchcsotype[0]->csotype;
         } else {
             $csotype = "";
@@ -65,7 +65,7 @@ class PengaturanController extends Controller
     public function store(Request $request)
     {
         // dd($request->type);
-        if($request->type == 1) {
+        if ($request->type == 1) {
             DB::table('dbxcsotype')->truncate();
             DB::table('dbxcsotype')->insert(['csotype' => $request->typestock]);
         } elseif ($request->type == 2) {
@@ -75,39 +75,44 @@ class PengaturanController extends Controller
         } elseif ($request->type == 3) {
             $datajob = DB::table('dbxjob')->pluck('userid');
             $datauser = ModelsUser::all();
-            $pelaku = $request->pelaku;
+            $pelaku = explode(",", $request->pelaku[0]);
 
             foreach ($pelaku as $p) {
                 if ($datajob->contains($p)) {
                     continue;
                 }
-                $user = $datauser->firstWhere('userid', $p);
-                
-                if ($user) {
-                    DB::table('dbxjob')->insert([
-                        'userid' => $p,
-                        'username' => $user->username,
-                        'name' => $user->name,
-                        'coyid' => 1,
-                        'jobtypeid' => 1
-                    ]);
+                $isDuplicatep = DB::table('dbxjob')->where('userid', $p)->exists();
 
-                    DB::table('dbmuser')
-                        ->where('userid', $p)
-                        ->update(['level' => 4]);
+                if (!$isDuplicatep) {
+                    $user = $datauser->firstWhere('userid', $p);
+
+                    if ($user) {
+                        DB::table('dbxjob')->insert([
+                            'userid' => $p,
+                            'username' => $user->username,
+                            'name' => $user->name,
+                            'coyid' => 1,
+                            'jobtypeid' => 1
+                        ]);
+
+                        DB::table('dbmuser')->where('userid', $p)->update(['level' => 4]);
+                    }
                 }
             }
         } else {
             $datajob = DB::table('dbxjob')->pluck('userid');
-                $datauser = ModelsUser::all();
-                $analisator = $request->analisator;
+            $datauser = ModelsUser::all();
+            $analisator = explode(",", $request->analisator[0]); 
 
-                foreach ($analisator as $a) {
-                    if ($datajob->contains($a)) {
-                        continue;
-                    }
+            foreach ($analisator as $a) {
+                if ($datajob->contains($a)) {
+                    continue;
+                }
+                $isDuplicatep = DB::table('dbxjob')->where('userid', $a)->exists();
+
+                if (!$isDuplicatep) {
                     $user = $datauser->firstWhere('userid', $a);
-                    
+
                     if ($user) {
                         DB::table('dbxjob')->insert([
                             'userid' => $a,
@@ -117,13 +122,12 @@ class PengaturanController extends Controller
                             'jobtypeid' => 2
                         ]);
 
-                        DB::table('dbmuser')
-                            ->where('userid', $a)
-                            ->update(['level' => 3]);
+                        DB::table('dbmuser')->where('userid', $a)->update(['level' => 3]);
                     }
                 }
+            }
         }
-        
+
         return redirect()->route("pengaturan.index")->with('status', 'Berhasil mengubah data pengaturan CSO');
     }
 
@@ -159,7 +163,7 @@ class PengaturanController extends Controller
         try {
             $pengaturan->delete();
             return redirect()->route("pengaturan.index")->with('status', 'Berhasil menghapus user dari pengaturan');
-        } catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             return redirect()->route("pengaturan.index")->with('error', "Gagal menghapus data");
         }
     }

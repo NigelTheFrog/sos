@@ -22,17 +22,17 @@ class AvalanController extends Controller
     public function index()
     {
         $avalan = ViewDashboardAvalan::all();
-        $avalanBlmProses = ViewDashboardAvalan::where('status','=', '0')->get();
+        $avalanBlmProses = ViewDashboardAvalan::where('status', '=', '0')->get();
         $countAvalanBlmProses = count($avalanBlmProses);
-        $avalanSdgProses = ViewDashboardAvalan::where('status','!=', '0')->where('status','!=', '3')->get();
+        $avalanSdgProses = ViewDashboardAvalan::where('status', '!=', '0')->where('status', '!=', '3')->get();
         $countAvalanSdgProses = count($avalanSdgProses);
-        $avalanOk = ViewDashboardAvalan::where('status','=', '3')->get();
-        $countAvalanOk=count($avalanOk);
-        $avalanSelisihPlus = ViewDashboardAvalan::where('selisih','>', '0')->get();
+        $avalanOk = ViewDashboardAvalan::where('status', '=', '3')->get();
+        $countAvalanOk = count($avalanOk);
+        $avalanSelisihPlus = ViewDashboardAvalan::where('selisih', '>', '0')->get();
         $countAvalanSelisihPlus = count($avalanSelisihPlus);
-        $avalanSelisihMinus = ViewDashboardAvalan::where('selisih','<', '0')->get();
+        $avalanSelisihMinus = ViewDashboardAvalan::where('selisih', '<', '0')->get();
         $countAvalanSelisihMinus = count($avalanSelisihMinus);
-        $dbxjob = DB::table('dbxjob')->where('jobtypeid','=',2)->get();
+        $dbxjob = DB::table('dbxjob')->where('jobtypeid', '=', 2)->get();
         $group = Group::all();
 
         $checkCsoActive = DB::table('dbttrsheda')->where('dbttrsheda.statusdoc', '=', 'A')->get();
@@ -41,38 +41,39 @@ class AvalanController extends Controller
 
         $checkCsoFinal = DB::table('dbttrsheda')->where('statusdoc', '=', 'P')->get();
 
-        $getCsoDate = DB::table('dbttrsheda')->select('startcsodate')->where('statusdoc','<>','P')->orderByDesc('trsid')->limit(1)->get();
+        $getCsoDate = DB::table('dbttrsheda')->select('startcsodate')->where('statusdoc', '<>', 'P')->orderByDesc('trsid')->limit(1)->get();
 
-        if(count($getCsoDate) > 0) {
+        if (count($getCsoDate) > 0) {
             $csoDate = Carbon::parse($getCsoDate[0]->startcsodate)->format('d M Y');
         } else {
-            $csoDate = "";
+            $csoDate = "Belum ada tanggal CSO";
         }
 
         return view("admin.dashboard.avalan", [
-            'countCsoActive' => count($checkCsoActive), 'countCsoEnd' => count($checkCsoEnd), 'countCsoFinal' => count($checkCsoFinal), 'avalan'=>$avalan,
-            "countAvalanBlmProses"=>$countAvalanBlmProses,"avalanBlmProses"=>$avalanBlmProses,
-            "countAvalanSdgProses"=>$countAvalanSdgProses,"avalanSdgProses"=>$avalanSdgProses,
-            "countAvalanOk"=>$countAvalanOk,"avalanSelesai"=>$avalanOk,
-            "countAvalanSelisih"=>($countAvalanSelisihPlus + $countAvalanSelisihMinus),"avalanSelisihPlus"=>$avalanSelisihPlus, "avalanSelisihMinus"=>$avalanSelisihMinus,
+            'countCsoActive' => count($checkCsoActive), 'countCsoEnd' => count($checkCsoEnd), 'countCsoFinal' => count($checkCsoFinal), 'avalan' => $avalan,
+            "countAvalanBlmProses" => $countAvalanBlmProses, "avalanBlmProses" => $avalanBlmProses,
+            "countAvalanSdgProses" => $countAvalanSdgProses, "avalanSdgProses" => $avalanSdgProses,
+            "countAvalanOk" => $countAvalanOk, "avalanSelesai" => $avalanOk,
+            "countAvalanSelisih" => ($countAvalanSelisihPlus + $countAvalanSelisihMinus), "avalanSelisihPlus" => $avalanSelisihPlus, "avalanSelisihMinus" => $avalanSelisihMinus,
             "dbxjob" => $dbxjob, "dbmgroup" => $group, "csodate" => $csoDate
         ]);
     }
 
-    public function showBanner() {
-        $avalanBlmProses = ViewDashboardAvalan::where('status','=', '0')->get();
+    public function showBanner()
+    {
+        $avalanBlmProses = ViewDashboardAvalan::where('status', '=', '0')->get();
         $countAvalanBlmProses = count($avalanBlmProses);
-        $avalanSdgProses = ViewDashboardAvalan::where('status','!=', '0')->where('status','!=', '3')->get();
+        $avalanSdgProses = ViewDashboardAvalan::where('status', '!=', '0')->where('status', '!=', '3')->get();
         $countAvalanSdgProses = count($avalanSdgProses);
-        $avalanOk = ViewDashboardAvalan::where('status','=', '3')->get();
-        $countAvalanOk=count($avalanOk);
-        $avalanSelisih = ViewDashboardAvalan::where('selisih','>', '0')->get();
+        $avalanOk = ViewDashboardAvalan::where('status', '=', '3')->get();
+        $countAvalanOk = count($avalanOk);
+        $avalanSelisih = ViewDashboardAvalan::where('selisih', '>', '0')->get();
         $countAvalanSelisih = count($avalanSelisih);
         return view("admin.dashboard.banner.banner-avalan", [
-            "countAvalanBlmProses"=>$countAvalanBlmProses,
-            "countAvalanSdgProses"=>$countAvalanSdgProses,
-            "countAvalanOk"=>$countAvalanOk,
-            "countAvalanSelisih"=>$countAvalanSelisih
+            "countAvalanBlmProses" => $countAvalanBlmProses,
+            "countAvalanSdgProses" => $countAvalanSdgProses,
+            "countAvalanOk" => $countAvalanOk,
+            "countAvalanSelisih" => $countAvalanSelisih
         ]);
     }
 
@@ -80,20 +81,20 @@ class AvalanController extends Controller
     {
 
         $pdf = App::make('dompdf.wrapper');
-        
-        if($request =="1") {
+
+        if ($request == "1") {
             $data = ViewDashboardAvalan::where('status', '=', '0')->get();
-            $view = view("admin.dashboard.pdf-avalan", ["avalanBlmProses" => $data, "type"=>1]);
-        } elseif($request =="2") {
+            $view = view("admin.dashboard.pdf-avalan", ["avalanBlmProses" => $data, "type" => 1]);
+        } elseif ($request == "2") {
             $data = ViewDashboardAvalan::where('status', '!=', '0')->where('status', '!=', '3')->get();
-            $view = view("admin.dashboard.pdf-avalan", ["avalanSdgProses" => $data, "type"=>2]);
-        } elseif($request =="3") {
+            $view = view("admin.dashboard.pdf-avalan", ["avalanSdgProses" => $data, "type" => 2]);
+        } elseif ($request == "3") {
             $data =  ViewDashboardAvalan::where('status', '=', '3')->get();
-            $view = view("admin.dashboard.pdf-avalan", ["avalanSelesai" => $data, "type"=>3]);
+            $view = view("admin.dashboard.pdf-avalan", ["avalanSelesai" => $data, "type" => 3]);
         } else {
             $dataPlus = ViewDashboardAvalan::where('selisih', '>', '0')->get();
             $dataMinus = ViewDashboardAvalan::where('selisih', '<', '0')->get();
-            $view = view("admin.dashboard.pdf-avalan", ["avalanSelisihPlus" => $dataPlus, "avalanSelisihMinus" => $dataMinus, "type"=>4]);
+            $view = view("admin.dashboard.pdf-avalan", ["avalanSelisihPlus" => $dataPlus, "avalanSelisihMinus" => $dataMinus, "type" => 4]);
         }
         $pdf->loadHTML($view);
         return $pdf->stream();
@@ -105,37 +106,152 @@ class AvalanController extends Controller
         return view("admin.dashboard.table.avalan.main-table-avalan", ["avalan" => $avalan]);
     }
 
-    public function showBannerTable(String $request) {
-        $dbxjob = DB::table('dbxjob')->where('jobtypeid','=',2)->get();
+    public function showBannerTable(String $request)
+    {
+        $dbxjob = DB::table('dbxjob')->where('jobtypeid', '=', 2)->get();
         $group = Group::all();
 
-        if($request == "1") {
-            $avalanBlmProses = ViewDashboardAvalan::where('status','=', '0')->get();
-            return view("admin.dashboard.table.avalan.avalan-belum-proses",[
-                "avalanBlmProses"=>$avalanBlmProses,
+        if ($request == "1") {
+            $avalanBlmProses = ViewDashboardAvalan::where('status', '=', '0')->get();
+            return view("admin.dashboard.table.avalan.avalan-belum-proses", [
+                "avalanBlmProses" => $avalanBlmProses,
                 "dbxjob" => $dbxjob, "dbmgroup" => $group
             ]);
-        } else if($request == '2') {
-            $avalanSdgProses = ViewDashboardAvalan::where('status','!=', '0')->where('status','!=', '3')->get();
-            return view("admin.dashboard.table.avalan.avalan-sedang-proses",[
-                "avalanSdgProses"=>$avalanSdgProses,
+        } else if ($request == '2') {
+            $avalanSdgProses = ViewDashboardAvalan::where('status', '!=', '0')->where('status', '!=', '3')->get();
+            return view("admin.dashboard.table.avalan.avalan-sedang-proses", [
+                "avalanSdgProses" => $avalanSdgProses,
                 "dbxjob" => $dbxjob, "dbmgroup" => $group
             ]);
-        } else if($request == '3') {
-            $avalanOk = ViewDashboardAvalan::where('status','=', '3')->get();
-            return view("admin.dashboard.table.avalan.avalan-ok",[
-                "avalanSelesai"=>$avalanOk,
+        } else if ($request == '3') {
+            $avalanOk = ViewDashboardAvalan::where('status', '=', '3')->get();
+            return view("admin.dashboard.table.avalan.avalan-ok", [
+                "avalanSelesai" => $avalanOk,
                 "dbxjob" => $dbxjob, "dbmgroup" => $group
             ]);
         } else {
-            $avalanSelisihPlus = ViewDashboardAvalan::where('selisih','>', '0')->get();
-            $avalanSelisihMinus = ViewDashboardAvalan::where('selisih','<', '0')->get();
-            return view("admin.dashboard.table.avalan.avalan-selisih",[
-                "avalanSelisihPlus"=>$avalanSelisihPlus, "avalanSelisihMinus"=>$avalanSelisihMinus,
+            $avalanSelisihPlus = ViewDashboardAvalan::where('selisih', '>', '0')->get();
+            $avalanSelisihMinus = ViewDashboardAvalan::where('selisih', '<', '0')->get();
+            return view("admin.dashboard.table.avalan.avalan-selisih", [
+                "avalanSelisihPlus" => $avalanSelisihPlus, "avalanSelisihMinus" => $avalanSelisihMinus,
                 "dbxjob" => $dbxjob, "dbmgroup" => $group
             ]);
         }
+    }
+
+    public function updateCsoAvalan(Request $request) {
+        DB::beginTransaction();
+        if(!empty($request->check_kesalahan_admin)) {
+            $kesalahan = 1;
+        } else {
+            $kesalahan = 0;
+        }
+        $updateAvalan = DB::table('dbttrsdeta')
+        ->where('itemid', $request->itemid)
+        ->where('batchno', $request->batchno)
+        ->update([
+            'koreksi' => $request->koreksi,
+            'deviasi' => $request->deviasi,
+            'analisatorid' => $request->analisator,
+            'keterangan' => $request->keterangan,
+            'groupid' => $request->grouping,
+            'kesalahan_admin' => $kesalahan
+        ]);
+
+        if($updateAvalan == true) {
+            DB::commit();
+            return redirect()->route("avalan.index")->with('status', "Berhasil mengubah data CSO avalan");
+        } else {
+            DB::rollBack();
+            return redirect()->route("avalan.index")->with('error', "Gagal mengubah data CSO avalan");
+        }
+    }
+
+    public function showDetailCsoAvalan(Request $request)
+    {
+        $data = ViewDashboardAvalan::where('itemid', '=', $request->id)->where('batchNo', '=', $request->batchNo)->get();
+
+        $dataAnalisator = DB::table('dbttrsdet')
+            ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+            ->leftJoin('dbmuser', 'dbttrsdet.analisatorid', '=', 'dbmuser.userid')
+            ->leftJoin('dbmgroup', 'dbmgroup.groupid', '=', 'dbttrsdet.groupid')
+            ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name"])
+            ->where('itemid', '=', $request->id)
+            ->where('batchNo', '=', $request->batchNo)
+            ->where('dbttrshed.statusdoc', '=', 'A')
+            ->whereNotNull('analisatorid')
+            ->get();
+
+        $dataDetailDashboard = DB::table('viewdetaildashb')->distinct()->where('itemid', '=', $request->id)->get();
+
+        $dataTotalCso = DB::table('dbttrsdet')
+            ->leftJoin('totalcso1', 'totalcso1.itemid', '=', 'dbttrsdet.itemid')
+            ->leftJoin('totalcso2', 'totalcso2.itemid', '=', 'dbttrsdet.itemid')
+            ->leftJoin('totalcso3', 'totalcso3.itemid', '=', 'dbttrsdet.itemid')
+            ->leftJoin('totalcso4', 'totalcso4.itemid', '=', 'dbttrsdet.itemid')
+            ->select('dbttrsdet.itemid')
+            ->selectRaw('ifnull(totalcso1.qtytot,0) as totalcso1')
+            ->selectRaw('ifnull(totalcso2.qtytot,0) as totalcso2')
+            ->selectRaw('ifnull(totalcso3.qtytot,0) as totalcso3')
+            ->selectRaw('ifnull(totalcso4.qtytot,0) as totalcso4')
+            ->where('dbttrsdet.itemid', '=', $request->id)
+            ->distinct()
+            ->get();
         
+            $cekCso = DB::table('dbtcsodet2')
+                ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
+                ->leftJoin('dbtcsodet', 'dbtcsodet.csodetid', '=', 'dbtcsodet2.csodetid')
+                ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet2.csoid')
+                ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
+                ->leftJoin('viewdashboard', 'viewdashboard.itemid', '=', 'dbtcsodet.itemid')
+                ->where('dbtcsodet.itemid', '=', $request->id)
+                ->where('dbttrsdet.batchNo', '=', $request->batchNo)
+                ->whereRaw('ifnull(qty,0) <> 0')
+                ->whereColumn('csocount', 'viewdashboard.statuscso')
+                ->where('statussubmit', 'P')
+                ->where('dbtcsohed.status', 'A')
+                ->get();
+
+        $dataCsoCount = DB::table('viewdetaildashb')
+            ->select(['name', 'csocount', 'cso1', 'cso2', 'cso3', 'cso4'])
+            ->where('itemid', '=', $request->id)
+            ->distinct()
+            ->get();
+
+        $dataGroup = Group::all();
+
+        $dataDbxJob = DB::table('analisator')
+            ->select(['userid', 'name'])
+            ->distinct()
+            ->get();
+
+
+        return view('admin.dashboard.table.avalan.detail-cso-avalan', [
+            "itemid" => $data[0]->itemid,
+            "batchno" => $data[0]->batchno,
+            "tolerance" => $data[0]->tolerance,
+            "onhand" => $data[0]->onhand,
+            "totalcso" => $data[0]->totalcso,
+            "selisih" => $data[0]->selisih,
+            "koreksi" => $data[0]->koreksi,
+            "deviasi" => $data[0]->deviasi,
+            "tableDetailDashboard" => $dataDetailDashboard,
+            "dataCso" => $dataCsoCount,
+            "totalCso" => $dataTotalCso,
+            "analisator" => $dataAnalisator,
+            "group" => $dataGroup,
+            "dbxJob" => $dataDbxJob,
+            "checkCso" => count($cekCso) 
+        ]);
+
+        // return response()->json(["itemid" => $data[0]->itemid,
+        // "batchno" => $data[0]->batchno,
+        // "tolerance" => $data[0]->tolerance,
+        // "onhand" => $data[0]->onhand,
+        // "totalcso" => $data[0]->totalcso,
+        // "selisih" => $data[0]->selisih,
+        // "koreksi" => $data[0]->koreksi,
+        // "deviasi" => $data[0]->deviasi,]);
     }
 
     /**
@@ -155,25 +271,25 @@ class AvalanController extends Controller
 
         $checkDbxImport = ImportAvalan::all();
 
-        if(count($checkDbxImport) > 0) {
+        if (count($checkDbxImport) > 0) {
             $checkCsoMaterial = DB::table('dbxmaterial')->limit(1)->get();
             $checkCsoType = DB::table('dbxcsotype')->limit(1)->get();
-            $getCoy = Company::select('coycode')->where('coyid','=','1')->get();
+            $getCoy = Company::select('coycode')->where('coyid', '=', '1')->get();
 
-            if(count($checkCsoMaterial) > 0 && count($checkCsoType) > 0) {
+            if (count($checkCsoMaterial) > 0 && count($checkCsoType) > 0) {
                 $checkMonth = DB::table('dbttrsheda')
-                ->select(DB::raw("DATE_FORMAT(startcsodate, '%m') as monthbefore"),'idxno')
-                ->orderByDesc('trsid')
-                ->limit(1)
-                ->get();
+                    ->select(DB::raw("DATE_FORMAT(startcsodate, '%m') as monthbefore"), 'idxno')
+                    ->orderByDesc('trsid')
+                    ->limit(1)
+                    ->get();
                 $idxno = 0;
 
-                if(count($checkMonth) > 0 && $checkMonth[0]->monthbefore == Carbon::now()->month) {
+                if (count($checkMonth) > 0 && $checkMonth[0]->monthbefore == Carbon::now()->month) {
                     $idxno = $checkMonth[0]->idxno + 1;
                 } else {
                     $idxno = 1;
                 }
-                $today=Carbon::now()->format('Y-m-d');
+                $today = Carbon::now()->format('Y-m-d');
 
                 $doccsoid = "{$checkCsoType[0]->csotype}{$getCoy[0]->coycode}{$today}-{$idxno}";
 
@@ -185,62 +301,64 @@ class AvalanController extends Controller
                     'statusdoc' => 'A'
                 ]);
 
-                if($insertDbttrsheda == true) {
-                    $getTrsHedId = DB::table('dbttrsheda')->select('trsid')->where('statusdoc','=','A')->limit(1)->get();
-                    $selectDbxImporDet = DB::table('dbximpordetavalan')->select('itembatchid',DB::raw('sum(qty)as qty'))->groupBy('itembatchid');
+                if ($insertDbttrsheda == true) {
+                    $getTrsHedId = DB::table('dbttrsheda')->select('trsid')->where('statusdoc', '=', 'A')->limit(1)->get();
+                    $selectDbxImporDet = DB::table('dbximpordetavalan')->select('itembatchid', DB::raw('sum(qty)as qty'))->groupBy('itembatchid');
 
                     $selectDbxImpor = DB::table('dbximporavalan')
-                    ->leftJoinSub($selectDbxImporDet, 'dbximpordetavalan', function (JoinClause $join) {
-                        $join->on('dbximporavalan.itembatchid', '=', 'dbximpordetavalan.itembatchid');
-                    })
-                    ->select([DB::raw($getTrsHedId[0]->trsid),"dbximporavalan.itemid","dbximporavalan.itembatchid","itemcode","itemname",
-                    DB::raw("case when dbximporavalan.batchid =0 then 0 else 1 end as isbatch"),
-                    "batchid","heatno","dimension","tolerance","kondisi","qty","uom","cogs","statusitem",DB::raw(1)]);
-                    
-                    $insertDbttrsdet = DB::table('dbttrsdeta')->insertUsing(["trsid","itemid","itembatchid","itemcode","itemname","isbatch","batchno","heatno","dimension","tolerance","kondisi","onhand","uom","cogs","statusitem","statuscso"],$selectDbxImpor);
+                        ->leftJoinSub($selectDbxImporDet, 'dbximpordetavalan', function (JoinClause $join) {
+                            $join->on('dbximporavalan.itembatchid', '=', 'dbximpordetavalan.itembatchid');
+                        })
+                        ->select([
+                            DB::raw($getTrsHedId[0]->trsid), "dbximporavalan.itemid", "dbximporavalan.itembatchid", "itemcode", "itemname",
+                            DB::raw("case when dbximporavalan.batchid =0 then 0 else 1 end as isbatch"),
+                            "batchid", "heatno", "dimension", "tolerance", "kondisi", "qty", "uom", "cogs", "statusitem", DB::raw(1)
+                        ]);
 
-                    if($insertDbttrsdet == true) {
+                    $insertDbttrsdet = DB::table('dbttrsdeta')->insertUsing(["trsid", "itemid", "itembatchid", "itemcode", "itemname", "isbatch", "batchno", "heatno", "dimension", "tolerance", "kondisi", "onhand", "uom", "cogs", "statusitem", "statuscso"], $selectDbxImpor);
+
+                    if ($insertDbttrsdet == true) {
                         $getTrsDet2 = DB::table('dbttrsdeta')
-                        ->join('dbttrshed','dbttrshed.trsid','=','dbttrsdeta.trsid')
-                        ->select('trsdetid','itemid','itembatchid')
-                        ->where('dbttrshed.statusdoc','=','A')
-                        ->get();
+                            ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdeta.trsid')
+                            ->select('trsdetid', 'itemid', 'itembatchid')
+                            ->where('dbttrshed.statusdoc', '=', 'A')
+                            ->get();
 
-                        foreach($getTrsDet2 as $trsDet2) {
+                        foreach ($getTrsDet2 as $trsDet2) {
                             $selectDbxImporDet2 = DB::table('dbximpordetavalan')
-                            ->select(DB::raw($trsDet2->trsdetid),"itemid","itembatchid","batchid","wrh","qty")
-                            ->where('itembatchid','=',$trsDet2->itembatchid);
-                            
-                            DB::table('dbttrsdet2a')->insertUsing(["trsdetid","itemid","itembatchid","batchno","wrh","qty"],$selectDbxImporDet2);
+                                ->select(DB::raw($trsDet2->trsdetid), "itemid", "itembatchid", "batchid", "wrh", "qty")
+                                ->where('itembatchid', '=', $trsDet2->itembatchid);
+
+                            DB::table('dbttrsdet2a')->insertUsing(["trsdetid", "itemid", "itembatchid", "batchno", "wrh", "qty"], $selectDbxImporDet2);
                         }
 
                         DB::table('dbtcsoprsn')
-                        ->where('trsid','=',$getTrsHedId[0]->trsid)
-                        ->update(["status"=>"P"]);
+                            ->where('trsid', '=', $getTrsHedId[0]->trsid)
+                            ->update(["status" => "P"]);
 
-                        $finalise = DB::table("dbxsetdate")->insert(["date"=>Carbon::now(),"tipe"=>"I"]);
-                        if($finalise == true) {
+                        $finalise = DB::table("dbxsetdate")->insert(["date" => Carbon::now(), "tipe" => "I"]);
+                        if ($finalise == true) {
                             DB::commit();
-                            return redirect()->route("avalan.index")->with('status', "Berhasil memulai CSO");   
+                            return redirect()->route("avalan.index")->with('status', "Berhasil memulai CSO");
                         } else {
                             DB::rollBack();
-                            return redirect()->route("avalan.index")->with('error', "Gagal memulai CSO, silahkan ulangi"); 
+                            return redirect()->route("avalan.index")->with('error', "Gagal memulai CSO, silahkan ulangi");
                         }
                     } else {
                         DB::rollBack();
-                        return redirect()->route("avalan.index")->with('error', "Gagal memulai CSO, silahkan ulangi"); 
+                        return redirect()->route("avalan.index")->with('error', "Gagal memulai CSO, silahkan ulangi");
                     }
                 } else {
                     DB::rollBack();
-                    return redirect()->route("avalan.index")->with('error', "Gagal memulai CSO, silahkan ulangi"); 
-                }                
+                    return redirect()->route("avalan.index")->with('error', "Gagal memulai CSO, silahkan ulangi");
+                }
             } else {
                 DB::rollBack();
-                return redirect()->route("pengaturan.index")->with('error', "Harap lakukan input tipe CSO dan Materialnya terlebih dahulu");  
-            }                     
+                return redirect()->route("pengaturan.index")->with('error', "Harap lakukan input tipe CSO dan Materialnya terlebih dahulu");
+            }
         } else {
             DB::rollBack();
-            return redirect()->route("import-avalan.index")->with('error', "Harap lakukan import avalan terlebih dahulu");            
+            return redirect()->route("import-avalan.index")->with('error', "Harap lakukan import avalan terlebih dahulu");
         }
     }
 
@@ -296,7 +414,7 @@ class AvalanController extends Controller
         // $inserDbtCsoPrsn = DB::table('dbtcsoprsn')->insertUsing(['trsid', 'userid', 'username', 'name', 'coyid', 'jobtypeid', 'status'],$unionQuery);
 
 
-        if ($updateDbtTrsHeda == true ) {
+        if ($updateDbtTrsHeda == true) {
             DB::commit();
             return redirect()->route("avalan.index")->with('status', 'CSO Avalan berhasil diberhentikan');
         } else {
@@ -317,7 +435,7 @@ class AvalanController extends Controller
         DB::table('dbximporavalan')->truncate();
         DB::table('dbximpordetavalan')->truncate();
 
-        DB::table('dbxsetdate')->where('tipe','=','I')->delete();
+        DB::table('dbxsetdate')->where('tipe', '=', 'I')->delete();
 
         DB::table('dbxmaterial')->truncate();
 
@@ -328,8 +446,8 @@ class AvalanController extends Controller
         DB::table('dbxcsotype')->truncate();
 
         // if($updateDbtTrsHed == true ) {
-            // DB::commit();
-            return redirect()->route("avalan.index")->with('status', 'CSO avalan berhasil diakhiri');
+        // DB::commit();
+        return redirect()->route("avalan.index")->with('status', 'CSO avalan berhasil diakhiri');
         // } else {
         //     DB::rollBack();
         //     return redirect()->route("item.index")->with('error', 'Gagal mengakhiri CSO');

@@ -13,7 +13,7 @@
                     Centang Semua
                 </label>
             </div>
-            <div style="overflow: auto; max-height: 60vh;">
+            <div style="overflow: auto; max-height: 56vh;">
                 <table class="table table-sm table-hover table-striped table-bordered text-nowrap">
                     <thead class="table-dark">
                         <tr class="text-center ">

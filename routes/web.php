@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Dashboard\AvalanController;
 use App\Http\Controllers\Admin\Dashboard\ItemController;
+use App\Http\Controllers\Admin\Konfirmas\KonfrimasiWarehouseController;
 use App\Http\Controllers\Admin\Master\AreaLokasiController;
 use App\Http\Controllers\Admin\Master\CompanyController;
 use App\Http\Controllers\Admin\Master\GroupController;
@@ -18,6 +19,8 @@ use App\Http\Controllers\Admin\Penjadwalan\ImportAvalanController;
 use App\Http\Controllers\Admin\Penjadwalan\ImportItemController;
 use App\Http\Controllers\Admin\Penjadwalan\Pengaturan;
 use App\Http\Controllers\Admin\Penjadwalan\PengaturanController;
+use App\Http\Controllers\Admin\Resume\BarangSelisihController;
+use App\Http\Controllers\Admin\Resume\SusunanTimCsoController;
 use App\Models\Admin\Penjadwalan\ImportAvalan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +46,10 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
     Route::prefix('dashboard')->group(function() {          
         Route::resource('avalan', AvalanController::class);
         Route::resource('item', ItemController::class);
+        Route::post('item/detail-cso-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showDetailCso'])->name('item.detail-cso');
+        Route::post('item/update-cso-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'updateCsoItem'])->name('item.update-cso');
+        Route::post('avalan/detail-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showDetailCsoAvalan'])->name('avalan.detail-cso');
+        Route::post('avalan/update-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'updateCsoAvalan'])->name('avalan.update-cso');
         Route::get("main-table-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showMainTable']);
         Route::get("main-table-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
         Route::get("banner-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBanner']);
@@ -69,8 +76,12 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::post('import-avalan/pull-import',[App\Http\Controllers\Admin\Penjadwalan\ImportAvalanController::class, 'showTable']);
         Route::resource('pengaturan', PengaturanController::class);   
     });
+    Route::resource('konfirmasi-wrh', KonfrimasiWarehouseController::class);
+    Route::prefix('resume')->group(function() {
+        Route::resource('susunan-tim-cso', SusunanTimCsoController::class);
+        Route::resource('barang-selisih', BarangSelisihController::class);
+    });
 });
-       
 
 Auth::routes();
 Route::get("/",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index'])->middleware(['auth','isAdmin']);

@@ -19,11 +19,11 @@
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
                         <div class="d-flex justify-content-between mb-2" style="width: 25%">
                             <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal"
-                                data-bs-target="#modalImportItem">
+                                data-bs-target="#modalImportItem" @if ($csoActive > 0) disabled @endif>
                                 <i class="nav-icon fas fa-file-import"></i> Import Item
                             </button>
                             <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal"
-                                data-bs-target="#modalImportBatch">
+                                data-bs-target="#modalImportBatch" @if ($csoActive > 0) disabled @endif>
                                 <i class="nav-icon fas fa-file-import"></i> Import Batch
                             </button>
                         </div>
@@ -49,13 +49,13 @@
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div class="form-group form-check ">
-                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete">
+                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete" @if ($csoActive > 0) disabled @endif>
                                     <label class="form-check-label" for="cekdelete">
                                         Centang Semua
                                     </label>
                                 </div>
                                 <button type="button" data-bs-toggle="modal" data-bs-target="#modalDeleteItem"
-                                    class="btn btn-danger" title="Hapus Centang" id="btnHapus" data-id=""><i
+                                    class="btn btn-danger" title="Hapus Centang" id="btnHapus" data-id=""  @if ($csoActive > 0) disabled @endif><i
                                         class="fas fa-trash-alt"></i>
                                     Hapus Checklist</button>
                             </div>
@@ -84,7 +84,7 @@
                                                 <div class="form-check">
                                                     <input type="checkbox" name="checkboxDelete[]"
                                                         class="form-check-input cekboxdelete"
-                                                        value={{ $stok->itembatchid }}>
+                                                        value={{ $stok->itembatchid }} @if ($csoActive > 0) disabled @endif>
                                                 </div>
                                             </td>
                                             <td class="align-middle">{{ $index + 1 }}</td>
@@ -141,7 +141,7 @@
 
             <div id="mySidenav" class="pt-2 sidenav d-none" style="width:0%">
                 <div class="card card-secondary">
-                    <div class="card-header d-flex flex-row">
+                    <div class="card-header bg-secondary text-white d-flex flex-row">
                         <a class="pr-3" href="javascript:void(0)" class="closebtn" id="closeNav"
                             data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tutup Form Barang Temuan"><i
                                 class="fas fa-angle-right"></i></a>
@@ -258,7 +258,7 @@
                                 <select id="itemSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
                                     data-search="true" data-silent-initial-value-set="true">
                                     @foreach ($response_wrh['data'] as $wrh)
-                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }}</option>
+                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }} - {{ $wrh['NameName'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -302,7 +302,7 @@
                                 <select id="batchSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
                                     data-search="true" data-silent-initial-value-set="true">
                                     @foreach ($response_wrh['data'] as $wrh)
-                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }}</option>
+                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }} - {{ $wrh['NameName'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -359,7 +359,11 @@
                 },
                 error: function() {
                     // Handle error cases if necessary
-                    alert("Error fetching data from the server.");
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Tidak terdapat item pada gudang tersebut",
+                    });
                 }
             });
         }
@@ -385,7 +389,11 @@
                 },
                 error: function() {
                     // Handle error cases if necessary
-                    alert("Error fetching data from the server.");
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Tidak terdapat item pada gudang tersebut",
+                    });
                 }
             });
         }

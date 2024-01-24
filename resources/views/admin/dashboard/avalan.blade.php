@@ -9,21 +9,25 @@
             <div class="col-4">
                 <h1>Dashboard Avalan</h1>
             </div>
-            <div class="col-4">
-                @if ($countCsoActive > 0)
-                    <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1">
-                        <i class="bi bi-stopwatch-fill"></i> Tutup CSO Avalan
-                    </button>
-                @elseif ($countCsoEnd > 0)
-                    <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end" value="2">
-                        <i class="bi bi-stopwatch-fill"></i> Akhiri CSO Avalan
-                    </button>
-                @else
-                    <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end" value="3">
-                        <i class="bi bi-stopwatch-fill"></i> Mulai CSO Avalan
-                    </button>
-                @endif
-            </div>
+            @if (Auth::user()->level == 1 || Auth::user()->level == 2)
+                <div class="col-4">
+                    @if ($countCsoActive > 0)
+                        <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1">
+                            <i class="bi bi-stopwatch-fill"></i> Tutup CSO Avalan
+                        </button>
+                    @elseif ($countCsoEnd > 0)
+                        <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end"
+                            value="2">
+                            <i class="bi bi-stopwatch-fill"></i> Akhiri CSO Avalan
+                        </button>
+                    @else
+                        <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end"
+                            value="3">
+                            <i class="bi bi-stopwatch-fill"></i> Mulai CSO Avalan
+                        </button>
+                    @endif
+                </div>
+            @endif
         </div>
         <div class="row justify-content-between align-items-center mb-2">
             <div class="col-4">
@@ -31,13 +35,15 @@
                     <li class="breadcrumb-item active">Dashboard Avalan</li>
                 </ol>
             </div>
-            <div class="col-4">
-                <input class=" form-control col-9 text-center bg-dark-subtle float-end" type="text" placeholder="{{ $csodate }}"
-                    aria-label="Disabled input example" style="width: 200px" disabled>
-            </div>
+            @if (Auth::user()->level == 1 || Auth::user()->level == 2)
+                <div class="col-4">
+                    <input class=" form-control col-9 text-center bg-dark-subtle float-end" type="text"
+                        placeholder="{{ $csodate }}" aria-label="Disabled input example" style="width: 200px" disabled>
+                </div>
+            @endif
         </div>
         <div class="row">
-            @include("admin.dashboard.banner.banner-avalan")
+            @include('admin.dashboard.banner.banner-avalan')
         </div>
         <div class="card mt-2">
             <div class="card-header">
@@ -54,7 +60,7 @@
                 </div>
 
                 <div class="card-body" id="main-table-avalan">
-                    @include("admin.dashboard.table.avalan.main-table-avalan")
+                    @include('admin.dashboard.table.avalan.main-table-avalan')
                 </div>
             </div>
         </div>
@@ -64,26 +70,27 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Belum Proses</h1>
-                    <button type="button" onclick="closeModalBlmProses(this)" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" onclick="closeModalBlmProses(this)" class="btn-close align-middle"
+                        data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                
+
                 <div class="modal-body">
                     <div class="row justify-content-between mb-2">
                         <div class="col-1">
-                            <button type="submit" class="btn btn-primary" name="simpan"><i
-                                    class="bi bi-floppy-fill"></i>
+                            <button type="submit" class="btn btn-primary" name="simpan"><i class="bi bi-floppy-fill"></i>
                                 Simpan</button>
                         </div>
                         <div class="col-1 me-3">
-                            <a href="{{url("admin/dashboard/print-avalan/1")}}"class="btn btn-primary bi bi-printer-fill"> </i>
-                                Cetak</button></a>                                                               
+                            <a href="{{ url('admin/dashboard/print-avalan/1') }}"class="btn btn-primary bi bi-printer-fill">
+                                </i>
+                                Cetak</button></a>
                         </div>
                     </div>
 
                     <div id="avalanBlmProses">
                         @include('admin.dashboard.table.avalan.avalan-belum-proses')
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,25 +101,26 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Sedang Proses</h1>
-                    <button type="button" onclick="closeModalSdgProses(this)" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" onclick="closeModalSdgProses(this)" class="btn-close align-middle"
+                        data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <div class="modal-body" >
+                <div class="modal-body">
                     <div class="row justify-content-between mb-2">
                         <div class="col-1">
-                            <button type="submit" class="btn btn-primary" name="simpan"><i
-                                    class="bi bi-floppy-fill"></i>
+                            <button type="submit" class="btn btn-primary" name="simpan"><i class="bi bi-floppy-fill"></i>
                                 Simpan</button>
                         </div>
                         <div class="col-1 me-3">
-                                <a href="{{url("admin/dashboard/print-avalan/2")}}"class="btn btn-primary bi bi-printer-fill"> </i>
-                                    Cetak</button></a>                                
+                            <a href="{{ url('admin/dashboard/print-avalan/2') }}"class="btn btn-primary bi bi-printer-fill">
+                                </i>
+                                Cetak</button></a>
                         </div>
                     </div>
                     <div id="avalanSdgProses">
                         @include('admin.dashboard.table.avalan.avalan-sedang-proses')
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -122,7 +130,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Selesai</h1>
-                    <button type="button" onclick="closeModalOk(this)" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" onclick="closeModalOk(this)" class="btn-close align-middle"
+                        data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body">
@@ -133,12 +142,14 @@
                                 Simpan</button>
                         </div>
                         <div class="col-1 me-3">
-                                <a href="{{url("admin/dashboard/print-avalan/3")}}"class="btn btn-primary bi bi-printer-fill"> </i>
-                                    Cetak</button></a>                                
+                            <a
+                                href="{{ url('admin/dashboard/print-avalan/3') }}"class="btn btn-primary bi bi-printer-fill">
+                                </i>
+                                Cetak</button></a>
                         </div>
                     </div>
                     <div id="avalanOk">
-                        @include("admin.dashboard.table.avalan.avalan-ok")    
+                        @include('admin.dashboard.table.avalan.avalan-ok')
                     </div>
                 </div>
             </div>
@@ -149,7 +160,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Selisih</h1>
-                    <button type="button" onclick="closeModalSelisih(this)" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" onclick="closeModalSelisih(this)" class="btn-close align-middle"
+                        data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body">
@@ -160,13 +172,15 @@
                                 Simpan</button>
                         </div>
                         <div class="col-1 me-3">
-                                <a href="{{url("admin/dashboard/print-avalan/4")}}"class="btn btn-primary bi bi-printer-fill"> </i>
-                                    Cetak</button></a>                                
+                            <a
+                                href="{{ url('admin/dashboard/print-avalan/4') }}"class="btn btn-primary bi bi-printer-fill">
+                                </i>
+                                Cetak</button></a>
                         </div>
                     </div>
                     <div id="avalanSelisih">
-                        @include("admin.dashboard.table.avalan.avalan-selisih")                      
-                    </div>                    
+                        @include('admin.dashboard.table.avalan.avalan-selisih')
+                    </div>
                 </div>
             </div>
         </div>
@@ -196,6 +210,126 @@
             </div>
         </div>
     </div>
+    <div class="modal fade text-left" id="ModalDetailCsoAvalan" tabindex="-1">
+        <form id="formSubmitCso" action="" method="POST">
+            @csrf
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-secondary text-white">
+                        <h1 class="modal-title fs-5" id="detailCsoHeader"></h1>
+                        <button type="button" class="btn-close btn-close-white align-middle" data-bs-dismiss="modal"
+                            aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body" id="detailCsoAvalan">
+                        <div id="warning" class="alert alert-warning d-none"></div>
+                        <input type="text" name="itemid" class="d-none" value="">
+
+                        <div class="row g-3 mb-3">
+                            <div class="form-floating col">
+                                <input class="form-control text-center bg-primary shadow-sm" value=""
+                                    id="onHand" type="text" readonly>
+                                <label class="fw-bold" for="onHand">On Hand</label>
+                            </div>
+                            <div class="form-floating col">
+                                <input class="form-control text-center bg-warning shadow-sm" value=""
+                                    type="text" readonly>
+                                <label class="fw-bold">Qty CSO</label>
+                            </div>
+                            <div class="form-floating col">
+                                <input class="form-control text-center bg-danger shadow-sm" value="" type="text"
+                                    readonly>
+                                <label class="fw-bold" for="vselisih">Selisih</label>
+                            </div>
+                            <div class="form-floating col">
+                                <input class="form-control text-center shadow-sm" name="koreksi" value=""
+                                    type="number">
+                                <label class="fw-bold" for="vkoreksi">Input Koreksi</label>
+                            </div>
+                            <div class="form-floating col">
+                                <input class="form-control text-center shadow-sm" name="deviasi" value=""
+                                    type="number">
+                                <label class="fw-bold" for="vdeviasi">Input Deviasi</label>
+                            </div>
+                        </div>
+                        <div id="tbldetail">
+                            <table class="table table-sm table-hover table-bordered table-responsive-md small shadow-sm">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Pelaku</th>
+                                        <th scope="col">Lokasi</th>
+                                        <th scope="col">Color</th>
+                                        <th scope="col">Qty/lokasi</th>
+                                        <th scope="col">CSO ke-</th>
+                                        <th scope="col">Remark</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-7">
+                                <table
+                                    class="table table-sm table-responsive-md table-hover table-bordered shadow-sm small">
+                                    <thead class="table-secondary">
+                                        <tr>
+                                            <th scope="col">Pelaku</th>
+                                            <th scope="col">CSO 1</th>
+                                            <th scope="col">CSO 2</th>
+                                            <th scope="col">CSO 3</th>
+                                            <th scope="col">CSO 4</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-2">
+                                <button type="button" id="csoorder" name="csoorder" class="btn btn-info mb-3">CSO
+                                    Ulang</button>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="checkkesalahanadmin"
+                                        name="check_kesalahan_admin">
+                                    <label class="form-check-label small" for="checkkesalahanadmin">
+                                        Kesalahan Admin
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3 small">
+                                <div class="w-100 mb-2">
+                                    <label class="input-group-text small">Analisator</label>
+                                    <select class="form-select form-select-sm" id="" name="analisator"
+                                        @if (Auth::user()->level != 1 && Auth::user()->level != 2) disabled @endif>
+
+                                    </select>
+                                </div>
+                                <div class="w-100 mb-2">
+                                    <label class="input-group-text small">Grouping</label>
+                                    <select class="form-select form-select-sm" id="" name="grouping">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="">
+                            <label for="vketerangan" class="input-group-text">Keterangan Koreksi</label>
+                            <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button id="buttonSubmit" type="button" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 
     <script>
         var intervalAvalanBlmProses = undefined;
@@ -211,8 +345,47 @@
                     $('#main-table-avalan').html(data);
                 }
             });
-            
+
         }, 1000);
+
+        function openModalDetailCSOAvalan(button) {
+            const row = $(button).closest('tr');
+            const itemId = row.find('td:nth-child(1)').text();
+            const batchId = row.find('td:nth-child(2)').text();
+            const itemName = row.find('td:nth-child(3)').text();
+            document.getElementById("detailCsoHeader").innerText =
+                `DETAIL ${itemName.replace(/(\r\n|\n|\r)/gm, '')} - ${batchId.replace(/(\r\n|\n|\r)/gm, '')}`;
+               
+            $.ajax({
+                url: "{{ route('avalan.detail-cso') }}",
+                type: 'POST',
+                data: {
+                    id: itemId.replace(/\s/g, ''),
+                    batchNo: batchId.replace(/\s/g, '')
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    $('#detailCsoAvalan').html(data);
+                    $('#formSubmitCso').attr('action', `{{ route('avalan.update-cso') }}`);
+                    $("#buttonSubmit").attr('type', 'submit');
+                    // console.log(response.data.itemid);
+                    // console.log(data);
+                },
+                error: function() {
+                    alert("Error");
+                    // Handle error cases if necessary
+                    // Swal.fire({
+                    //     icon: "error",
+                    //     title: "Oops...",
+                    //     text: "Tidak terdapat item pada gudang tersebut",
+                    // });
+                }
+
+            });
+            $('#ModalDetailCsoAvalan').modal('show');
+        }
 
         function openModalCSO(button, type) {
             $('#ModalCSO').modal('show');
@@ -220,11 +393,11 @@
                 document.getElementById("modalHeader").innerText = `Menghentikan CSO`;
                 document.getElementById("warning").innerText =
                     `Apakah anda yakin akan menghentikan proses penghitungan cek stok avalan?`;
-                $('#modalActionCSO').attr('action', `{{ route('avalan.update','item') }}`);
+                $('#modalActionCSO').attr('action', `{{ route('avalan.update', 'item') }}`);
             } else if (type == 2) {
                 document.getElementById("modalHeader").innerText = `Mengakhiri CSO`;
                 document.getElementById("warning").innerText = `Apakah anda yakin akan mengakhiri cek stok avalan?`;
-                $('#modalActionCSO').attr('action', `{{ route('avalan.destroy','item') }}`);
+                $('#modalActionCSO').attr('action', `{{ route('avalan.destroy', 'item') }}`);
             } else {
                 document.getElementById("modalHeader").innerText = `Memulai CSO`;
                 document.getElementById("warning").innerText = `Apakah anda yakin akan memulai cek stok avalan?`;

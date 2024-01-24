@@ -18,11 +18,11 @@ class AdminMiddleware
     {
         
         if(Auth::check()){
-            if(Auth::user()->level == 1){
+            // if(Auth::user()->level == 1){
                 return $next($request);
-            }else{
-                return redirect('/home')->with('status','Anda tidak memiliki akses ke halaman Admin');
-            }
+            // }else{
+            //     return redirect('/home')->with('status','Anda tidak memiliki akses ke halaman Admin');
+            // }
         } else {
             return redirect('/login')->with('status','Harap login terlebih dahulu');
         }
