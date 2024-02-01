@@ -11,11 +11,7 @@ use App\Models\ViewDashboard;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use LaravelDaily\Invoices\Invoice;
-use LaravelDaily\Invoices\Classes\Buyer;
-use LaravelDaily\Invoices\Classes\InvoiceItem;
 use \NumberFormatter;
-use Barryvdh\Snappy\Facades\SnappyPdf;
 use Carbon\Carbon;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +36,7 @@ class ItemController extends Controller
         if (count($getCsoDate) > 0) {
             $csoDate = Carbon::parse($getCsoDate[0]->startcsodate)->format('d M Y');
         } else {
-            $csoDate = "Belum ada tanggal CSO";
+            $csoDate = "Belum ada tanggal CSO"; 
         }
 
         $itemBlmProses = ViewDashboard::where('status', '=', '0')->get();
@@ -261,39 +257,40 @@ class ItemController extends Controller
         //
     }
 
-    public function updateCsoItem(Request $request) {
+    public function updateCsoItem(Request $request)
+    {
         DB::beginTransaction();
-        if(!empty($request->check_kesalahan_admin)) {
+        if (!empty($request->check_kesalahan_admin)) {
             $kesalahan = 1;
         } else {
             $kesalahan = 0;
         }
-        if($request->batchno == null) {
+        if ($request->batchno == null) {
             $updateAvalan = DB::table('dbttrsdet')
-            ->where('itemid', $request->itemid)
-            ->update([
-                'koreksi' => $request->koreksi,
-                'deviasi' => $request->deviasi,
-                'analisatorid' => $request->analisator,
-                'keterangan' => $request->keterangan,
-                'groupid' => $request->grouping,
-                'kesalahan_admin' => $kesalahan
-            ]);
+                ->where('itemid', $request->itemid)
+                ->update([
+                    'koreksi' => $request->koreksi,
+                    'deviasi' => $request->deviasi,
+                    'analisatorid' => $request->analisator,
+                    'keterangan' => $request->keterangan,
+                    'groupid' => $request->grouping,
+                    'kesalahan_admin' => $kesalahan
+                ]);
         } else {
             $updateAvalan = DB::table('dbttrsdet')
-            ->where('itemid', $request->itemid)
-            ->where('batchno', $request->batchno)
-            ->update([
-                'koreksi' => $request->koreksi,
-                'deviasi' => $request->deviasi,
-                'analisatorid' => $request->analisator,
-                'keterangan' => $request->keterangan,
-                'groupid' => $request->grouping,
-                'kesalahan_admin' => $kesalahan
-            ]);
-        }       
+                ->where('itemid', $request->itemid)
+                ->where('batchno', $request->batchno)
+                ->update([
+                    'koreksi' => $request->koreksi,
+                    'deviasi' => $request->deviasi,
+                    'analisatorid' => $request->analisator,
+                    'keterangan' => $request->keterangan,
+                    'groupid' => $request->grouping,
+                    'kesalahan_admin' => $kesalahan
+                ]);
+        }
 
-        if($updateAvalan == true) {
+        if ($updateAvalan == true) {
             DB::commit();
             return redirect()->route("item.index")->with('status', "Berhasil mengubah data CSO item");
         } else {
@@ -311,24 +308,24 @@ class ItemController extends Controller
                 ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbmuser', 'dbttrsdet.analisatorid', '=', 'dbmuser.userid')
                 ->leftJoin('dbmgroup', 'dbmgroup.groupid', '=', 'dbttrsdet.groupid')
-                ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name"])
+                ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name", "kesalahan_admin"])
                 ->where('itemid', '=', $request->id)
                 ->where('dbttrshed.statusdoc', '=', 'A')
                 ->whereNotNull('analisatorid')
                 ->get();
-            
+
             $cekCso = DB::table('dbtcsodet2')
-            ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
-            ->leftJoin('dbtcsodet', 'dbtcsodet.csodetid', '=', 'dbtcsodet2.csodetid')
-            ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet2.csoid')
-            ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
-            ->leftJoin('viewdashboard', 'viewdashboard.itemid', '=', 'dbtcsodet.itemid')
-            ->where('dbtcsodet.itemid', '=', $request->id)
-            ->whereRaw('ifnull(qty,0) <> 0')
-            ->whereColumn('csocount', 'viewdashboard.statuscso')
-            ->where('statussubmit', 'P')
-            ->where('dbtcsohed.status', 'A')
-            ->get();
+                ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
+                ->leftJoin('dbtcsodet', 'dbtcsodet.csodetid', '=', 'dbtcsodet2.csodetid')
+                ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet2.csoid')
+                ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
+                ->leftJoin('viewdashboard', 'viewdashboard.itemid', '=', 'dbtcsodet.itemid')
+                ->where('dbtcsodet.itemid', '=', $request->id)
+                ->whereRaw('ifnull(qty,0) <> 0')
+                ->whereColumn('csocount', 'viewdashboard.statuscso')
+                ->where('statussubmit', 'P')
+                ->where('dbtcsohed.status', 'A')
+                ->get();
         } else {
             $data = ViewDashboard::where('itemid', '=', $request->id)->where('batchNo', '=', $request->batchNo)->get();
 
@@ -336,14 +333,14 @@ class ItemController extends Controller
                 ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbmuser', 'dbttrsdet.analisatorid', '=', 'dbmuser.userid')
                 ->leftJoin('dbmgroup', 'dbmgroup.groupid', '=', 'dbttrsdet.groupid')
-                ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name"])
+                ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name", "kesalahan_admin"])
                 ->where('itemid', '=', $request->id)
                 ->where('batchNo', '=', $request->batchNo)
                 ->where('dbttrshed.statusdoc', '=', 'A')
                 ->whereNotNull('analisatorid')
                 ->get();
-            
-                $cekCso = DB::table('dbtcsodet2')
+
+            $cekCso = DB::table('dbtcsodet2')
                 ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.csodetid', '=', 'dbtcsodet2.csodetid')
                 ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet2.csoid')
@@ -356,7 +353,7 @@ class ItemController extends Controller
                 ->where('statussubmit', 'P')
                 ->where('dbtcsohed.status', 'A')
                 ->get();
-        }        
+        }
 
         $dataDetailDashboard = DB::table('viewdetaildashb')->distinct()->where('itemid', '=', $request->id)->get();
 
@@ -379,13 +376,13 @@ class ItemController extends Controller
             ->where('itemid', '=', $request->id)
             ->distinct()
             ->get();
-        
+
         $dataGroup = Group::all();
 
         $dataDbxJob = DB::table('analisator')
-        ->select(['userid','name'])
-        ->distinct()
-        ->get();
+            ->select(['userid', 'name'])
+            ->distinct()
+            ->get();
 
         return view('admin.dashboard.table.item.detail-cso-item', [
             "itemid" => $data[0]->itemid,
@@ -405,9 +402,9 @@ class ItemController extends Controller
             "analisator" => $dataAnalisator,
             "group" => $dataGroup,
             "dbxJob" => $dataDbxJob,
-            "checkCso" => count($cekCso)            
+            "checkCso" => count($cekCso)
         ]);
-        // return response()->json(['data'=>$data[0]]); 
+        // return response()->json(['data'=>$dataAnalisator]); 
     }
 
     /**
@@ -423,6 +420,7 @@ class ItemController extends Controller
 
         DB::table('dbtcsohed')
             ->where('status', '=', 'A')
+            ->where('tipecso', '=', 'R')
             ->update(['status' => 'P',]);
 
         // $subquery = DB::table('dbttrshed')

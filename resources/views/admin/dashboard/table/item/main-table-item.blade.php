@@ -62,7 +62,7 @@
                 <td class="align-middle text-center">{{ $barang->deviasi }}</td>
                 <td class="align-middle text-center">{{ $barang->statuscso }}</td>
                 <td class="align-middle text-center">{{ $barang->groupid }}</td>
-                <td class="align-middle text-center">{{ $barang->analisator }}</td>
+                <td class="align-middle text-center">{{ $barang->analisator }}</td> 
             </tr>
         @endforeach
     </tbody>

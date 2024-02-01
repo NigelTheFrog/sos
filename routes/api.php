@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AccountController;
 use App\Http\Controllers\api\AddController;
+use App\Http\Controllers\api\AnalisaatorController;
+use App\Http\Controllers\api\DetailController;
 use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\api\ProcessController;
 
@@ -31,16 +33,24 @@ Route::get('location-list',[AddController::class,'lokasi']);
 Route::get('color-list',[AddController::class,'warna']);
 
 Route::post('add-item',[ProcessController::class,'addItem']);
-Route::post('tambah-perhitungan',[ProcessController::class,'addHitung']);
-Route::post('simpan-perhitungan',[ProcessController::class,'simpanHitung']);
 Route::post('add-temuan-item',[ProcessController::class,'addTemuanItem']);
 Route::post('add-temuan-avalan',[ProcessController::class,'addTemuanAvalan']);
 
+Route::post('tambah-perhitungan',[ProcessController::class,'addHitung']);
+Route::post('tambah-perhitungan-temuan',[ProcessController::class,'addHitungTemuan']);
+
+Route::post('simpan-perhitungan',[ProcessController::class,'simpanHitung']);
+
+Route::post('update-perhitungan',[DetailController::class,'updatePerhitungan']);
+Route::post('update-item',[DetailController::class,'updateItem']);
+Route::post('update-temuan',[DetailController::class,'updateTemuan']);
+
 Route::post('daftar-item',[HomeController::class,'listItem']);
+Route::post('daftar-avalan',[HomeController::class,'listAvalan']);
 Route::post('submit-item',[HomeController::class,'submitItem']);
 
-
-
-
-
-
+Route::post('daftar-item-analisator',[AnalisaatorController::class,'listItemAnalisator']);
+Route::post('daftar-avalan-analisator',[AnalisaatorController::class,'listAvalanAnalisator']);
+Route::post('tambah-perhitungan-item-analisator',[AnalisaatorController::class,'addHitungItem']);
+Route::post('update-perhitungan-item-analisator',[AnalisaatorController::class,'simpanHitungItem']);
+Route::post('update-item-analisator',[AnalisaatorController::class,'updateItemAnalisator']);

@@ -110,7 +110,8 @@
         <button type="button" id="csoorder" name="csoorder" class="btn btn-info mb-3"
             @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin">
+            <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin"
+            @if (count($analisator) > 0 && $analisator[0]->kesalahan_admin == 1) checked @endif>
             <label class="form-check-label small" for="checkkesalahanadmin">
                 Kesalahan Admin
             </label>
@@ -155,7 +156,7 @@
                                 @if ($grup->groupid == $analis->groupid)
                                 selected                            
                                 @endif @endforeach>
-                            {{ $job->name }}</option>
+                            {{ $grup->groupdesc }}</option>
                     @endforeach
                 @endif
             </select>

@@ -88,7 +88,7 @@
                         List Barang Selisih
                     </a>
                     <div class="sb-sidenav-menu-heading">Report</div>
-                    <a class="nav-link" href="tables.html">
+                    <a class="nav-link" href="{{route('cek-stok.index')}}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-alt" style="font-size: 20px"></i>
                         </div>
                         Report Cek Stok

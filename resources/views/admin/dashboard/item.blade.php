@@ -196,7 +196,28 @@
     </div>
 
     <div class="modal fade text-left" id="ModalCSO" tabindex="-1">
-
+        <div class="modal-dialog modal modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalHeader"></h1>
+                </div>
+                <div class="modal-body">
+                    <form id="modalActionCSO" action="" method="POST" class="needs-validation" novalidate>
+                        @csrf
+                        @if ($countCsoActive > 0)
+                            @method('PUT')
+                        @elseif ($countCsoEnd > 0)
+                            @method('DELETE')
+                        @endif
+                        <p id="warning"></p>
+                        <button type="submit" class="btn btn-danger" name="simpan"><i
+                                class="bx bxs-save"></i>Iya</button>
+                        <button type="button" onclick="closeModalCSO(this)" class="btn btn-primary" name="simpan"><i
+                                class="bx bxs-save"></i>Batal</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade text-left" id="ModalDetailCso" tabindex="-1">
@@ -360,7 +381,7 @@
                     $('#detailCso').html(data);
                     $('#formSubmitCso').attr('action', `{{ route('item.update-cso') }}`);
                     $("#buttonSubmit").attr('type', 'submit');
-                    // console.log(data);
+                    // console.log(data.data[0].kesalahan_admin);
                 },
                 error: function() {
                     alert("Error");

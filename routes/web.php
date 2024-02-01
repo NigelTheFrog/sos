@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\Master\TipeUserController;
 use App\Http\Controllers\Admin\Master\User;
 use App\Http\Controllers\Admin\Master\UserController;
 use App\Http\Controllers\Admin\Master\WarnaController;
+use App\Http\Controllers\Admin\Report\ReportCekStokController;
 use App\Models\Item;
 use App\Http\Controllers\Admin\Penjadwalan\Impor;
 use App\Http\Controllers\Admin\Penjadwalan\ImportAvalanController;
@@ -80,6 +81,9 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
     Route::prefix('resume')->group(function() {
         Route::resource('susunan-tim-cso', SusunanTimCsoController::class);
         Route::resource('barang-selisih', BarangSelisihController::class);
+    });
+    Route::prefix('report')->group(function() {
+        Route::resource('cek-stok', ReportCekStokController::class);
     });
 });
 

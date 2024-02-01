@@ -23,11 +23,13 @@ class AccountController extends Controller
             ->limit(1)
             ->get();
             if($getCSOIDUser->count() > 0) {
-                return response()->json(['result'=>1,'message'=>'login sucess','username'=>Auth::user()->username, 
-                'name'=>Auth::user()->name, 'level'=>Auth::user()->level, 'csoid' => $getCSOIDUser[0]->csoid]);
+                return response()->json(['result'=>1,'message'=>'login sucess', 'userid' => Auth::user()->userid,
+                'username'=>Auth::user()->username, 'name'=>Auth::user()->name, 'level'=>Auth::user()->level, 
+                'csoid' => $getCSOIDUser[0]->csoid]);
             } else {
-                return response()->json(['result'=>1,'message'=>'login sucess','username'=>Auth::user()->username, 
-                'name'=>Auth::user()->name, 'level'=>Auth::user()->level, 'csoid' => '']);
+                return response()->json(['result'=>1,'message'=>'login sucess', 'userid' => Auth::user()->userid,
+                'username'=>Auth::user()->username, 'name'=>Auth::user()->name, 'level'=>Auth::user()->level, 
+                'csoid' => 0]);
             }            
         } else {
             return response()->json(['result'=>0,'message'=>'Username / Password salah']);
@@ -65,7 +67,8 @@ class AccountController extends Controller
             'pelakuid' => $getUserData[0]->userid,
             'pelakuuname' => $request->username,
             'coyid' => $getUserData[0]->coyid,
-            'status' => 'A'
+            'status' => 'A',
+            'tipecso'=>$request->tipecso
         ];        
 
         $insertHed = DB::table('dbtcsohed')->insert($insertValues);

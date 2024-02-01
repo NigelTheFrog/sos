@@ -113,29 +113,29 @@
             </thead>
             <tbody>
                 @foreach ($dataCso as $cso)
-                <tr>
-                    <td>{{ $cso->name }}</td>
-                    @if ($cso->csocount == 1)
-                        <td class="bg-info">{{ $cso->cso1 }}</td>
-                    @else
-                        <td>{{ $cso->cso1 }}</td>
-                    @endif
-                    @if ($cso->csocount == 2)
-                        <td class="bg-info">{{ $cso->cso2 }}</td>
-                    @else
-                        <td>{{ $cso->cso2 }}</td>
-                    @endif
-                    @if ($cso->csocount == 3)
-                        <td class="bg-info">{{ $cso->cso3 }}</td>
-                    @else
-                        <td>{{ $cso->cso3 }}</td>
-                    @endif
-                    @if ($cso->csocount == 4)
-                        <td class="bg-info">{{ $cso->cso4 }}</td>
-                    @else
-                        <td>{{ $cso->cso4 }}</td>
-                    @endif
-                </tr>
+                    <tr>
+                        <td>{{ $cso->name }}</td>
+                        @if ($cso->csocount == 1)
+                            <td class="bg-info">{{ $cso->cso1 }}</td>
+                        @else
+                            <td>{{ $cso->cso1 }}</td>
+                        @endif
+                        @if ($cso->csocount == 2)
+                            <td class="bg-info">{{ $cso->cso2 }}</td>
+                        @else
+                            <td>{{ $cso->cso2 }}</td>
+                        @endif
+                        @if ($cso->csocount == 3)
+                            <td class="bg-info">{{ $cso->cso3 }}</td>
+                        @else
+                            <td>{{ $cso->cso3 }}</td>
+                        @endif
+                        @if ($cso->csocount == 4)
+                            <td class="bg-info">{{ $cso->cso4 }}</td>
+                        @else
+                            <td>{{ $cso->cso4 }}</td>
+                        @endif
+                    </tr>
                 @endforeach
 
                 @foreach ($totalCso as $tCso)
@@ -154,7 +154,8 @@
         <button type="button" name="csoorder" class="btn btn-info mb-3"
             @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin">
+            <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin"
+                @if (count($analisator) > 0 && $analisator[0]->kesalahan_admin == 1) checked @endif>
             <label class="form-check-label small" for="checkkesalahanadmin">
                 Kesalahan Admin
             </label>
@@ -199,7 +200,7 @@
                                 @if ($grup->groupid == $analis->groupid)
                                 selected                            
                                 @endif @endforeach>
-                            {{ $job->name }}</option>
+                            {{ $grup->groupdesc }}</option>
                     @endforeach
                 @endif
             </select>
