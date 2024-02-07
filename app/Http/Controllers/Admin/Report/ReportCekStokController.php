@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\PDF;
-
+use Carbon\Carbon;
 
 class ReportCekStokController extends Controller
 {
@@ -17,7 +17,6 @@ class ReportCekStokController extends Controller
     public function index()
     {
         $getDbtTrsHed = DB::table('dbttrshed')->where('statusdoc', '=', 'P')->get();
-        // dd($getDbtTrsHed);
         return view('admin.report.cek-stok', ['listNodoc' => $getDbtTrsHed]);
     }
 
@@ -34,6 +33,7 @@ class ReportCekStokController extends Controller
      */
     public function store(Request $request)
     {
+        Carbon::setLocale('id');
         $pdf = App::make('dompdf.wrapper');
         if ($request->type == 1) {
             $dataDbtTrsHed = DB::table('dbttrshed')->where('trsid', '=', $request->trsidresume)->get();
@@ -130,63 +130,38 @@ class ReportCekStokController extends Controller
                 ->groupBy('dbttrsdet.trsdetid')
                 ->get();
 
-            // $data3BulanTerakhir = DB::table('dbttrshed')
-            //     ->select(DB::raw("DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart"), 'dbttrshed.csomaterial')
-            //     ->whereRaw('dbttrshed.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), INTERVAL 3 MONTH)')
-            //     ->whereRaw('dbttrshed.startcsodate < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)')
-            //     ->groupBy('monthstart', 'dbttrshed.csomaterial')
-            //     ->get();
+            $item_ok = DB::table('dbttrshed')
+                ->join('dbttrsdet', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+                ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
+                ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                ->select(DB::raw("COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
+                ->where('dbttrshed.statusdoc', 'P')
+                ->whereRaw('(coalesce(dbttrsdet.koreksi, 0) + coalesce(dbttrsdet.deviasi, 0) + coalesce(dbtcsodet2.qty, 0)) = dbttrsdet.onhand')
+                ->whereRaw('dbttrshed.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), interval 1 month), interval 3 month)')
+                ->whereRaw('dbttrshed.startcsodate < DATE_SUB(CURDATE(), interval 1 month)')
+                ->groupBy('monthstart', 'dbttrshed.csomaterial');
 
-            $data3BulanTerakhir = DB::select("
-            SELECT 
-                item_ok.monthstart,
-                item_ok.csomaterial,
-                item_ok.count as 'item_ok',
-                item_ada.count as 'item_ada'
-            FROM
-                (SELECT 
-                    COUNT(distinct dbttrsdet.trsdetid) as 'count',
-                    DATE_FORMAT(dbttrshed.startcsodate, '%m') as 'monthstart',
-                    dbttrshed.csomaterial
-                FROM
-                    dbttrshed
-                INNER JOIN dbttrsdet ON
-                    dbttrshed.trsid = dbttrsdet.trsid
-                LEFT JOIN dbtcsodet ON
-                    dbtcsodet.itemid = dbttrsdet.itemid
-                LEFT JOIN dbtcsodet2 ON
-                    dbtcsodet2.csodetid = dbtcsodet.csodetid
-                WHERE
-                    dbttrshed.statusdoc = 'P'
-                    AND (coalesce(dbttrsdet.koreksi, 0) + coalesce(dbttrsdet.deviasi, 0) + coalesce(dbtcsodet2.qty, 0)) = dbttrsdet.onhand
-                    AND dbttrshed.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), interval 1 month), interval 3 month)
-                    AND dbttrshed.startcsodate < DATE_SUB(CURDATE(), interval 1 month)      
-                GROUP BY monthstart, dbttrshed.csomaterial) as item_ok
-            JOIN
-                (SELECT 
-                    COUNT(distinct dbttrsdet.trsdetid) as 'count',
-                    DATE_FORMAT(dbttrshed.startcsodate, '%m') as 'monthstart',
-                    dbttrshed.csomaterial
-                FROM
-                    dbttrshed
-                INNER JOIN dbttrsdet ON
-                    dbttrshed.trsid = dbttrsdet.trsid
-                LEFT JOIN dbtcsodet ON
-                    dbtcsodet.itemid = dbttrsdet.itemid
-                LEFT JOIN dbtcsodet2 ON
-                    dbtcsodet2.csodetid = dbtcsodet.csodetid
-                WHERE
-                    dbttrshed.statusdoc = 'P'
-                    AND coalesce(dbtcsodet2.qty, 0) > 0
-                    AND dbttrshed.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), interval 1 month), interval 3 month)
-                    AND dbttrshed.startcsodate < DATE_SUB(CURDATE(), interval 1 month)      
-                GROUP BY monthstart, dbttrshed.csomaterial) as item_ada
-            ON
-                item_ok.monthstart = item_ada.monthstart
-                AND item_ok.csomaterial = item_ada.csomaterial;            
-            ");
+            $item_ada = DB::table('dbttrshed')
+                ->join('dbttrsdet', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+                ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
+                ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                ->select(DB::raw("COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
+                ->where('dbttrshed.statusdoc', 'P')
+                ->whereRaw('coalesce(dbtcsodet2.qty, 0) > 0')
+                ->whereRaw('dbttrshed.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), interval 1 month), interval 3 month)')
+                ->whereRaw('dbttrshed.startcsodate < DATE_SUB(CURDATE(), interval 1 month)')
+                ->groupBy('monthstart', 'dbttrshed.csomaterial');
 
-            $view = view("admin.report.pdf-resume", [
+            $data3BulanTerakhir = DB::query()
+                ->fromSub($item_ok, 'item_ok')
+                ->joinSub($item_ada, 'item_ada', function ($join) {
+                    $join->on('item_ok.monthstart', '=', 'item_ada.monthstart');
+                    $join->on('item_ok.csomaterial', '=', 'item_ada.csomaterial');
+                })
+                ->select('item_ok.monthstart', 'item_ok.csomaterial', 'item_ok.count as item_ok', 'item_ada.count as item_ada')
+                ->get();            
+
+            $view = view("admin.report.stok-item.pdf-resume", [
                 "data3BulanTerakhir" => $data3BulanTerakhir,
                 "dataItemTertukar" => $dataItemSelisihTertukar,
                 "dataItemKesalahanAdmin" => $dataItemKesalahanAdmin,
@@ -198,8 +173,22 @@ class ReportCekStokController extends Controller
                 "dataSelisih" => $dataSelisih,
                 "dataRekapitulasi" => $dataRekapitulasi[0],
             ]);
+        } else {
+            $dataDbtTrsHed = DB::table('dbttrshed')->where('trsid', '=', $request->trsidlaporan)->get();
+            $dataLaporan = DB::select('CALL GetDataLaporan(?)', [$request->trsidlaporan]);
+            $dataWrh = DB::table('dbttrsdet')
+            ->join('dbttrsdet2','dbttrsdet.trsdetid','=','dbttrsdet2.trsdetid')
+            ->where('dbttrsdet.trsid','=',$request->trsidlaporan)
+            ->select('dbttrsdet2.wrh')
+            ->groupBy('dbttrsdet2.wrh')
+            ->get();
+            $view = view("admin.report.stok-item.pdf-laporan-cso", [
+                "dataCso" => $dataDbtTrsHed[0],
+                "dataWrh"=>$dataWrh,
+                "dataLaporan"=>$dataLaporan
+            ]);
         }
-        $pdf->loadHTML($view)->setPaper('a4', 'landscape');
+        $pdf->loadHTML($view)->setPaper('a4', 'landscape')->add_info('Title', 'Your meta title');;
         return $pdf->stream();
     }
 

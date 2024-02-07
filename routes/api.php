@@ -25,7 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login',[AccountController::class,'login']);
-Route::post('mulai-cso',[AccountController::class,'mulaiCSO']);
+Route::post('mulai-cso-item',[AccountController::class,'mulaiCSOItem']);
+Route::post('mulai-cso-avalan',[AccountController::class,'mulaiCSOAvalan']);
 
 Route::get('item-list',[AddController::class,'item']);
 Route::get('avalan-list',[AddController::class,'avalan']);
@@ -48,6 +49,8 @@ Route::post('update-temuan',[DetailController::class,'updateTemuan']);
 Route::post('daftar-item',[HomeController::class,'listItem']);
 Route::post('daftar-avalan',[HomeController::class,'listAvalan']);
 Route::post('submit-item',[HomeController::class,'submitItem']);
+Route::get('check-status-cso-item',[HomeController::class,'checkCsoItemStatus']);
+Route::get('check-status-cso-avalan',[HomeController::class,'checkCsoAvalanStatus']);
 
 Route::post('daftar-item-analisator',[AnalisaatorController::class,'listItemAnalisator']);
 Route::post('daftar-avalan-analisator',[AnalisaatorController::class,'listAvalanAnalisator']);

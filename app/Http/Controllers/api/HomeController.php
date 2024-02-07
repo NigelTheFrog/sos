@@ -33,8 +33,7 @@ class HomeController extends Controller
             ->where('dbtcsohed.pelakuuname', '=', $request->username)
             ->where('dbtcsodet.csoid', '=', $request->csoid)
             ->where('dbtcsohed.status', '=', 'A')
-            ->where('dbtcsohed.statusitem', '=', 'R')
-            // ->where('dbtcsohed.statusitem', '=', 'A')
+            ->where('dbtcsohed.tipecso', '=', 'R')
             ->orderByDesc('dbtcsodet.csodetid')
             ->get();
 
@@ -64,6 +63,7 @@ class HomeController extends Controller
             ->where('dbtcsohed.pelakuuname', '=', $request->username)
             ->where('dbtcsodet.csoid', '=', $request->csoid)
             ->where('dbtcsohed.status', '=', 'A')
+            ->where('dbtcsohed.tipecso', '=', 'A')
             ->orderByDesc('dbtcsodet.csodetid')
             ->get();
 
@@ -87,5 +87,25 @@ class HomeController extends Controller
             DB::rollBack();
             return response()->json(['result' => 0, 'message' => 'Penambahan data item gagal']);
         }   
+    }
+
+    public function checkCsoItemStatus() {
+        $data = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'A')->orderByDesc('trsid')->limit(1)->get();
+
+        if(count($data) > 0) {
+            return response()->json(['result' => 1, 'trsid' => $data[0]->trsid]);
+        } else {
+            return response()->json(['result' => 0]);
+        }
+    }
+
+    public function checkCsoAvalanStatus() {
+        $data = DB::table('dbttrsheda')->where('dbttrsheda.statusdoc', '=', 'A')->orderByDesc('trsid')->limit(1)->get();
+
+        if(count($data) > 0) {
+            return response()->json(['result' => 1, 'trsid' => $data[0]->trsid]);
+        } else {
+            return response()->json(['result' => 0]);
+        }
     }
 }

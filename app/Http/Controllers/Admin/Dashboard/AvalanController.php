@@ -139,6 +139,76 @@ class AvalanController extends Controller
         }
     }
 
+    public function csoUlang(Request $request)
+    {
+        DB::beginTransaction();
+        $updateLCso = DB::table('dbtcsodet')
+                ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
+                ->where('dbtcsodet.itemid', $request->itemid)
+                ->where('dbtcsodet.itembatchid', $request->batchno)
+                ->where('dbtcsohed.status', 'A')
+                ->update(['statushslcso' => 'C']);
+
+            if ($updateLCso == true) {
+                $getDataDbtCsoDet = DB::table('dbtcsodet')
+                    ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
+                    ->select(DB::raw("dbtcsodet.csoid, dbtcsodet.itemid, dbtcsodet.itembatchid, dbtcsodet.locationid, dbtcsodet.grade, 'R', 'D', 'T' "))
+                    ->where('dbtcsodet.itemid', '=', $request->itemid)
+                    ->where('dbtcsodet.itembatchid', $request->batchno)
+                    ->where('dbtcsohed.status', '=', 'A')
+                    ->distinct();
+
+                $insertDbtCsoDet = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'itembatchid', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $getDataDbtCsoDet);
+
+                if ($insertDbtCsoDet == true) {
+                    $getDbtCsoDetOnDbtCsoDet2 = DB::table('dbtcsodet')
+                        ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->select(DB::raw("dbtcsodet.itemid, dbtcsodet.itembatchid, (dbtcsodet2.csocount+1) as count"))
+                        ->where('dbtcsodet.itemid', '=', $request->itemid)
+                        ->where('dbtcsodet.itembatchid', $request->batchno)
+                        ->where('dbtcsodet.statushslcso', '=', 'C')
+                        ->distinct();
+
+                    $getDbtCsoDetOnDbtCsoHed = DB::table('dbtcsodet')
+                        ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet.csoid')
+                        ->leftJoinSub($getDbtCsoDetOnDbtCsoDet2, 'dbtcsodet2', function ($join) {
+                            $join->on('dbtcsodet2.itemid', '=', 'dbtcsodet.itemid');
+                        })
+                        ->select(['dbtcsodet.itemid', 'dbtcsodet.csoid', 'dbtcsodet2.count'])
+                        ->where('dbtcsodet.itemid', '=', $request->itemid)
+                        ->where('dbtcsodet.itembatchid', $request->batchno)
+                        ->where('dbtcsodet.statushslcso', '=', 'T')
+                        ->where('dbtcsohed.status', '=', 'A')
+                        ->distinct();
+
+                    $insertDbtCsoDet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount'], $getDbtCsoDetOnDbtCsoHed);
+
+                    if ($insertDbtCsoDet2 == true) {
+                        $updateDbtTrsDet = DB::table('dbttrsdeta')
+                            ->where('itemid', $request->itemid)
+                            ->where('batchno', $request->batchno)
+                            ->increment('statuscso');
+                        if ($updateDbtTrsDet == true) {
+                            DB::commit();
+                            return redirect()->route("avalan.index")->with('status', "Berhasil mangubah status CSO Ulang");
+                        } else {
+                            DB::rollBack();
+                            return redirect()->route("avalan.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                        }
+                    } else {
+                        DB::rollBack();
+                        return redirect()->route("avalan.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                    }
+                } else {
+                    DB::rollBack();
+                    return redirect()->route("avalan.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                }
+            } else {
+                DB::rollBack();
+                return redirect()->route("avalan.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+            }
+    }
+
     public function updateCsoAvalan(Request $request)
     {
         DB::beginTransaction();
@@ -392,7 +462,7 @@ class AvalanController extends Controller
             ->where('statusdoc', '=', 'A')
             ->update(['endcsodate' => Carbon::now(), 'statusdoc' => 'E']);
 
-        DB::table('dbtcsoheda')
+        DB::table('dbtcsohed')
             ->where('status', '=', 'A')
             ->where('tipecso', '=', 'A')
             ->update(['status' => 'P',]);

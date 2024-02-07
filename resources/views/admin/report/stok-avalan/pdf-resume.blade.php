@@ -1,6 +1,4 @@
-<title>
-    Resume
-</title>
+
 <style>
     .title-info {
         padding-top: 25px;
@@ -103,7 +101,7 @@
             I. PELAKSANAAN CEK STOK
         </h4>
         <p>Nama perusahaan : PT. Sutindo Raya Mulia Surabaya</p>
-        <p>Tanggal pelaksanaan cek stok : {{ $dataCso->startcsodate }} </p>
+        <p>Tanggal pelaksanaan cek stok : {{ \Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')  }} </p>
         <p>Lokasi/kelompok produk yang di cek stok : {{ $dataCso->csomaterial }} </p>
     </div>
     <div>

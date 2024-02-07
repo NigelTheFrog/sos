@@ -47,8 +47,8 @@
                                     <td>{{ $avalan['NamaItem'] }}</td>
                                     <td>{{ $avalan['Product'] }}</td>
                                     <td>{{ $avalan['SubProduct'] }}</td>
-                                    <td>{{ $avalan['BatchNo'] }}</td>
-                                    <td>{{ $avalan['HeatNo'] }}</td>
+                                    <td>{{ $avalan['batchno'] }}</td>
+                                    <td>{{ $avalan['heatNo'] }}</td>
                                     <td>{{ $avalan['Dimension'] }}</td>
                                     <td>{{ $avalan['Tolerance'] }}</td>
                                     <td>{{ $avalan['condition'] }}</td>

@@ -151,8 +151,13 @@
         </table>
     </div>
     <div class="col-2">
-        <button type="button" name="csoorder" class="btn btn-info mb-3"
+        <form method="POST" action="{{route('item.cso-ulang')}}">
+            @csrf
+            <input type="text" name="itemid" class="d-none" value="{{ $itemid }}">
+            <input type="text" name="batchno" class="d-none" value="{{ $batchno }}">
+            <button type="submit" name="csoorder" class="btn btn-info mb-3"
             @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
+        </form>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin"
                 @if (count($analisator) > 0 && $analisator[0]->kesalahan_admin == 1) checked @endif>

@@ -12,7 +12,7 @@
                     <div class="">
                         <div class="card card-secondary">
                             <div class="card-header bg-secondary text-white">
-                                <h3 class="card-title"> Laporan CSO</h3>
+                                <h3 class="card-title"> Laporan CSO Avalan</h3>
                             </div>
                             <div class="card-body" style="background-color: #f8f8f8;">
 
@@ -45,7 +45,7 @@
     <div class="modal fade text-left" id="modalLaporanResume" tabindex="-1">
         <div class="modal-dialog modal modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form action="{{ route('cek-stok.store') }}" method="POST">
+                <form action="{{ route('cek-stok-avalan.store') }}" method="POST">
                     @csrf
                     <input type="text" name="type" value="1" hidden>
                     <div class="modal-header bg-secondary text-white">
@@ -86,7 +86,7 @@
                         aria-label="Close">
                     </button>
                 </div>
-                <form action="{{ route('cek-stok.store') }}" method="POST">
+                <form action="{{ route('cek-stok-avalan.store') }}" method="POST">
                     @csrf
                     <input type="text" name="type" value="2" hidden>
                     <div class="modal-body">

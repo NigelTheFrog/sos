@@ -91,7 +91,12 @@
                     <a class="nav-link" href="{{route('cek-stok.index')}}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-alt" style="font-size: 20px"></i>
                         </div>
-                        Report Cek Stok
+                        Report Cek Stok Item
+                    </a>
+                    <a class="nav-link" href="{{route('cek-stok-avalan.index')}}">
+                        <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-alt" style="font-size: 20px"></i>
+                        </div>
+                        Report Cek Stok Avalan
                     </a>
                 @elseif(Auth::user()->level == 3)
                     <div class="sb-sidenav-menu-heading">Core</div>

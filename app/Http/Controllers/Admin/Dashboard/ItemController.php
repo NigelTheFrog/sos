@@ -25,18 +25,18 @@ class ItemController extends Controller
     public function index()
     {
         $item = ViewDashboard::all();
-        $checkCsoActive = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'A')->get();
+        $checkCsoActive = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'A')->orderByDesc('trsid')->limit(1)->get();
 
-        $checkCsoEnd = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'E')->get();
+        $checkCsoEnd = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'E')->orderByDesc('trsid')->limit(1)->get();
 
-        $checkCsoFinal = DB::table('dbttrshed')->where('statusdoc', '=', 'P')->get();
+        $checkCsoFinal = DB::table('dbttrshed')->where('statusdoc', '=', 'P')->orderByDesc('trsid')->limit(1)->get();
 
         $getCsoDate = DB::table('dbttrshed')->select('startcsodate')->where('statusdoc', '!=', 'P')->orderByDesc('trsid')->limit(1)->get();
 
         if (count($getCsoDate) > 0) {
             $csoDate = Carbon::parse($getCsoDate[0]->startcsodate)->format('d M Y');
         } else {
-            $csoDate = "Belum ada tanggal CSO"; 
+            $csoDate = "Belum ada tanggal CSO";
         }
 
         $itemBlmProses = ViewDashboard::where('status', '=', '0')->get();
@@ -255,6 +255,139 @@ class ItemController extends Controller
     public function edit(Item $item)
     {
         //
+    }
+
+    public function csoUlang(Request $request)
+    {
+        DB::beginTransaction();
+        if ($request->batchno == null || $request->batchno == "") {
+            $updateLCso = DB::table('dbtcsodet')
+                ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
+                ->where('dbtcsodet.itemid', $request->itemid)
+                ->where('dbtcsohed.status', 'A')
+                ->update(['statushslcso' => 'C']);
+
+            if ($updateLCso == true) {
+                $getDataDbtCsoDet = DB::table('dbtcsodet')
+                    ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
+                    ->select(DB::raw("dbtcsodet.csoid, dbtcsodet.itemid, dbtcsodet.locationid, dbtcsodet.grade, 'R', 'D', 'T' "))
+                    ->where('dbtcsodet.itemid', '=', $request->itemid)
+                    ->where('dbtcsohed.status', '=', 'A')
+                    ->distinct();
+
+                $insertDbtCsoDet = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $getDataDbtCsoDet);
+
+                if ($insertDbtCsoDet == true) {
+                    $getDbtCsoDetOnDbtCsoDet2 = DB::table('dbtcsodet')
+                        ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->select(DB::raw("dbtcsodet.itemid, (dbtcsodet2.csocount+1) as count"))
+                        ->where('dbtcsodet.itemid', '=', $request->itemid)
+                        ->where('dbtcsodet.statushslcso', '=', 'C')
+                        ->distinct();
+
+                    $getDbtCsoDetOnDbtCsoHed = DB::table('dbtcsodet')
+                        ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet.csoid')
+                        ->leftJoinSub($getDbtCsoDetOnDbtCsoDet2, 'dbtcsodet2', function ($join) {
+                            $join->on('dbtcsodet2.itemid', '=', 'dbtcsodet.itemid');
+                        })
+                        ->select(['dbtcsodet.itemid', 'dbtcsodet.csoid', 'dbtcsodet2.count'])
+                        ->where('dbtcsodet.itemid', '=', $request->itemid)
+                        ->where('dbtcsodet.statushslcso', '=', 'T')
+                        ->where('dbtcsohed.status', '=', 'A')
+                        ->distinct();
+
+                    $insertDbtCsoDet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount'], $getDbtCsoDetOnDbtCsoHed);
+
+                    if ($insertDbtCsoDet2 == true) {
+                        $updateDbtTrsDet = DB::table('dbttrsdet')
+                            ->where('itemid', $request->itemid)
+                            ->increment('statuscso');
+                        if ($updateDbtTrsDet == true) {
+                            DB::commit();
+                            return redirect()->route("item.index")->with('status', "Berhasil mangubah status CSO Ulang");
+                        } else {
+                            DB::rollBack();
+                            return redirect()->route("item.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                        }
+                    } else {
+                        DB::rollBack();
+                        return redirect()->route("item.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                    }
+                } else {
+                    DB::rollBack();
+                    return redirect()->route("item.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                }
+            } else {
+                DB::rollBack();
+                return redirect()->route("item.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+            }
+        } else {
+            $updateLCso = DB::table('dbtcsodet')
+                ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
+                ->where('dbtcsodet.itemid', $request->itemid)
+                ->where('dbtcsodet.itembatchid', $request->batchno)
+                ->where('dbtcsohed.status', 'A')
+                ->update(['statushslcso' => 'C']);
+
+            if ($updateLCso == true) {
+                $getDataDbtCsoDet = DB::table('dbtcsodet')
+                    ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
+                    ->select(DB::raw("dbtcsodet.csoid, dbtcsodet.itemid, dbtcsodet.itembatchid, dbtcsodet.locationid, dbtcsodet.grade, 'R', 'D', 'T' "))
+                    ->where('dbtcsodet.itemid', '=', $request->itemid)
+                    ->where('dbtcsodet.itembatchid', $request->batchno)
+                    ->where('dbtcsohed.status', '=', 'A')
+                    ->distinct();
+
+                $insertDbtCsoDet = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'itembatchid', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $getDataDbtCsoDet);
+
+                if ($insertDbtCsoDet == true) {
+                    $getDbtCsoDetOnDbtCsoDet2 = DB::table('dbtcsodet')
+                        ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->select(DB::raw("dbtcsodet.itemid, dbtcsodet.itembatchid, (dbtcsodet2.csocount+1) as count"))
+                        ->where('dbtcsodet.itemid', '=', $request->itemid)
+                        ->where('dbtcsodet.itembatchid', $request->batchno)
+                        ->where('dbtcsodet.statushslcso', '=', 'C')
+                        ->distinct();
+
+                    $getDbtCsoDetOnDbtCsoHed = DB::table('dbtcsodet')
+                        ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet.csoid')
+                        ->leftJoinSub($getDbtCsoDetOnDbtCsoDet2, 'dbtcsodet2', function ($join) {
+                            $join->on('dbtcsodet2.itemid', '=', 'dbtcsodet.itemid');
+                        })
+                        ->select(['dbtcsodet.itemid', 'dbtcsodet.csoid', 'dbtcsodet2.count'])
+                        ->where('dbtcsodet.itemid', '=', $request->itemid)
+                        ->where('dbtcsodet.itembatchid', $request->batchno)
+                        ->where('dbtcsodet.statushslcso', '=', 'T')
+                        ->where('dbtcsohed.status', '=', 'A')
+                        ->distinct();
+
+                    $insertDbtCsoDet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount'], $getDbtCsoDetOnDbtCsoHed);
+
+                    if ($insertDbtCsoDet2 == true) {
+                        $updateDbtTrsDet = DB::table('dbttrsdet')
+                            ->where('itemid', $request->itemid)
+                            ->where('batchno', $request->batchno)
+                            ->increment('statuscso');
+                        if ($updateDbtTrsDet == true) {
+                            DB::commit();
+                            return redirect()->route("item.index")->with('status', "Berhasil mangubah status CSO Ulang");
+                        } else {
+                            DB::rollBack();
+                            return redirect()->route("item.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                        }
+                    } else {
+                        DB::rollBack();
+                        return redirect()->route("item.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                    }
+                } else {
+                    DB::rollBack();
+                    return redirect()->route("item.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+                }
+            } else {
+                DB::rollBack();
+                return redirect()->route("item.index")->with('error', "Proses pengubahan status CSO Ulang gagal");
+            }
+        }
     }
 
     public function updateCsoItem(Request $request)

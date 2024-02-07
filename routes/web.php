@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\Penjadwalan\ImportAvalanController;
 use App\Http\Controllers\Admin\Penjadwalan\ImportItemController;
 use App\Http\Controllers\Admin\Penjadwalan\Pengaturan;
 use App\Http\Controllers\Admin\Penjadwalan\PengaturanController;
+use App\Http\Controllers\Admin\Report\ReportCekStokAvalanController;
 use App\Http\Controllers\Admin\Resume\BarangSelisihController;
 use App\Http\Controllers\Admin\Resume\SusunanTimCsoController;
 use App\Models\Admin\Penjadwalan\ImportAvalan;
@@ -49,8 +50,10 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::resource('item', ItemController::class);
         Route::post('item/detail-cso-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showDetailCso'])->name('item.detail-cso');
         Route::post('item/update-cso-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'updateCsoItem'])->name('item.update-cso');
+        Route::post('item/cso-ulang', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'csoUlang'])->name('item.cso-ulang');
         Route::post('avalan/detail-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showDetailCsoAvalan'])->name('avalan.detail-cso');
-        Route::post('avalan/update-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'updateCsoAvalan'])->name('avalan.update-cso');
+        Route::post('avalan/update-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'updateCsoAvalan'])->name('avalan.cso-ulang');
+        Route::post('avalan/cso-ulang', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'csoUlang'])->name('avalan.update-cso');
         Route::get("main-table-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showMainTable']);
         Route::get("main-table-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
         Route::get("banner-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBanner']);
@@ -84,6 +87,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
     });
     Route::prefix('report')->group(function() {
         Route::resource('cek-stok', ReportCekStokController::class);
+        Route::resource('cek-stok-avalan', ReportCekStokAvalanController::class);
     });
 });
 
