@@ -15,16 +15,8 @@ class BarangSelisihController extends Controller
      */
     public function index()
     {
-        $tertukar = BarangSelisih::where('groupid', '!=', '0')->orderBy('groupid')->get();
-        $selisih = BarangSelisih::all();
-        // $selisih = BarangSelisih::where('groupid', '=', '0')
-        //     ->where(function ($query) {
-        //         $query->where('selisihplus', '!=', 0)
-        //             ->orWhere('selisihmin', '!=', 0);
-        //     })
-        //     ->orderBy('itemname')
-        //     ->get();
-        
+        $tertukar = DB::select('CALL ReportTertukar()');
+        $selisih = DB::select('CALL ReportSelisih()');        
         $keputusan = Keputusan::all();
 
         return view('admin.resume.barang-selisih',['tertukar'=>$tertukar,'selisih'=>$selisih,'keputusan'=>$keputusan]);

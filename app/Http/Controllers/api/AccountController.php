@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
+            // ssh-ed25519 255 SHA256:MXxecc+xkd1ri1J8dH0XTP+Ye6neLbNbY4e6ERFdbko
     public function login(Request $request) {
         $loginCredentials = $request->only("username","password");
         if(Auth::attempt($loginCredentials)) {
