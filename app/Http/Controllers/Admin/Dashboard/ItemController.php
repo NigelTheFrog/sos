@@ -94,9 +94,15 @@ class ItemController extends Controller
         return $pdf->stream();
     }
 
-    public function showMainTable()
+    public function showMainTable(Request $request)
     {
-        $item = ViewDashboard::all();
+        $item = ViewDashboard::where('itemname','like','%'.$request->search.'%')
+        ->orWhere('itemcode','like','%'.$request->search.'%')
+        ->orWhere('itemid','like','%'.$request->search.'%')
+        ->orWhere('batchno','like','%'.$request->search.'%')
+        ->orWhere('analisator','like','%'.$request->search.'%')
+        ->orWhere('analisatorid','like','%'.$request->search.'%')
+        ->get();
         return view("admin.dashboard.table.item.main-table-item", ["item" => $item]);
     }
 

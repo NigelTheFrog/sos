@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin\Master;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -13,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = DB::table('dbmuser')->leftJoin('dbmlevel','dbmuser.level','=','dbmlevel.levelid')->get();
+        $user = User::all()->leftJoin('dbmlevel','dbmuser.level','=','dbmlevel.levelid')->get();
         return view("admin.master.user",["user"=> $user]);
     }
 
@@ -30,7 +31,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = new User;
+        $user->name = $request->nama;
+        $user->nik = $request->nik;
+        $user->username = $request->username;
+        $user->password = bcrypt($request->password);
+        $user->level = $request->level;
+        $user->createdby = Auth::user()->username;
+        $user->coyid = 1;
+
+        $user->save();
+        return redirect()->route("user.index");
     }
 
     /**

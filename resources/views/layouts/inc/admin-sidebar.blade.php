@@ -1,5 +1,7 @@
-<div id="layoutSidenav_nav" class="navbar-nav-scroll sb-sidenav-dark" style="--bs-scroll-height: 100%;">
-    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+<div id="layoutSidenav_nav" class="navbar-nav-scroll sb-sidenav-dark" style="--bs-scroll-height: 100%; 
+/* background-color: rgb(44, 44, 44) */
+">
+    <nav class="sb-sidenav accordion" id="sidenavAccordion">
         <div class="sb-sidenav-menu">
             <div class="nav">
                 @if (Auth::user()->level == 1 || Auth::user()->level == 2)

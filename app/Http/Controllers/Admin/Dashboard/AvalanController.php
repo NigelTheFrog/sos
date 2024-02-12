@@ -100,9 +100,15 @@ class AvalanController extends Controller
         return $pdf->stream();
     }
 
-    public function showMainTable()
+    public function showMainTable(Request $request)
     {
-        $avalan = ViewDashboardAvalan::all();
+        $avalan = ViewDashboardAvalan::where('itemname','like','%'.$request->search.'%')
+        ->orWhere('itemcode','like','%'.$request->search.'%')
+        ->orWhere('itemid','like','%'.$request->search.'%')
+        ->orWhere('batchno','like','%'.$request->search.'%')
+        ->orWhere('analisator','like','%'.$request->search.'%')
+        ->orWhere('analisatorid','like','%'.$request->search.'%')
+        ->get();;
         return view("admin.dashboard.table.avalan.main-table-avalan", ["avalan" => $avalan]);
     }
 
@@ -314,17 +320,7 @@ class AvalanController extends Controller
             "dbxJob" => $dataDbxJob,
             "checkCso" => count($cekCso) 
         ]);
-        // return response()->json(['data' => $dataAnalisator]);
-
-
-        // return response()->json(["itemid" => $data[0]->itemid,
-        // "batchno" => $data[0]->batchno,
-        // "tolerance" => $data[0]->tolerance,
-        // "onhand" => $data[0]->onhand,
-        // "totalcso" => $data[0]->totalcso,
-        // "selisih" => $data[0]->selisih,
-        // "koreksi" => $data[0]->koreksi,
-        // "deviasi" => $data[0]->deviasi,]);
+       
     }
 
     /**

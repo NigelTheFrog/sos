@@ -12,6 +12,12 @@
                     <div class="card-header bg-secondary text-white">
                         <h4 class="card-title pt-2">Daftar Pengguna</h4>
                     </div>
+                    <div class="d-flex ">
+                        <button type="button" class="btn btn-primary float-start mt-3 ms-3" data-bs-toggle="modal"
+                            data-bs-target="#modalImportUser">
+                            <i class="nav-icon fas fa-file-import"></i> Import User
+                        </button>
+                    </div>
                     <div id="table-data" class="card-body" style="background-color:rgb(248, 248, 248)">                        
                         <table id="datatable" class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
                             <thead class="table-dark">
@@ -242,6 +248,42 @@
                             <button type="button" onclick="closeModalDelete(this)" class="btn btn-primary"
                                 name="simpan"><i class="bx bxs-save"></i>Batal</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade text-left" id="modalImportUser" tabindex="-1">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Data User</h1>
+                        <button type="button" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row justify-content-between ps-2 mb-2 pe-2 bg-light align-items-center"
+                            style="height: 50px">
+                            <div class="col">
+                                <div class="d-flex justify-content-between" style="width: 50%">
+                                    
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="d-flex justify-content-between">
+                                    <form class="" role="search">
+                                        <input class="form-control" id="searchAvalan" type="search" placeholder="Search"
+                                            aria-label="Search">
+                                    </form>
+                                    <button type="button" id="tarikitem" class="btn btn-primary float-end"
+                                        onclick="tarikAvalan(this)">
+                                        Tarik Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="tableAvalan">
+                        </div>
                     </div>
                 </div>
             </div>

@@ -398,14 +398,18 @@
         }
 
         setInterval(function(event) {
+            var searchValue = $("#searchModItem").val();     
             $.ajax({
                 url: "{{ url('admin/dashboard/main-table-item') }}",
-                type: 'GET',
+                type: 'POST',
+                data: { search: searchValue },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 success: function(data) {
                     $('#main-table-item').html(data);
                 }
-            });
-
+            });       
         }, 1000);
 
         function openModalBlmProses(button) {

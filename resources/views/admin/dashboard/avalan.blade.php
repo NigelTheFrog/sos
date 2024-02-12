@@ -338,9 +338,14 @@
         var intervalAvalanSelisih = undefined;
 
         setInterval(function(event) {
+            var searchValue = $("#searchModItem").val();     
             $.ajax({
                 url: "{{ url('admin/dashboard/main-table-avalan') }}",
-                type: 'GET',
+                type: 'POST',
+                data: { search: searchValue },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 success: function(data) {
                     $('#main-table-avalan').html(data);
                 }
