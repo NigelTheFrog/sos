@@ -47,21 +47,6 @@ class ReportCekStokAvalanController extends Controller
                 ->where('joBtypeid', '=', '1')
                 ->get();
 
-            $dataTertukar = DB::table('reportselisih')
-                ->where('groupid', '!=', 0)
-                ->orderBy('groupid')
-                ->orderBy('itemname')
-                ->get();
-
-            $dataSelisih = DB::table('reportselisih')
-                ->where('groupid', 0)
-                ->where(function ($query) {
-                    $query->where('selisihplus', '<>', 0)
-                        ->orWhere('selisihmin', '<>', 0);
-                })
-                ->orderBy('itemname')
-                ->get();
-
             $dataRekapitulasi = DB::select('CALL RekapitulasiHasilCsoAvalan(?)', [$request->trsidresume]);
 
             $dataItemKesalahanAdmin = DB::table('dbttrsdeta')
@@ -169,8 +154,6 @@ class ReportCekStokAvalanController extends Controller
                 "dataCso" => $datadbttrsheda[0],
                 "dataAnalisator" => $dataAnalisator,
                 "dataPelaku" => $dataPelaku,
-                "dataTertukar" => $dataTertukar,
-                "dataSelisih" => $dataSelisih,
                 "dataRekapitulasi" => $dataRekapitulasi[0],
             ]);
         } else {

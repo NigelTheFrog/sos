@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -14,8 +15,64 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::all()->leftJoin('dbmlevel','dbmuser.level','=','dbmlevel.levelid')->get();
-        return view("admin.master.user",["user"=> $user]);
+        $user = DB::table('dbmuser')->leftJoin('dbmlevel', 'dbmuser.level', '=', 'dbmlevel.levelid')->get();
+        error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE ^ E_DEPRECATED);
+
+        //GET TOKEN
+        $url = "http://erpapp.local.sutindo.net/APISutindo/Api/SOS/PosisiStock/getToken";
+
+        $curl = curl_init();
+        $data = array();
+        $param = http_build_query($data);
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_POSTFIELDS => $param,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST'
+        ));
+
+        $token = curl_exec($curl);
+        $token = json_decode($token);
+        $token = $token->data->token;
+
+        curl_close($curl);
+
+
+        $companyID = 'SRM SBY';
+
+        $data = [
+            'companyID' => $companyID,
+            // 'type'=>$type,
+            // 'search'=>$search,
+            'token' => $token
+        ];
+
+        //GET USER
+        $urlu = "http://erpapp.local.sutindo.net/APISutindo/Api/SOS/User/getUser";
+
+        $curlu = curl_init();
+        $param = http_build_query($data);
+        curl_setopt_array($curlu, array(
+            CURLOPT_URL => $urlu,
+            CURLOPT_POSTFIELDS => $param,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 5,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST'
+        ));
+        $responseuser = curl_exec($curlu);
+
+        curl_close($curlu);
+
+        return view("admin.master.user", ["user" => $user, "importedUser" => $responseuser]);
     }
 
     /**

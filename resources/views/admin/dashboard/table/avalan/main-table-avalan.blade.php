@@ -58,8 +58,8 @@
                     @endif
                     </span>
                 </td>
-                <td class="align-middle text-center">{{ $barang->selisih }}</td>
-                <td class="align-middle text-center">{{ $barang->onhand }}</td>
+                <td class="align-middle text-center">{{number_format($barang->selisih, 2, ',', '.')}}</td>
+                <td class="align-middle text-center">{{ number_format($barang->onhand, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ $barang->totalcso }}</td>
                 <td class="align-middle text-center">{{ $barang->koreksi }}</td>
                 <td class="align-middle text-center">{{ $barang->deviasi }}</td>
