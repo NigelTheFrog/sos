@@ -48,17 +48,18 @@
 
 <div class="row g-3 mb-3">
     <div class="form-floating col">
-        <input class="form-control text-center bg-primary shadow-sm" value="{{ $onhand }}" id="onHand"
-            type="text" readonly>
+        <input class="form-control text-center bg-primary shadow-sm" value="{{ number_format($onhand, 2, ',', '.') }}"
+            id="onHand" type="text" readonly>
         <label class="fw-bold" for="onHand">On Hand</label>
     </div>
     <div class="form-floating col">
-        <input class="form-control text-center bg-warning shadow-sm" value="{{ $totalcso }}" type="text"
-            readonly>
+        <input class="form-control text-center bg-warning shadow-sm" value="{{ number_format($totalcso, 2, ',', '.') }}"
+            type="text" readonly>
         <label class="fw-bold">Qty CSO</label>
     </div>
     <div class="form-floating col">
-        <input class="form-control text-center bg-danger shadow-sm" value="{{ $selisih }}" type="text" readonly>
+        <input class="form-control text-center bg-danger shadow-sm" value="{{ number_format($selisih, 2, ',', '.') }}"
+            type="text" readonly>
         <label class="fw-bold" for="vselisih">Selisih</label>
     </div>
     <div class="form-floating col">
@@ -90,7 +91,7 @@
                     <td>{{ $detail->name }}</td>
                     <td>{{ $detail->locationname }}</td>
                     <td>{{ $detail->color }}</td>
-                    <td>{{ $detail->qty }}</td>
+                    <td>{{ number_format($detail->qty, 2, ',', '.') }}</td>
                     <td>{{ $detail->csocount }}</td>
                     <td>{{ $detail->remark }}</td>
                 </tr>
@@ -116,22 +117,22 @@
                     <tr>
                         <td>{{ $cso->name }}</td>
                         @if ($cso->csocount == 1)
-                            <td class="bg-info">{{ $cso->cso1 }}</td>
+                            <td class="bg-info">{{ number_format($cso->cso1, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso1 }}</td>
                         @endif
                         @if ($cso->csocount == 2)
-                            <td class="bg-info">{{ $cso->cso2 }}</td>
+                            <td class="bg-info">{{ number_format($cso->cso2, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso2 }}</td>
                         @endif
                         @if ($cso->csocount == 3)
-                            <td class="bg-info">{{ $cso->cso3 }}</td>
+                            <td class="bg-info">{{ number_format($cso->cso3, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso3 }}</td>
                         @endif
                         @if ($cso->csocount == 4)
-                            <td class="bg-info">{{ $cso->cso4 }}</td>
+                            <td class="bg-info">{{ number_format($cso->cso4, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso4 }}</td>
                         @endif
@@ -141,23 +142,20 @@
                 @foreach ($totalCso as $tCso)
                     <tr class="table-secondary">
                         <td>Total</td>
-                        <td>{{ $tCso->totalcso1 }}</td>
-                        <td>{{ $tCso->totalcso2 }}</td>
-                        <td>{{ $tCso->totalcso3 }}</td>
-                        <td>{{ $tCso->totalcso4 }}</td>
+                        <td>{{ number_format($tCso->totalcso1, 2, ',', '.') }}</td>
+                        <td>{{ number_format($tCso->totalcso2, 2, ',', '.') }}</td>
+                        <td>{{ number_format($tCso->totalcso3, 2, ',', '.') }}</td>
+                        <td>{{ number_format($tCso->totalcso4, 2, ',', '.') }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
     <div class="col-2">
-        <form method="POST" action="{{route('item.cso-ulang')}}">
-            @csrf
-            <input type="text" name="itemid" class="d-none" value="{{ $itemid }}">
-            <input type="text" name="batchno" class="d-none" value="{{ $batchno }}">
-            <button type="submit" name="csoorder" class="btn btn-info mb-3"
+        <input type="text" id="itemid" class="d-none" value="{{ $itemid }}">
+        <input type="text" id="batchno" class="d-none" value="{{ $batchno }}">
+        <button type="button" id="csoulang" onclick="csoUlang(this)" name="csoorder" class="btn btn-info mb-3"
             @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
-        </form>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin"
                 @if (count($analisator) > 0 && $analisator[0]->kesalahan_admin == 1) checked @endif>
@@ -217,3 +215,54 @@
     <label for="vketerangan" class="input-group-text">Keterangan Koreksi</label>
     <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan"></textarea>
 </div>
+
+<script>
+    function csoUlang(button) {
+        var itemidparam = $("#itemid").val(); // Get the selected gudang values
+        var batchnoparam = $("#batchno").val();
+        var buttonCsoUlang = document.getElementById("csoulang");
+        $.ajax({
+            url: "{{ url('admin/dashboard/item/cso-ulang') }}",
+            method: "POST",
+            data: {
+                itemid: itemidparam,
+                batchno: batchnoparam
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                if (data['result'] == 1) {
+                    if (batchnoparam == null || batchnoparam == "") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Berhasil",
+                            text: `Item dengan id ${itemidparam}\nberhasil di CSO Ulang`,
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Berhasil",
+                            text: `Item dengan id ${itemidparam} dan batch number ${batchnoparam}\nberhasil di CSO Ulang`,
+                        });
+                    }
+                    buttonCsoUlang.disabled = true;
+                } else {
+                    Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Gagal melakukan CSO ulang",
+                });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Terjadi kesalahan pada sistem, segera laporkan pada tim IT",
+                });
+            }
+        });
+    }
+</script>

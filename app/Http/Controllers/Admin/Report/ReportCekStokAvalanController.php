@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Report;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Resume\SusunanCso;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -37,15 +38,9 @@ class ReportCekStokAvalanController extends Controller
         if ($request->type == 1) {
             $datadbttrsheda = DB::table('dbttrsheda')->where('trsid', '=', $request->trsidresume)->get();
 
-            $dataAnalisator = DB::table('dbtcsoprsn')
-                ->where('trsid', '=', $request->trsidresume)
-                ->where('joBtypeid', '=', '2')
-                ->get();
+            $dataAnalisator = SusunanCso::where('trsid', '=', $request->trsidresume)->where('joBtypeid', '=', '2')->where('tipecso','=','A')->get();
 
-            $dataPelaku = DB::table('dbtcsoprsn')
-                ->where('trsid', '=', $request->trsidresume)
-                ->where('joBtypeid', '=', '1')
-                ->get();
+            $dataPelaku = SusunanCso::where('trsid', '=', $request->trsidresume)->where('joBtypeid', '=', '1')->where('tipecso','=','A')->get();
 
             $dataRekapitulasi = DB::select('CALL RekapitulasiHasilCsoAvalan(?)', [$request->trsidresume]);
 
@@ -121,8 +116,8 @@ class ReportCekStokAvalanController extends Controller
                 ->select(DB::raw("COUNT(distinct dbttrsdeta.trsdetid) as count, DATE_FORMAT(dbttrsheda.startcsodate, '%m') as monthstart, dbttrsheda.csomaterial"))
                 ->where('dbttrsheda.statusdoc', 'P')
                 ->whereRaw('(coalesce(dbttrsdeta.koreksi, 0) + coalesce(dbttrsdeta.deviasi, 0) + coalesce(dbtcsodet2.qty, 0)) = dbttrsdeta.onhand')
-                ->whereRaw('dbttrsheda.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), interval 1 month), interval 3 month)')
-                ->whereRaw('dbttrsheda.startcsodate < DATE_SUB(CURDATE(), interval 1 month)')
+                ->whereRaw("dbttrsheda.startcsodate >= DATE_SUB(DATE_SUB('".$datadbttrsheda[0]->startcsodate."', interval 1 month), interval 3 month)")
+                ->whereRaw("dbttrsheda.startcsodate < DATE_SUB('".$datadbttrsheda[0]->startcsodate."', interval 1 month)")
                 ->groupBy('monthstart', 'dbttrsheda.csomaterial');
 
             $item_ada = DB::table('dbttrsheda')
@@ -132,8 +127,8 @@ class ReportCekStokAvalanController extends Controller
                 ->select(DB::raw("COUNT(distinct dbttrsdeta.trsdetid) as count, DATE_FORMAT(dbttrsheda.startcsodate, '%m') as monthstart, dbttrsheda.csomaterial"))
                 ->where('dbttrsheda.statusdoc', 'P')
                 ->whereRaw('coalesce(dbtcsodet2.qty, 0) > 0')
-                ->whereRaw('dbttrsheda.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), interval 1 month), interval 3 month)')
-                ->whereRaw('dbttrsheda.startcsodate < DATE_SUB(CURDATE(), interval 1 month)')
+                ->whereRaw("dbttrsheda.startcsodate >= DATE_SUB(DATE_SUB('".$datadbttrsheda[0]->startcsodate."', interval 1 month), interval 3 month)")
+                ->whereRaw("dbttrsheda.startcsodate < DATE_SUB('".$datadbttrsheda[0]->startcsodate."', interval 1 month)")
                 ->groupBy('monthstart', 'dbttrsheda.csomaterial');
 
             $data3BulanTerakhir = DB::query()

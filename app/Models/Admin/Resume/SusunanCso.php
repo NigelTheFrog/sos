@@ -9,5 +9,5 @@ class SusunanCso extends Model
 {
     use HasFactory;
 
-    public $table = "reportselisih";
+    public $table = "dbtcsoprsn";
 }

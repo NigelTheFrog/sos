@@ -37,7 +37,7 @@
                             onclick="openModalDetailCSOAvalan(this)" style="color: rgb(81, 81, 81)" id="viewlistcso"><i
                                 class="fas fa-eye"></i></button>
                     </div>
-                    <div>{{ $barang->itemname }}</div>
+                    <div>{{ $barang->itemname }} - {{$barang->batchno}}</div>
                 </div>
             </td>
                 <td class="align-middle text-center">{{ $barang->dimension }}</td>
@@ -60,7 +60,7 @@
                 </td>
                 <td class="align-middle text-center">{{number_format($barang->selisih, 2, ',', '.')}}</td>
                 <td class="align-middle text-center">{{ number_format($barang->onhand, 2, ',', '.') }}</td>
-                <td class="align-middle text-center">{{ $barang->totalcso }}</td>
+                <td class="align-middle text-center">{{ number_format($barang->totalcso, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ $barang->koreksi }}</td>
                 <td class="align-middle text-center">{{ $barang->deviasi }}</td>
                 <td class="align-middle text-center">{{ $barang->statuscso }}</td>

@@ -3,7 +3,12 @@
 @section('title', 'User')
 
 @section('content')
-
+<style>
+        .vscomp-toggle-button {
+            padding: 10px 30px 10px 10px;
+            border-radius: 7px
+        }
+    </style>
     <div class="container-fluid px-4">
         <h1 class="mt-4">User</h1>
         <div class="row justify-content-md-center">
@@ -12,13 +17,14 @@
                     <div class="card-header bg-secondary text-white">
                         <h4 class="card-title pt-2">Daftar Pengguna</h4>
                     </div>
-                    <div class="d-flex ">
-                        <button type="button" class="btn btn-primary float-start mt-3 ms-3" data-bs-toggle="modal"
-                            data-bs-target="#modalImportUser">
-                            <i class="nav-icon fas fa-file-import"></i> Import User
-                        </button>
-                    </div>
-                    <div id="table-data" class="card-body" style="background-color:rgb(248, 248, 248)">                        
+                    
+                    <div id="table-data" class="card-body" style="background-color:rgb(248, 248, 248)"> 
+                        <div class="d-flex ">
+                            <button type="button" class="btn btn-primary float-start mb-3" data-bs-toggle="modal"
+                                data-bs-target="#modalImportUser">
+                                <i class="nav-icon fas fa-file-import"></i> Import User
+                            </button>
+                        </div>                       
                         <table id="datatable" class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
                             <thead class="table-dark">
                                 <tr class="text-center ">
@@ -69,6 +75,7 @@
                         <form id="forminput" action="{{ route('user.store') }}" method="POST" class="needs-validation mx-3"
                             novalidate>
                             @csrf
+                            <input type="text" name="type" value="1" hidden>
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-prepend" style="width:15%">
@@ -260,30 +267,9 @@
                         <button type="button" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row justify-content-between ps-2 mb-2 pe-2 bg-light align-items-center"
-                            style="height: 50px">
-                            <div class="col">
-                                <div class="d-flex justify-content-between" style="width: 50%">
-                                    
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="d-flex justify-content-between">
-                                    <form class="" role="search">
-                                        <input class="form-control" id="searchAvalan" type="search" placeholder="Search"
-                                            aria-label="Search">
-                                    </form>
-                                    <button type="button" id="tarikitem" class="btn btn-primary float-end"
-                                        onclick="tarikAvalan(this)">
-                                        Tarik Data
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div id="tableAvalan">
-                        </div>
+                    <div class="modal-body"  id="tabelUser">
+                        
+                        @include('admin.master.table.table-user')
                     </div>
                 </div>
             </div>

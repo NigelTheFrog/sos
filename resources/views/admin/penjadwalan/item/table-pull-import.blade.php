@@ -57,9 +57,9 @@
     <hr>
     @if ($importedItem > 0)
     <div class="float-end d-flex" >
-        <button type="submit" class="btn btn-primary float-end">Impor</button>
+        <button type="submit" class="btn btn-primary float-end" id="buttonImpor" >Impor</button>
         <button type="button" class="ms-2 btn btn-primary float-end" data-bs-dismiss="modal"
-            aria-label="Close">Keluar</button>
+            aria-label="Close" id="buttonKeluar">Keluar</button>
     </div>
     @endisset
 </form>
@@ -74,4 +74,11 @@
             }
         });
     });
+
+    function clickImpor(button) {
+        var buttonImpor = document.getElementById("buttonImpor");
+        var buttonKeluar = document.getElementById("buttonKeluar");
+        buttonImpor.disabled = true;
+        buttonKeluar.disabled = true;
+    }
 </script>

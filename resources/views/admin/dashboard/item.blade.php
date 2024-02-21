@@ -9,16 +9,18 @@
             <div class="col-4">
                 <h1>Dashboard Item</h1>
             </div>
+            <input type="text" id="countCsoActive" value="{{$countCsoActive}}" hidden>
             @if (Auth::user()->level == 1 || Auth::user()->level == 2)
                 <div class="col-4">
                     @if ($countCsoActive > 0)
-                        <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1">
-                            <i class="bi bi-stopwatch-fill"></i> Tutup CSO Item
+                        <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1" 
+                        id="buttonTutupCso" @if ($countCsoActive > 0) disabled @endif>
+                            <i class="bi bi-stopwatch-fill"></i> Tutup Akses Mobile
                         </button>
                     @elseif ($countCsoEnd > 0)
                         <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end"
                             value="2">
-                            <i class="bi bi-stopwatch-fill"></i> Akhiri CSO Item
+                            <i class="bi bi-stopwatch-fill"></i> Finish CSO
                         </button>
                     @else
                         <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end"
@@ -77,38 +79,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="modal fade text-left" id="ModalItemSdgProses" tabindex="-1">
-            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Sedang Proses</h1>
-                        <button type="button" class="btn-close align-middle" data-bs-dismiss="modal"
-                            onclick="closeModalSdgProses(this)" aria-label="Close">
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row justify-content-between mb-2">
-                            <div class="col-1">
-                                <button type="submit" class="btn btn-primary" name="simpan"><i
-                                        class="bi bi-floppy-fill"></i>
-                                    Simpan</button>
-                            </div>
-                            <div class="col-1 me-3">
-                                <a
-                                    href="{{ url('admin/dashboard/print-item/2') }}"class="btn btn-primary bi bi-printer-fill">
-                                    </i>
-                                    Cetak</button></a>
-                            </div>
-                        </div>
-
-                        <div id="itemSdgProses" style="overflow: auto; max-height: 75vh;">
-                            @include('admin.dashboard.table.item.item-sedang-proses')
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </div>       
         <div class="modal fade text-left" id="ModalItemOk" tabindex="-1">
             <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -357,9 +328,29 @@
 
     <script>
         var intervalItemBlmProses = undefined;
-        var intervalItemSdgProses = undefined;
         var intervalItemOk = undefined;
         var intervalItemSelisih = undefined;
+        var intervalCheckItemBlmProses = undefined;
+        var buttonTutupCso = document.getElementById('buttonTutupCso');
+
+        if($('#countCsoActive').val() == 1) {
+            setInterval(function(event) {
+            $.ajax({
+                url: "{{ url('admin/dashboard/check-item') }}",
+                type: 'GET',
+                
+                success: function(data) {
+                    if(data['data']) {
+                        buttonTutupCso.disabled = true;
+                    } else {
+                        buttonTutupCso.disabled = false;
+                    }
+                }
+            });       
+        }, 1000);
+        } else {
+            if (typeof myTimeout != undefined) clearTimeout(intervalCheckItemBlmProses);
+        }
 
         function openModalDetailCSO(button) {
             const row = $(button).closest('tr');
@@ -372,7 +363,7 @@
                 type: 'POST',
                 data: {
                     id: itemId.replace(/\s/g, ''),
-                    batchNo: batchId.replace(/\s/g, '')
+                    batchno: batchId.replace(/\s/g, '')
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -407,7 +398,19 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
+                    // console.log(data);
                     $('#main-table-item').html(data);
+                }
+            });       
+        }, 1000);
+
+        setInterval(function(event) {
+            $.ajax({
+                url: "{{ url('admin/dashboard/banner-item') }}",
+                type: 'GET',
+                
+                success: function(data) {
+                    $('#banner-item').html(data);
                 }
             });       
         }, 1000);
@@ -429,25 +432,6 @@
         function closeModalBlmProses(button) {
             if (typeof myTimeout != undefined) clearTimeout(intervalItemBlmProses);
             $('#ModalItemBlmProses').modal('hide');
-        }
-
-        function openModalSdgProses(button) {
-            $('#ModalItemSdgProses').modal('show');
-            intervalItemSdgProses = setInterval(function() {
-                $.ajax({
-                    url: "{{ url('admin/dashboard/banner-item/2') }}",
-                    type: 'GET',
-                    success: function(data) {
-                        $('#itemSdgProses').html(data);
-                        console.log(data);
-                    }
-                });
-            }, 1000);
-        }
-
-        function closeModalSdgProses(button) {
-            if (typeof myTimeout != undefined) clearTimeout(intervalItemSdgProses);
-            $('#ModalItemSdgProses').modal('hide');
         }
 
         function openModalOk(button) {

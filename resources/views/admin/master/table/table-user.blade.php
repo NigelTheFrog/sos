@@ -1,38 +1,72 @@
-    <table id="datatable" class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
-        <thead class="table-dark">
-            <tr class="text-center ">
-                <th class="align-middle" style="width: 2%">No</th>
-                <th class="align-middle" style="width: 15%">Nama</th>
-                <th class="align-middle" style="width: 7%">NIK</th>
-                <th class="align-middle" style="width: 10%">Username</th>
-                <th class="align-middle" style="width: 7%">Level</th>
-                <th class="align-middle" style="width: 8%">Action</th>
-                <th class="align-middle" style="width: 0%" hidden></th>
-                <th class="align-middle" style="width: 0%" hidden></th>
-            </tr>
-        </thead>
-        <tbody>                                
-            @foreach ($user as $index => $user)
-            <tr class="text-center">
-                <td class="align-middle">{{$index +1}}</td>
-                <td class="align-middle">{{$user->name}}</td>
-                <td class="align-middle">{{$user->nik}}</td>
-                <td class="align-middle">{{$user->username}}</td>
-                <td class="align-middle">{{$user->levelname}}</td>                                
-                <td class="align-middle"> 
-                    <div class="row">
-                        <div class="col-2 ms-2">
-                            <button onclick="openModalEdit(this)" class="btn btn-sm btn-primary edit" id="btnEditUser" ><i class="bi bi-pencil-square", style="color: white"></i></button>
-                        </div>
-                        <div class="col-2 ms-2">
-                            <button onclick="openModalDelete(this)" class="btn btn-danger btn-sm" title="Hapus User" id="btnHapus" data-id=""><i class="bi bi-trash-fill"></i></button>
-                        </div>
-                    </div>
-
-                </td>
-                <td class="align-middle" hidden>{{$user->level}}</td>
-                <td class="align-middle" hidden>{{$user->id}}</td>
-            </tr>                                    
-            @endforeach                                
-        </tbody>
-    </table>                
+    
+    <form method="post" action="{{ route('user.store') }}">
+        @csrf
+        <div class="container-lg" style="height: 70vh;">
+            @if ($importedUser > 0)
+                <input type="text" name="type" value="2" hidden>
+                <div class="ms-4 mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="ceksemuauser">
+                    <label for="ceksemuauser" class="form-check-label">
+                        Centang Semua
+                    </label>
+                </div>
+                <div style="overflow: auto; max-height: 66vh;">
+                    <table id="tableUser" class="mb-2 table table-sm table-hover table-striped table-bordered text-nowrap">
+                        <thead class="table-dark">
+                            <tr class="text-center ">
+                                <th></th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">NIK</th>
+                                <th scope="col">Username</th>  
+                                <th scope="col">User Id</th>                              
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            @foreach ($importedUser->data as $index => $users)
+                                @foreach ($users as $user)
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input type="checkbox" name="checkboxImport[]"
+                                                    class="form-check-input cekboxsemuauser"
+                                                    value={{ $user->UserID }}>
+                                            </div>
+                                        </td>
+                                        <td>{{ $user->FullName}}</td>
+                                        <td>{{ $user->NIK }}</td>
+                                        <td>{{ $user->username }}</td>
+                                        <td>{{ $user->UserID}}</td>                                        
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+        <hr>
+        @if ($importedUser > 0)
+            <div class="float-end d-flex" >
+                <button type="submit" class="btn btn-primary float-end">Impor</button>
+                <button type="button" class="ms-2 btn btn-primary float-end" data-bs-dismiss="modal"
+                    aria-label="Close">Keluar</button>
+            </div>
+        @endisset
+    </form>
+    
+    <script>
+        $(function() {
+        $("#tableUser").DataTable({
+            "responsive": true,
+        });
+    });
+        $(document).ready(function() {
+            $("#ceksemuauser").click(function() {
+                if ($(".cekboxsemuauser").prop("checked")) {
+                    $(".cekboxsemuauser").prop("checked", false);
+                } else {
+                    $(".cekboxsemuauser").prop("checked", true);
+                }
+            });
+        });
+    </script>

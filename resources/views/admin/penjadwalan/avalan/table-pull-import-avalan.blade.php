@@ -1,6 +1,6 @@
 <form method="post" action="{{ route('import-avalan.store') }}">
     @csrf
-    <div class="container-lg" style="height: 60vh;">
+    <div class="container-lg" style="height: 58vh;">
         @if ($importedAvalan > 0)
             <input type="text" name="type" value="1" hidden>
             <input type="text" name="coy" value="{{ $companyID }}" hidden>
@@ -50,7 +50,7 @@
                                     <td>{{ $avalan['batchno'] }}</td>
                                     <td>{{ $avalan['heatNo'] }}</td>
                                     <td>{{ $avalan['Dimension'] }}</td>
-                                    <td>{{ $avalan['Tolerance'] }}</td>
+                                    <td>{{ number_format($avalan['Tolerance'], 2, ',', '.') }}</td>
                                     <td>{{ $avalan['condition'] }}</td>
                                     <td>{{ (float) $avalan['Onhand'] }}</td>
                                     <td>{{ $avalan['UOM'] }}</td>

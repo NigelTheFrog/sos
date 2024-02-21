@@ -32,9 +32,8 @@ class DetailController extends Controller
     public function updateItem(Request $request)
     {
         DB::beginTransaction();
-        $color = implode(",", $request->color);
+        // $color = implode(",", $request->color);
 
-        if ($request->statusItem == 'R') {
             $simpanItem = DB::table('dbtcsodet')
                 ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
@@ -44,26 +43,12 @@ class DetailController extends Controller
                 ->update([
                     'dbtcsodet.itemid' => $request->itemid,
                     'dbtcsodet.locationid' => $request->lokasi,
-                    'dbtcsodet.color' => $color,
+                    'dbtcsodet.itembatchid' => $request->itembatchid,
+                    'dbtcsodet.color' => $request->color,
                     'dbtcsodet.remark' => $request->remark,
                     'dbtcsodet2.qty' => $request->qtycso,
                 ]);
-        } else {
-            $simpanItem = DB::table('dbtcsodet')
-                ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
-                ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->where('dbtcsohed.pelakuuname', '=', $request->username)
-                ->where('dbtcsodet.csodetid', '=', $request->csodetid)
-                ->where('dbtcsohed.status', '=', 'A')
-                ->update([
-                    'dbtcsodet.itemid' => $request->itemid,
-                    'dbtcsodet.locationid' => $request->lokasi,
-                    'dbtcsodet.itembatchid' => $request->batchno,
-                    'dbtcsodet.color' => $color,
-                    'dbtcsodet.remark' => $request->remark,
-                    'dbtcsodet2.qty' => $request->qtycso,
-                ]);
-        }
+        
 
 
         if ($simpanItem == true) {

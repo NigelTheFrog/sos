@@ -175,9 +175,9 @@
                         <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                         <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
                         <th class="th-content-cso" style="width: 0.5cm">No Form</th>
+                        <th class="th-content-cso" style="width: 0.5cm">Lokasi</th>
                         <th class="th-content-cso" style="width: 0.5cm">Kesimpulan</th>
 
-                        <th class="th-content-cso" style="width: 0.5cm">Lokasi</th>
                         <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                         <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
                         <th class="th-content-cso" style="width: 0.5cm">No Form</th>

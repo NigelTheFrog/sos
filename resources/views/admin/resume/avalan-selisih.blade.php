@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Daftar Barang Selisih')
+@section('title', 'Daftar Avalan Selisih')
 
 @section('content')
 
@@ -10,15 +10,14 @@
 
             <div class="container-fluid">
                 <div class="mb-3 mt-3">
-                    <h5>List Item Barang Selisih</h5>
+                    <h5>List Avalan Selisih</h5>
                 </div>
                 <div class="card card-secondary">
                     <div class="card-header bg-secondary text-white">
-                        <h3 class="card-title">Item tertukar</h3>
+                        <h3 class="card-title">Avalan tertukar</h3>
                     </div>
-                    <form action="{{ route('barang-selisih.update', 'barang_selisih') }}" method="POST">
+                    <form action="{{ route('avalan-selisih.store') }}" method="POST">
                         @csrf
-                        @method('PUT')
                         <input type="text" name="type" value="1" hidden>
                         <div class="card-body small">
                             <table class="table table-striped table-hover text-center">
@@ -49,7 +48,7 @@
                                             <th>{{ $index + 1 }}</th>
                                             <td>{{ $tertukar->itemname }}</td>
                                             <td><select class="form-select form-select-sm" name="keputusan[]">
-                                                   @if ($tertukar->keputusan != null)
+                                                @if ($tertukar->keputusan != null)
                                                         <option value="{{ $tertukar->keputusan }}" selected>
                                                             @foreach ($keputusan as $kep)
                                                             @if ($kep->keputusanid == $tertukar->keputusan)
@@ -67,7 +66,7 @@
                                                             <option value="{{ $kep->keputusanid }}">
                                                                 {{ $kep->keputusandesc }}</option>
                                                         @endforeach
-                                                @endif      
+                                                @endif                                                    
                                                 </select> </td>
                                             <td>{{ $tertukar->onhand }}</td>
                                             <td>{{ $tertukar->statuscso }}</td>
@@ -116,11 +115,10 @@
 
                 <div class="card card-secondary">
                     <div class="card-header bg-secondary text-white">
-                        <h3 class="card-title">Item Selisih Plus & Selisih Minus</h3>
+                        <h3 class="card-title">Avalan Selisih Plus & Selisih Minus</h3>
                     </div>
-                    <form action="{{ route('barang-selisih.update', 'barang_selisih') }}" method="POST">
+                    <form action="{{ route('avalan-selisih.store') }}" method="POST">
                         @csrf
-                        @method('PUT')
                         <input type="text" name="type" value="2" hidden>
                         <div class="card-body small">
                             <table class="table table-striped table-hover text-center">
@@ -214,7 +212,7 @@
                                             </td>
                                             <td>
                                                 @if ($selisih->keterangan != null)
-                                                    <input type="text" class="form-control form-control-sm"
+                                                    <input type="number" class="form-control form-control-sm"
                                                         name="keterangan[]" value="{{ $selisih->keterangan }}">
                                                 @else
                                                     <input type="text" class="form-control form-control-sm"

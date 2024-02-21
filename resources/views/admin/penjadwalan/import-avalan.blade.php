@@ -235,7 +235,7 @@
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Data Stok Batch ERP</h1>
+                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Data Stok Avalan</h1>
                     <button type="button" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>

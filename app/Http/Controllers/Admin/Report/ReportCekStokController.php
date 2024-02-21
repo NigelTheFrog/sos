@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Report;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Resume\SusunanCso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -36,17 +37,12 @@ class ReportCekStokController extends Controller
         Carbon::setLocale('id');
         $pdf = App::make('dompdf.wrapper');
         if ($request->type == 1) {
+            
             $dataDbtTrsHed = DB::table('dbttrshed')->where('trsid', '=', $request->trsidresume)->get();
 
-            $dataAnalisator = DB::table('dbtcsoprsn')
-                ->where('trsid', '=', $request->trsidresume)
-                ->where('joBtypeid', '=', '2')
-                ->get();
+            $dataAnalisator = SusunanCso::where('trsid', '=', $request->trsidresume)->where('joBtypeid', '=', '2')->where('tipecso', '=', 'R')->get();
 
-            $dataPelaku = DB::table('dbtcsoprsn')
-                ->where('trsid', '=', $request->trsidresume)
-                ->where('joBtypeid', '=', '1')
-                ->get();
+            $dataPelaku = SusunanCso::where('trsid', '=', $request->trsidresume)->where('joBtypeid', '=', '1')->where('tipecso', '=', 'R')->get();
 
             $dataRekapitulasi = DB::select('CALL RekapitulasiHasilCso(?)', [$request->trsidresume]);
 
@@ -122,8 +118,9 @@ class ReportCekStokController extends Controller
                 ->select(DB::raw("COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
                 ->where('dbttrshed.statusdoc', 'P')
                 ->whereRaw('(coalesce(dbttrsdet.koreksi, 0) + coalesce(dbttrsdet.deviasi, 0) + coalesce(dbtcsodet2.qty, 0)) = dbttrsdet.onhand')
-                ->whereRaw('dbttrshed.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), interval 1 month), interval 3 month)')
-                ->whereRaw('dbttrshed.startcsodate < DATE_SUB(CURDATE(), interval 1 month)')
+                ->whereRaw("dbttrshed.startcsodate >= DATE_SUB(DATE_SUB('".$dataDbtTrsHed[0]->startcsodate."', interval 1 month), interval 3 month)")
+                ->whereRaw("dbttrshed.startcsodate < DATE_SUB('".$dataDbtTrsHed[0]->startcsodate."', interval 1 month)")
+                // ->setBindings([$dataDbtTrsHed[0]->startcsodate, $dataDbtTrsHed[0]->startcsodate]) 
                 ->groupBy('monthstart', 'dbttrshed.csomaterial');
 
             $item_ada = DB::table('dbttrshed')
@@ -133,8 +130,9 @@ class ReportCekStokController extends Controller
                 ->select(DB::raw("COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
                 ->where('dbttrshed.statusdoc', 'P')
                 ->whereRaw('coalesce(dbtcsodet2.qty, 0) > 0')
-                ->whereRaw('dbttrshed.startcsodate >= DATE_SUB(DATE_SUB(CURDATE(), interval 1 month), interval 3 month)')
-                ->whereRaw('dbttrshed.startcsodate < DATE_SUB(CURDATE(), interval 1 month)')
+                ->whereRaw("dbttrshed.startcsodate >= DATE_SUB(DATE_SUB('".$dataDbtTrsHed[0]->startcsodate."', interval 1 month), interval 3 month)")
+                ->whereRaw("dbttrshed.startcsodate < DATE_SUB('".$dataDbtTrsHed[0]->startcsodate."', interval 1 month)")
+                // ->setBindings([$dataDbtTrsHed[0]->startcsodate, $dataDbtTrsHed[0]->startcsodate]) 
                 ->groupBy('monthstart', 'dbttrshed.csomaterial');
 
             $data3BulanTerakhir = DB::query()
@@ -144,7 +142,7 @@ class ReportCekStokController extends Controller
                     $join->on('item_ok.csomaterial', '=', 'item_ada.csomaterial');
                 })
                 ->select('item_ok.monthstart', 'item_ok.csomaterial', 'item_ok.count as item_ok', 'item_ada.count as item_ada')
-                ->get();            
+                ->get();
 
             $view = view("admin.report.stok-item.pdf-resume", [
                 "data3BulanTerakhir" => $data3BulanTerakhir,
@@ -162,18 +160,18 @@ class ReportCekStokController extends Controller
             $dataDbtTrsHed = DB::table('dbttrshed')->where('trsid', '=', $request->trsidlaporan)->get();
             $dataLaporan = DB::select('CALL GetDataLaporan(?)', [$request->trsidlaporan]);
             $dataWrh = DB::table('dbttrsdet')
-            ->join('dbttrsdet2','dbttrsdet.trsdetid','=','dbttrsdet2.trsdetid')
-            ->where('dbttrsdet.trsid','=',$request->trsidlaporan)
-            ->select('dbttrsdet2.wrh')
-            ->groupBy('dbttrsdet2.wrh')
-            ->get();
+                ->join('dbttrsdet2', 'dbttrsdet.trsdetid', '=', 'dbttrsdet2.trsdetid')
+                ->where('dbttrsdet.trsid', '=', $request->trsidlaporan)
+                ->select('dbttrsdet2.wrh')
+                ->groupBy('dbttrsdet2.wrh')
+                ->get();
             $view = view("admin.report.stok-item.pdf-laporan-cso", [
                 "dataCso" => $dataDbtTrsHed[0],
-                "dataWrh"=>$dataWrh,
-                "dataLaporan"=>$dataLaporan
+                "dataWrh" => $dataWrh,
+                "dataLaporan" => $dataLaporan
             ]);
         }
-        $pdf->loadHTML($view)->setPaper('a4', 'landscape')->add_info('Title', 'Your meta title');;
+        $pdf->loadHTML($view)->setPaper('a4', 'landscape')->add_info('Title', 'Your meta title');
         return $pdf->stream();
     }
 

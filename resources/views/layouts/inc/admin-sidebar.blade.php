@@ -79,15 +79,25 @@
                         </div>
                         Konfirmasi WRH
                     </a>
-                    <div class="sb-sidenav-menu-heading">Resume</div>
+                    <div class="sb-sidenav-menu-heading">Resume Item</div>
                     <a class="nav-link" href="{{route('susunan-tim-cso.index')}}">
                         <div class="sb-nav-link-icon"><i class="bi bi-people-fill" style="font-size: 20px"></i></div>
-                        Susunan Tim CSO
+                        Susunan Tim CSO Item
                     </a>
                     <a class="nav-link" href="{{route('barang-selisih.index')}}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard-list" style="font-size: 20px"></i>
                         </div>
-                        List Barang Selisih
+                        List Barang Selisih Item
+                    </a>
+                    <div class="sb-sidenav-menu-heading">Resume Avalan</div>
+                    <a class="nav-link" href="{{route('susunan-tim-cso-avalan.index')}}">
+                        <div class="sb-nav-link-icon"><i class="bi bi-people-fill" style="font-size: 20px"></i></div>
+                        Susunan Tim CSO Avalan
+                    </a>
+                    <a class="nav-link" href="{{route('avalan-selisih.index')}}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard-list" style="font-size: 20px"></i>
+                        </div>
+                        List Barang Selisih Avalan
                     </a>
                     <div class="sb-sidenav-menu-heading">Report</div>
                     <a class="nav-link" href="{{route('cek-stok.index')}}">

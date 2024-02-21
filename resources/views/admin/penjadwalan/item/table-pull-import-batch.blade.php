@@ -49,10 +49,10 @@
                                     <td>{{ $batch['NamaItem'] }}</td>
                                     <td>{{ $batch['Product'] }}</td>
                                     <td>{{ $batch['SubProduct'] }}</td>
-                                    <td>{{ $batch['batchno'] }}</td>
-                                    <td>{{ $batch['heatNo'] }}</td>
+                                    <td>{{ $batch['BatchNo'] }}</td>
+                                    <td>{{ $batch['HeatNo'] }}</td>
                                     <td>{{ $batch['Dimension'] }}</td>
-                                    <td>{{ $batch['Tolerance'] }}</td>
+                                    <td>{{ (string) $batch['Tolerance'] }}</td>
                                     <td>{{ $batch['condition'] }}</td>
                                     <td>{{ $batch['Onhand'] }}</td>
                                     <td>{{ $batch['UOM'] }}</td>

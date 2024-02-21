@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Susunan Tim Item')
+@section('title', 'Susunan Tim CSO Avalan')
 
 @section('content')
     <div class="content-wrapper">
@@ -11,9 +11,8 @@
                         <h5>Report Resume CSO</h5>
                     </div>
                 </div>
-                <form action="{{route('susunan-tim-cso.update','susunan_tim_cso')}}" class="mb-3" method="POST">
+                <form action="{{route('susunan-tim-cso-avalan.store')}}" class="mb-3" method="POST">
                     @csrf
-                    @method('PUT')
                     <input type="text" name="type" value="1" hidden>
                     <div class="card card-secondary">
                         <div class="card-header bg-secondary text-white">
@@ -64,9 +63,8 @@
                     </div>
                 </form>
 
-                <form action="{{route('susunan-tim-cso.update','susunan_tim_cso')}}" method="POST">
+                <form action="{{route('susunan-tim-cso-avalan.store')}}" method="POST">
                     @csrf
-                    @method('PUT')
                     <input type="text" name="type" value="2" hidden>
                     <div class="card card-secondary">
                         <div class="card-header bg-secondary text-white ">

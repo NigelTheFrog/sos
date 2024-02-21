@@ -60,7 +60,7 @@
                                 <select class="form-select" style="width: 110%" name="trsidresume">
                                     @foreach ($listNodoc as $nodoc)
                                         <option value="{{ $nodoc->trsid }}">{{ $nodoc->doccsoid }} -
-                                            {{ $nodoc->startcsodate }}
+                                            {{ $nodoc->csomaterial }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -96,7 +96,7 @@
                                 <select class="form-select" style="width: 110%" name="trsidlaporan">
                                     @foreach ($listNodoc as $nodoc)
                                         <option value="{{ $nodoc->trsid }}">{{ $nodoc->doccsoid }} -
-                                            {{ $nodoc->startcsodate }}
+                                            {{ $nodoc->csomaterial }}
                                         </option>
                                     @endforeach
                                 </select>

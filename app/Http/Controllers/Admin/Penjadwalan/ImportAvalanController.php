@@ -197,7 +197,7 @@ class ImportAvalanController extends Controller
                                     'itemcode' => $avalan['itemcode'],
                                     'itemname' => $avalan['NamaItem'],
                                     'batchid' => $avalan['batchid'],
-                                    'heatno' => $avalan['HeatNo'],
+                                    'heatno' => $avalan['heatNo'],
                                     'dimension' => $avalan['Dimension'],
                                     'tolerance' => $avalan['Tolerance'],
                                     'kondisi' => $avalan['condition'],
@@ -401,7 +401,7 @@ class ImportAvalanController extends Controller
 
         $successDelete = 0;
         $idItem = "";
-
+        if($request->checkboxDelete != null) {
         // return redirect()->route("import-avalan.index")->with('status', json_encode($request->checkboxDelete));
         foreach ($request->checkboxDelete as $itemBatchId) {
             $deleteDbxImportAvalan = DB::table('dbximporavalan')->where('itembatchid', '=', $itemBatchId)->delete();
@@ -421,5 +421,10 @@ class ImportAvalanController extends Controller
             DB::rollBack();
             return redirect()->route("import-avalan.index")->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
         }
+    } else {
+        DB::rollBack();
+            return redirect()->route("import-avalan.index")->with('error', "Harap pilih avalan yang hendak dihapus terlebih dahulu");
+        
+    }
     }
 }

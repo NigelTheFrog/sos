@@ -18,7 +18,7 @@ class HomeController extends Controller
 
         $subQueryJoinDbtTrsDet = DB::table('dbttrsdet')
             ->join('dbttrshed', 'dbttrsdet.trsid', '=', 'dbttrshed.trsid')
-            ->select(['trsdetid', 'dbttrsdet.trsid', 'itemid', 'itemname', 'onhand', 'uom', 'analisatorid'])
+            ->select(['trsdetid', 'dbttrsdet.trsid', 'itemid', 'itembatchid', 'batchno', 'itemname', 'onhand', 'uom', 'analisatorid'])
             ->where('statusdoc', '=', 'A');    
 
         $data = DB::table('dbtcsodet')
@@ -28,7 +28,7 @@ class HomeController extends Controller
             })
             ->leftJoin('dbmlocation', 'dbmlocation.locationid', '=', 'dbtcsodet.locationid')
             ->leftJoinSub($subQueryJoinDbtTrsDet, 'dbttrsdet', function (JoinClause $join) {
-                $join->on('dbttrsdet.itemid', '=', 'dbtcsodet.itemid');
+                $join->on('dbttrsdet.itembatchid', '=', 'dbtcsodet.itembatchid');
             })
             ->where('dbtcsohed.pelakuuname', '=', $request->username)
             ->where('dbtcsodet.csoid', '=', $request->csoid)
@@ -48,7 +48,7 @@ class HomeController extends Controller
 
         $subQueryJoinDbtTrsDet = DB::table('dbttrsdeta')
             ->join('dbttrsheda', 'dbttrsdeta.trsid', '=', 'dbttrsheda.trsid')
-            ->select(['trsdetid', 'dbttrsdeta.trsid', 'itemid', 'itemname', 'batchno', 'onhand', 'uom', 'analisatorid'])
+            ->select(['trsdetid', 'dbttrsdeta.trsid', 'itemid', 'itembatchid', 'itemname', 'batchno', 'onhand', 'uom', 'analisatorid'])
             ->where('statusdoc', '=', 'A');    
 
         $data = DB::table('dbtcsodet')
@@ -58,7 +58,7 @@ class HomeController extends Controller
             })
             ->leftJoin('dbmlocation', 'dbmlocation.locationid', '=', 'dbtcsodet.locationid')
             ->leftJoinSub($subQueryJoinDbtTrsDet, 'dbttrsdeta', function (JoinClause $join) {
-                $join->on('dbttrsdeta.batchno', '=', 'dbtcsodet.itembatchid');
+                $join->on('dbttrsdeta.itembatchid', '=', 'dbtcsodet.itembatchid');
             })
             ->where('dbtcsohed.pelakuuname', '=', $request->username)
             ->where('dbtcsodet.csoid', '=', $request->csoid)

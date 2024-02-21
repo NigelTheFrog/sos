@@ -1,4 +1,4 @@
-<div class="col-xl-3 col">
+<div class="col">
     <div class="card bg-warning text-white mb-4">
         <div class="card-body" id="title">
             <h3 class="text-dark">{{ $countItemBlmProses }}</h3>
@@ -12,20 +12,7 @@
         </div>
     </div>
 </div>
-<div class="col-xl-3">
-    <div class="card bg-primary text-white mb-4">
-        <div class="card-body" id="title">
-            <h3>{{ $countItemSdgProses }}</h3>
-            <p>Item sedang proses</p>
-        </div>
-        <div class="card-footer d-flex align-items-center justify-content-between">
-            <a class="small text-white stretched-link" href="#" id="btnItemSdgProses"
-                data-bs-toggle="modal" onclick="openModalSdgProses(this)">View Details</a>
-            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-        </div>
-    </div>
-</div>
-<div class="col-xl-3">
+<div class="col">
     <div class="card bg-success text-white mb-4">
         <div class="card-body">
             <h3>{{ $countItemOk }}</h3>
@@ -38,7 +25,7 @@
         </div>
     </div>
 </div>
-<div class="col-xl-3">
+<div class="col">
     <div class="card bg-danger text-white mb-4">
         <div class="card-body">
             <h3>{{ $countItemSelisih }}</h3>

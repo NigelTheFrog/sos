@@ -584,23 +584,30 @@ class ImportItemController extends Controller
         DB::beginTransaction();
         $successDelete = 0;
         $idItem = "";
-        foreach ($request->checkboxDelete as $itemBatchId) {
-            $deleteDbxImport = DB::table('dbximpor')->where('itembatchid', '=', $itemBatchId)->delete();
-            if ($deleteDbxImport == true) {
-                DB::table('dbximpordet')->where('itembatchid', '=', $itemBatchId)->delete();
-                $successDelete++;
-            } else {
-                $idItem = $itemBatchId;
-                break;
+        if($request->checkboxDelete != null) {
+            foreach ($request->checkboxDelete as $itemBatchId) {
+                $deleteDbxImport = DB::table('dbximpor')->where('itembatchid', '=', $itemBatchId)->delete();
+                if ($deleteDbxImport == true) {
+                    DB::table('dbximpordet')->where('itembatchid', '=', $itemBatchId)->delete();
+                    $successDelete++;
+                } else {
+                    $idItem = $itemBatchId;
+                    break;
+                }
             }
-        }
-
-        if ($successDelete > 0) {
-            DB::commit();
-            return redirect()->route("import-stok.index")->with('status', 'Berhasil menghapus data item');
+    
+            if ($successDelete > 0) {
+                DB::commit();
+                return redirect()->route("import-stok.index")->with('status', 'Berhasil menghapus data item');
+            } else {
+                DB::rollBack();
+                return redirect()->route("import-stok.index")->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
+            }
         } else {
             DB::rollBack();
-            return redirect()->route("import-stok.index")->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
+                return redirect()->route("import-stok.index")->with('error', "Harap pilih item yang hendak dihapus terlebih dahulu");
+            
         }
+        
     }
 }

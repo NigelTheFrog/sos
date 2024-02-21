@@ -9,16 +9,18 @@
             <div class="col-4">
                 <h1>Dashboard Avalan</h1>
             </div>
+            <input type="text" id="countCsoActive" value="{{$countCsoActive}}" hidden>
             @if (Auth::user()->level == 1 || Auth::user()->level == 2)
                 <div class="col-4">
                     @if ($countCsoActive > 0)
-                        <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1">
-                            <i class="bi bi-stopwatch-fill"></i> Tutup CSO Avalan
+                        <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1"
+                        id="buttonTutupCso" @if ($countCsoActive > 0) disabled @endif>
+                            <i class="bi bi-stopwatch-fill"></i> Tutup Akses Mobile
                         </button>
                     @elseif ($countCsoEnd > 0)
                         <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end"
                             value="2">
-                            <i class="bi bi-stopwatch-fill"></i> Akhiri CSO Avalan
+                            <i class="bi bi-stopwatch-fill"></i> Finish CSO
                         </button>
                     @else
                         <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end"
@@ -42,7 +44,7 @@
                 </div>
             @endif
         </div>
-        <div class="row">
+        <div class="row" id="banner-avalan">
             @include('admin.dashboard.banner.banner-avalan')
         </div>
         <div class="card mt-2">
@@ -96,35 +98,7 @@
         </div>
     </div>
 
-    <div class="modal fade text-left" id="ModalAvalanSdgProses" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Avalan Sedang Proses</h1>
-                    <button type="button" onclick="closeModalSdgProses(this)" class="btn-close align-middle"
-                        data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row justify-content-between mb-2">
-                        <div class="col-1">
-                            <button type="submit" class="btn btn-primary" name="simpan"><i class="bi bi-floppy-fill"></i>
-                                Simpan</button>
-                        </div>
-                        <div class="col-1 me-3">
-                            <a href="{{ url('admin/dashboard/print-avalan/2') }}"class="btn btn-primary bi bi-printer-fill">
-                                </i>
-                                Cetak</button></a>
-                        </div>
-                    </div>
-                    <div id="avalanSdgProses">
-                        @include('admin.dashboard.table.avalan.avalan-sedang-proses')
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <div class="modal fade text-left" id="ModalAvalanOk" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -324,7 +298,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button id="buttonSubmit" type="button" class="btn btn-primary">Simpan</button>
+                        <button id="buttonSubmit" type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </div>
             </div>
@@ -333,9 +307,29 @@
 
     <script>
         var intervalAvalanBlmProses = undefined;
-        var intervalAvalanSdgProses = undefined;
         var intervalAvalanOk = undefined;
         var intervalAvalanSelisih = undefined;
+        var intervalCheckItemBlmProses = undefined;
+        var buttonTutupCso = document.getElementById('buttonTutupCso');
+
+        if($('#countCsoActive').val() == 1) {
+            setInterval(function(event) {
+            $.ajax({
+                url: "{{ url('admin/dashboard/check-avalan') }}",
+                type: 'GET',
+                
+                success: function(data) {
+                    if(data['data']) {
+                        buttonTutupCso.disabled = true;
+                    } else {
+                        buttonTutupCso.disabled = false;
+                    }
+                }
+            });       
+        }, 1000);
+        } else {
+            if (typeof myTimeout != undefined) clearTimeout(intervalCheckItemBlmProses);
+        }
 
         setInterval(function(event) {
             var searchValue = $("#searchModItem").val();     
@@ -353,6 +347,16 @@
 
         }, 1000);
 
+        setInterval(function(event) {
+            $.ajax({
+                url: "{{ url('admin/dashboard/banner-avalan') }}",
+                type: 'GET',                
+                success: function(data) {
+                    $('#banner-avalan').html(data);
+                }
+            });       
+        }, 1000);
+
         function openModalDetailCSOAvalan(button) {
             const row = $(button).closest('tr');
             const itemId = row.find('td:nth-child(1)').text();
@@ -366,7 +370,7 @@
                 type: 'POST',
                 data: {
                     id: itemId.replace(/\s/g, ''),
-                    batchNo: batchId.replace(/\s/g, '')
+                    batchno: batchId.replace(/\s/g, '')
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -429,25 +433,6 @@
         function closeModalBlmProses(button) {
             if (typeof myTimeout != undefined) clearTimeout(intervalAvalanBlmProses);
             $('#ModalAvalanBlmProses').modal('hide');
-        }
-
-        function openModalSdgProses(button) {
-            $('#ModalAvalanSdgProses').modal('show');
-            intervalAvalanSdgProses = setInterval(function() {
-                $.ajax({
-                    url: "{{ url('admin/dashboard/banner-avalan/2') }}",
-                    type: 'GET',
-                    success: function(data) {
-                        $('#itemSdgProses').html(data);
-                        console.log(data);
-                    }
-                });
-            }, 1000);
-        }
-
-        function closeModalSdgProses(button) {
-            if (typeof myTimeout != undefined) clearTimeout(intervalAvalanSdgProses);
-            $('#ModalAvalanSdgProses').modal('hide');
         }
 
         function openModalOk(button) {

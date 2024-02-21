@@ -7,16 +7,16 @@ use App\Models\Admin\Resume\SusunanCso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SusunanTimCsoController extends Controller
+class SusunanTimCsoAvalanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $getDataAnalisator = SusunanCso::where('joBtypeid', '=', '2')->where('status', '=', 'D')->where('tipecso','=','R')->get();
-        $getDataPelaku = SusunanCso::where('joBtypeid', '=', '1')->where('status', '=', 'D')->where('tipecso','=','R')->get();
-        return view('admin.resume.susunan-tim-cso', ['analisator' => $getDataAnalisator, 'pelaku' => $getDataPelaku]);
+        $getDataAnalisator = SusunanCso::where('joBtypeid', '=', '2')->where('status', '=', 'D')->where('tipecso','=','A')->get();
+        $getDataPelaku = SusunanCso::where('joBtypeid', '=', '1')->where('status', '=', 'D')->where('tipecso','=','A')->get();
+        return view('admin.resume.susunan-tim-cso-avalan', ['analisator' => $getDataAnalisator, 'pelaku' => $getDataPelaku]);
     }
 
     /**
@@ -31,30 +31,6 @@ class SusunanTimCsoController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(SusunanCso $susunanCso)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SusunanCso $susunanCso)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request)
     {
         DB::beginTransaction();
         if ($request->type == 1) {
@@ -74,10 +50,10 @@ class SusunanTimCsoController extends Controller
             }
             if ($statusUpdate = true) {
                 DB::commit();
-                return redirect()->route("susunan-tim-cso.index")->with('status', "Berhasil mengubah data analisastor susunan tim CSO");
+                return redirect()->route("susunan-tim-cso-avalan.index")->with('status', "Berhasil mengubah data analisastor susunan tim CSO");
             } else {
                 DB::rollback();
-                return redirect()->route("susunan-tim-cso.index")->with('error', "Gagal mengubah data analisator susunan tim CSO");
+                return redirect()->route("susunan-tim-cso-avalan.index")->with('error', "Gagal mengubah data analisator susunan tim CSO");
             }
         } else {
             $statusUpdate = true;
@@ -96,18 +72,42 @@ class SusunanTimCsoController extends Controller
             }
             if ($statusUpdate = true) {
                 DB::commit();
-                return redirect()->route("susunan-tim-cso.index")->with('status', "Berhasil mengubah data analisastor susunan tim CSO");
+                return redirect()->route("susunan-tim-cso-avalan.index")->with('status', "Berhasil mengubah data analisastor susunan tim CSO");
             } else {
                 DB::rollback();
-                return redirect()->route("susunan-tim-cso.index")->with('error', "Gagal mengubah data analisator susunan tim CSO");
+                return redirect()->route("susunan-tim-cso-avalan.index")->with('error', "Gagal mengubah data analisator susunan tim CSO");
             }
         }
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SusunanCso $susunanCso)
+    public function destroy(string $id)
     {
         //
     }

@@ -14,12 +14,12 @@ class ProcessController extends Controller
         $color = implode(",", $request->color);
         if ($request->csodet2id == "") {
             $selectdbtcsohed = DB::table('dbtcsohed')
-                ->select(DB::raw("csoid,'$request->itemid','$request->lokasi','$color','$request->remark','$request->statusItem','D','D'"))
+                ->select(DB::raw("csoid,'$request->itemid', '$request->itembatchid','$request->lokasi','$color','$request->remark','$request->statusItem','D','D'"))
                 ->where('pelakuuname', '=', $request->username)
                 ->where('csoid', '=', $request->csoid)
                 ->where('status', '=', 'A');
 
-            $insertdbtcsodet1 = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'locationid', 'color', 'remark', 'statusitem', 'statussubmit', 'statushslcso'], $selectdbtcsohed);
+            $insertdbtcsodet1 = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'itembatchid', 'locationid', 'color', 'remark', 'statusitem', 'statussubmit', 'statushslcso'], $selectdbtcsohed);
 
             if ($insertdbtcsodet1 == true) {
                 $csodetid = DB::table('dbtcsodet')
@@ -48,37 +48,20 @@ class ProcessController extends Controller
                 return response()->json(['result' => 'fail', 'message' => 'Penambahan data gagal']);
             }
         } else {
-            if ($request->statusItem == 'R') {
-                $simpanItem = DB::table('dbtcsodet')
-                    ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
-                    ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                    ->where('dbtcsohed.pelakuuname', '=', $request->username)
-                    ->where('dbtcsodet.csodetid', '=', $request->csodetid)
-                    ->where('dbtcsohed.status', '=', 'A')
-                    ->update([
-                        'dbtcsodet.itemid' => $request->itemid,
-                        'dbtcsodet.locationid' => $request->lokasi,
-                        'dbtcsodet.color' => $color,
-                        'dbtcsodet.remark' => $request->remark,
-                        'dbtcsodet2.qty' => $request->qtycso,
-                    ]);
-            } else {
-                $simpanItem = DB::table('dbtcsodet')
-                    ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
-                    ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                    ->where('dbtcsohed.pelakuuname', '=', $request->username)
-                    ->where('dbtcsodet.csodetid', '=', $request->csodetid)
-                    ->where('dbtcsohed.status', '=', 'A')
-                    ->update([
-                        'dbtcsodet.itemid' => $request->itemid,
-                        'dbtcsodet.locationid' => $request->lokasi,
-                        'dbtcsodet.itembatchid' => $request->batchno,
-                        'dbtcsodet.color' => $color,
-                        'dbtcsodet.remark' => $request->remark,
-                        'dbtcsodet2.qty' => $request->qtycso,
-                    ]);
-            }
-
+            $simpanItem = DB::table('dbtcsodet')
+                ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
+                ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                ->where('dbtcsohed.pelakuuname', '=', $request->username)
+                ->where('dbtcsodet.csodetid', '=', $request->csodetid)
+                ->where('dbtcsohed.status', '=', 'A')
+                ->update([
+                    'dbtcsodet.itemid' => $request->itemid,
+                    'dbtcsodet.locationid' => $request->lokasi,
+                    'dbtcsodet.itembatchid' => $request->itembatchid,
+                    'dbtcsodet.color' => $color,
+                    'dbtcsodet.remark' => $request->remark,
+                    'dbtcsodet2.qty' => $request->qtycso,
+                ]);
 
             if ($simpanItem == true) {
                 DB::commit();
@@ -118,12 +101,12 @@ class ProcessController extends Controller
         $color = implode(",", $request->color);
 
         $selectdbtcsohed = DB::table('dbtcsohed')
-            ->select(DB::raw("csoid,$request->itemid,$request->lokasi,'$color','$request->statusItem','D','D'"))
+            ->select(DB::raw("csoid,$request->itemid,$request->itembatchid,$request->lokasi,'$color','$request->statusItem','D','D'"))
             ->where('pelakuuname', '=', $request->username)
             ->where('csoid', '=', $request->csoid)
             ->where('status', '=', 'A');
 
-        $insertdbtcsodet1 = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'locationid', 'color', 'statusitem', 'statussubmit', 'statushslcso'], $selectdbtcsohed);
+        $insertdbtcsodet1 = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'itembatchid', 'locationid', 'color', 'statusitem', 'statussubmit', 'statushslcso'], $selectdbtcsohed);
 
         if ($insertdbtcsodet1 == true) {
 

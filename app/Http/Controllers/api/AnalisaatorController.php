@@ -14,16 +14,17 @@ class AnalisaatorController extends Controller
     {
         $dataAnalisator = DB::table('dbttrshed')
             ->join('dbttrsdet', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
-            ->join('dbmgroup', 'dbttrsdet.groupid', '=', 'dbmgroup.groupid')
+            ->leftjoin('dbmgroup', 'dbttrsdet.groupid', '=', 'dbmgroup.groupid')
             ->join('dbtcsohed', 'dbttrshed.trsid', '=', 'dbtcsohed.trsid')
             ->join('dbtcsodet', function ($join) {
                 $join->on('dbtcsohed.csoid', '=', 'dbtcsodet.csoid')
                     ->on('dbttrsdet.itemid', '=', 'dbtcsodet.itemid');
             })
             ->join('dbtcsodet2', 'dbtcsodet.csodetid', '=', 'dbtcsodet2.csodetid')
-            ->where('dbttrsdet.analisatorid', $request->userid)
+            ->where('dbttrsdet.analisatorid', '=', $request->userid)
             ->where('dbttrshed.statusdoc', 'A')
             ->select([
+                'dbttrsdet.itemid',
                 'dbttrsdet.itemname',
                 'dbmgroup.groupdesc',
                 'dbttrsdet.onhand',
@@ -37,7 +38,7 @@ class AnalisaatorController extends Controller
                 DB::raw('(dbttrsdet.onhand - (dbtcsodet2.qty + dbttrsdet.koreksi + dbttrsdet.deviasi)) AS selisih'),
                 'dbtcsodet2.csocount'
             ])
-            ->distinct()
+            ->groupBy('dbttrsdet.itemid')
             ->get();
         return response()->json(['data' => $dataAnalisator]);
     }
