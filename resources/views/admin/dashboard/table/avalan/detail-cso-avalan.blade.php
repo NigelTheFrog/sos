@@ -1,6 +1,15 @@
+@if (Auth::user()->level != 1 && Auth::user()->level != 2)
+<div class="mb-3">
+    @if ($checkItemType->statusitem == 'T')
+        <button type="button"  class="btn btn-danger " onclick="hapusAvalanTemuan(this)"><i class="fas fa-trash-alt"></i>
+            Hapus Item</button>
+    @endif
+</div>
+@endif
 <div id="warning" class="alert alert-warning d-none"></div>
 <input type="text" name="itemid" class="d-none" value="{{ $itemid }}">
 <input type="text" name="batchno" class="d-none" value="{{ $batchno }}">
+<input type="text" name="trsdetid" id="trsdetidparam" class="d-none" value="{{ $trsdetid }}">
 
 <div class="row g-3 mb-3">
     <div class="form-floating col">
@@ -170,10 +179,52 @@
 
 <div class="">
     <label for="vketerangan" class="input-group-text">Keterangan Koreksi</label>
-    <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan"></textarea>
+    <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan">{{keterangan}}</textarea>
 </div>
 
 <script>
+    function hapusAvalanTemuan(button) {
+        var itemidparam = $("#itemid").val(); // Get the selected gudang values
+        var batchnoparam = $("#batchno").val();
+        var trsdetidparam = $("#trsdetidparam").val();
+
+        $.ajax({
+            url: "{{ url('admin/dashboard/item/hapus-temuan-avalan') }}",
+            method: "POST",
+            data: {
+                itemid: itemidparam,
+                batchno: batchnoparam,
+                trsdetid: trsdetidparam
+
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                if (data['result'] == 1) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Berhasil",
+                        text: `Temuan item dengan id ${itemidparam}\nberhasil dihapus`,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Terjadi kesalahan pada sistem, segera laporkan pada tim IT",
+                    });
+                }
+
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Terjadi kesalahan pada sistem, segera laporkan pada tim IT",
+                });
+            }
+        });
+    }
     function csoUlang(button) {
         var itemidparam = $("#itemid").val(); // Get the selected gudang values
         var batchnoparam = $("#batchno").val();

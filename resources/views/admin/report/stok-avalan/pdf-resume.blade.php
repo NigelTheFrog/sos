@@ -123,9 +123,9 @@
                 @foreach ($dataAnalisator as $index => $analisator)
                     <tr class="tr-body">
                         <th class="td-content">{{ $index + 1 }}</th>
-                        <td class="td-content">{{ $analisator->name }}</td>
-                        <td class="td-content">{{ $analisator->dept }}</td>
-                        <td class="td-content">{{ $analisator->note }}</td>
+                        <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
+                        <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
+                        <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -144,9 +144,9 @@
                 @foreach ($dataPelaku as $index => $pelaku)
                     <tr class="tr-body">
                         <th class="td-content">{{ $index + 1 }}</th>
-                        <td class="td-content">{{ $pelaku->name }}</td>
-                        <td class="td-content">{{ $pelaku->dept }}</td>
-                        <td class="td-content">{{ $pelaku->note }}</td>
+                        <td class="td-content" style="padding: 8px">{{ $pelaku->name }}</td>
+                        <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
+                        <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -251,7 +251,7 @@
                     @foreach ($dataItemKesalahanAdmin as $index => $itemKesalahanAdmin)
                 <tr class="tr-selisih">
                     <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
-                    <td class="td-content">{{ $itemKesalahanAdmin->itemname }}</td>
+                    <td class="td-content" style="padding-left: 5px">{{ $itemKesalahanAdmin->itemname }}</td>
                     <td class="td-content" style="text-align: center">
                         @if ($itemKesalahanAdmin->keputusan != 0)
                             {{ $itemKesalahanAdmin->keputusan }}
@@ -278,13 +278,21 @@
                         @endif
                     </td>
                     <td class="td-content" style="text-align: center">Rp.
-                        {{ number_format($itemKesalahanAdmin->hpp, 2, ',', '.') }}</td>
+                        @if ($itemKesalahanAdmin->hpp_manual == null)
+                            {{ number_format($itemKesalahanAdmin->hpp, 2, ',', '.') }}
+                        @else
+                            {{ number_format($itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
+                        @endif
+                    </td>
                     <td class="td-content" style="text-align: center">
                         @if (
                             $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi >
                                 $itemKesalahanAdmin->onhand)
-                            Rp.
-                            {{ number_format(($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand) * $itemKesalahanAdmin->hpp, 2, ',', '.') }}
+                            @if ($itemKesalahanAdmin->hpp_manual == null)
+                                {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp, 2, ',', '.') }}
+                            @else
+                                {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
+                            @endif
                         @endif
                     </td>
                     <td style="text-align: center" class="td-selisih-minus">
@@ -292,10 +300,15 @@
                             $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi <
                                 $itemKesalahanAdmin->onhand)
                             Rp.
-                            {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp, 2, ',', '.') }}
+                            @if ($itemKesalahanAdmin->hpp_manual == null)
+                                {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp, 2, ',', '.') }}
+                            @else
+                                {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
+                            @endif
                         @endif
                     </td>
-                    <td class="td-content" style="text-align: center">{{ $itemKesalahanAdmin->pembebanan }}</td>
+                    <td class="td-content" style="text-align: center">Rp.
+                        {{ number_format($itemKesalahanAdmin->pembebanan, 2, ',', '.') }}</td>
                     <td class="td-content" style="text-align: center">{{ $itemKesalahanAdmin->nodoc }}</td>
                     <td class="td-content" style="text-align: center">{{ $itemKesalahanAdmin->keterangan }}</td>
                 </tr>
@@ -327,7 +340,7 @@
                     @foreach ($dataItemTertukar as $index => $itemTertukar)
                 <tr class="tr-selisih">
                     <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
-                    <td class="td-content">{{ $itemTertukar->itemname }}</td>
+                    <td class="td-content" style="padding-left: 5px">{{ $itemTertukar->itemname }}</td>
                     <td class="td-content" style="text-align: center">
                         @if ($itemTertukar->keputusan != 0)
                             {{ $itemTertukar->keputusan }}
@@ -349,20 +362,34 @@
                         @endif
                     </td>
                     <td class="td-content" style="text-align: center">Rp.
-                        {{ number_format($itemTertukar->hpp, 2, ',', '.') }}</td>
+                        @if ($itemTertukar->hpp_manual == null)
+                            {{ number_format($itemTertukar->hpp, 2, ',', '.') }}
+                        @else
+                            {{ number_format($itemTertukar->hpp_manual, 2, ',', '.') }}
+                        @endif
+                    </td>
                     <td class="td-content" style="text-align: center">
                         @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi > $itemTertukar->onhand)
                             Rp.
-                            {{ number_format(($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi - $itemTertukar->onhand) * $itemTertukar->hpp, 2, ',', '.') }}
+                            @if ($itemTertukar->hpp_manual == null)
+                                {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
+                            @else
+                                {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp_manual, 2, ',', '.') }}
+                            @endif
                         @endif
                     </td>
                     <td style="text-align: center" class="td-selisih-minus">
                         @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi < $itemTertukar->onhand)
                             Rp.
-                            {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
+                            @if ($itemTertukar->hpp_manual == null)
+                                {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
+                            @else
+                                {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp_manual, 2, ',', '.') }}
+                            @endif
                         @endif
                     </td>
-                    <td class="td-content" style="text-align: center">{{ $itemTertukar->pembebanan }}</td>
+                    <td class="td-content" style="text-align: center"> Rp.
+                        {{ number_format($itemTertukar->pembebanan, 2, ',', '.') }}</td>
                     <td class="td-content" style="text-align: center">{{ $itemTertukar->nodoc }}</td>
                     <td class="td-content" style="text-align: center">{{ $itemTertukar->keterangan }}</td>
                 </tr>
@@ -395,7 +422,7 @@
                 @foreach ($dataItemSelisih as $index => $itemSelisih)
                     <tr class="tr-selisih">
                         <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
-                        <td class="td-content">{{ $itemSelisih->itemname }}</td>
+                        <td class="td-content" style="padding-left: 5px">{{ $itemSelisih->itemname }}</td>
                         <td class="td-content" style="text-align: center">
                             @if ($itemSelisih->keputusan != 0)
                                 {{ $itemSelisih->keputusan }}
@@ -417,20 +444,34 @@
                             @endif
                         </td>
                         <td class="td-content" style="text-align: center">Rp.
-                            {{ number_format($itemSelisih->hpp, 2, ',', '.') }}</td>
+                            @if ($itemSelisih->hpp_manual == null)
+                                {{ number_format($itemSelisih->hpp, 2, ',', '.') }}
+                            @else
+                                {{ number_format($itemSelisih->hpp_manual, 2, ',', '.') }}
+                            @endif
+                        </td>
                         <td class="td-content" style="text-align: center">
                             @if ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi > $itemSelisih->onhand)
                                 Rp.
-                                {{ number_format(($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi - $itemSelisih->onhand) * $itemSelisih->hpp, 2, ',', '.') }}
+                                @if ($itemTertukar->hpp_manual == null)
+                                    {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
+                                @else
+                                    {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp_manual, 2, ',', '.') }}
+                                @endif
                             @endif
                         </td>
                         <td style="text-align: center" class="td-selisih-minus">
                             @if ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi < $itemSelisih->onhand)
                                 Rp.
-                                {{ number_format(($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi)) * $itemSelisih->hpp, 2, ',', '.') }}
+                                @if ($itemSelisih->hpp_manual == null)
+                                    {{ number_format(($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi)) * $itemSelisih->hpp, 2, ',', '.') }}
+                                @else
+                                    {{ number_format(($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi)) * $itemSelisih->hpp_manual, 2, ',', '.') }}
+                                @endif
                             @endif
                         </td>
-                        <td class="td-content" style="text-align: center">{{ $itemSelisih->pembebanan }}</td>
+                        <td class="td-content" style="text-align: center">Rp.
+                            {{ number_format($itemSelisih->pembebanan, 2, ',', '.') }}</td>
                         <td class="td-content" style="text-align: center">{{ $itemSelisih->nodoc }}</td>
                         <td class="td-content" style="text-align: center">{{ $itemSelisih->keterangan }}</td>
                     </tr>

@@ -1,3 +1,11 @@
+@if (Auth::user()->level != 1 && Auth::user()->level != 2)
+<div class="mb-3">
+    @if ($checkItemType->statusitem == 'T')
+        <button type="button"  class="btn btn-danger " onclick="hapusItemTemuan(this)"><i class="fas fa-trash-alt"></i>
+            Hapus Item</button>
+    @endif
+</div>
+@endif
 <table class="table table-sm table-bordered small mb-3 text-center">
     <thead class="table-secondary">
         <tr>
@@ -45,11 +53,12 @@
 <div id="warning" class="alert alert-warning d-none"></div>
 <input type="text" name="itemid" class="d-none" value="{{ $itemid }}">
 <input type="text" name="batchno" class="d-none" value="{{ $batchno }}">
+<input type="text" name="trsdetid" id="trsdetidparam" class="d-none" value="{{ $trsdetid }}">
 
 <div class="row g-3 mb-3">
     <div class="form-floating col">
-        <input class="form-control text-center bg-primary shadow-sm" value="{{ number_format($onhand, 2, ',', '.') }}"
-            id="onHand" type="text" readonly>
+        <input class="form-control text-center text-white bg-primary shadow-sm"
+            value="{{ number_format($onhand, 2, ',', '.') }}" id="onHand" type="text" readonly>
         <label class="fw-bold" for="onHand">On Hand</label>
     </div>
     <div class="form-floating col">
@@ -58,8 +67,8 @@
         <label class="fw-bold">Qty CSO</label>
     </div>
     <div class="form-floating col">
-        <input class="form-control text-center bg-danger shadow-sm" value="{{ number_format($selisih, 2, ',', '.') }}"
-            type="text" readonly>
+        <input class="form-control text-center text-white bg-danger shadow-sm"
+            value="{{ number_format($selisih, 2, ',', '.') }}" type="text" readonly>
         <label class="fw-bold" for="vselisih">Selisih</label>
     </div>
     <div class="form-floating col">
@@ -154,11 +163,14 @@
     <div class="col-2">
         <input type="text" id="itemid" class="d-none" value="{{ $itemid }}">
         <input type="text" id="batchno" class="d-none" value="{{ $batchno }}">
-        <button type="button" id="csoulang" onclick="csoUlang(this)" name="csoorder" class="btn btn-info mb-3"
-            @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
+        @if (Auth::user()->level == 1 || Auth::user()->level == 2)
+            <button type="button" id="csoulang" onclick="csoUlang(this)" name="csoorder" class="btn btn-info mb-3"
+                @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
+        @endif
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin"
-                @if (count($analisator) > 0 && $analisator[0]->kesalahan_admin == 1) checked @endif>
+                @if (count($analisator) > 0 && $analisator[0]->kesalahan_admin == 1) checked @endif 
+                @if (Auth::user()->level != 1 && Auth::user()->level != 2) disabled @endif>
             <label class="form-check-label small" for="checkkesalahanadmin">
                 Kesalahan Admin
             </label>
@@ -213,10 +225,53 @@
 
 <div class="">
     <label for="vketerangan" class="input-group-text">Keterangan Koreksi</label>
-    <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan"></textarea>
+    <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan">{{$keterangan}}</textarea>
 </div>
 
 <script>
+    function hapusItemTemuan(button) {
+        var itemidparam = $("#itemid").val(); // Get the selected gudang values
+        var batchnoparam = $("#batchno").val();
+        var trsdetidparam = $("#trsdetidparam").val();
+
+        $.ajax({
+            url: "{{ url('admin/dashboard/item/hapus-temuan-item') }}",
+            method: "POST",
+            data: {
+                itemid: itemidparam,
+                batchno: batchnoparam,
+                trsdetid: trsdetidparam
+
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                if (data['result'] == 1) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Berhasil",
+                        text: `Temuan item dengan id ${itemidparam}\nberhasil dihapus`,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Terjadi kesalahan pada sistem, segera laporkan pada tim IT",
+                    });
+                }
+
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Terjadi kesalahan pada sistem, segera laporkan pada tim IT",
+                });
+            }
+        });
+    }
+
     function csoUlang(button) {
         var itemidparam = $("#itemid").val(); // Get the selected gudang values
         var batchnoparam = $("#batchno").val();
@@ -226,7 +281,8 @@
             method: "POST",
             data: {
                 itemid: itemidparam,
-                batchno: batchnoparam
+                batchno: batchnoparam,
+                
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -250,10 +306,10 @@
                     buttonCsoUlang.disabled = true;
                 } else {
                     Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Gagal melakukan CSO ulang",
-                });
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Gagal melakukan CSO ulang",
+                    });
                 }
             },
             error: function() {

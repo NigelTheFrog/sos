@@ -219,6 +219,7 @@ class AvalanController extends Controller
         $updateAvalan = DB::table('dbttrsdeta')
             ->where('itemid', $request->itemid)
             ->where('batchno', $request->batchno)
+            ->where('dbttrsdeta.trsdetid', '=', $request->trsdetid)
             ->update([
                 'koreksi' => $request->koreksi,
                 'deviasi' => $request->deviasi,
@@ -292,23 +293,60 @@ class AvalanController extends Controller
             ->select(['userid', 'name'])
             ->distinct()
             ->get();
+
+         $cekItem = DB::table('dbttrsdeta')
+            ->select('dbttrsdeta.statusitem','a.trsid')
+            ->leftjoin('dbttrsheda', 'dbttrsheda.trsid', '=', 'dbttrsdeta.trsid')
+            ->where('dbttrsdeta.itemid', '=', $request->id)
+            ->where('dbttrsheda.statusdoc', '=', 'A')
+            ->get();
+
         return view('admin.dashboard.table.avalan.detail-cso-avalan', [
             "itemid" => $data[0]->itemid,
             "batchno" => $data[0]->batchno,
+            "trsdetid" => $data[0]->trsdetid,
             "tolerance" => $data[0]->tolerance,
             "onhand" => $data[0]->onhand,
             "totalcso" => $data[0]->totalcso,
             "selisih" => $data[0]->selisih,
             "koreksi" => $data[0]->koreksi,
             "deviasi" => $data[0]->deviasi,
+            "keterangan" => $data[0]->keterangan,
             "tableDetailDashboard" => $dataDetailDashboard,
             "dataCso" => $dataCsoCount,
             "totalCso" => $dataTotalCso,
             "analisator" => $dataAnalisator,
             "group" => $dataGroup,
             "dbxJob" => $dataDbxJob,
-            "checkCso" => count($cekCso)
+            "checkCso" => count($cekCso),
+            "checkItemType" => $cekItem[0]
         ]);
+    }
+
+    public function hapusTemuanAvalan(Request $request)
+    {
+        DB::beginTransaction();
+
+        $deleteDataFromDbtTrsDet = DB::table('dbttrsdeta')
+            ->where('dbttrsdeta.itembatchid', '=', $request->itemid . $request->batchno)
+            ->where('dbttrsdeta.trsdetid', '=', $request->trsdetid)
+            ->delete();
+
+        if ($deleteDataFromDbtTrsDet == true) {
+            $deleteDataFromDbxImpor = DB::table('dbximporavalan')
+                ->where('dbximporavalan.itemid', '=', $request->itemid)
+                ->delete();
+            if ($deleteDataFromDbxImpor == true) {
+                DB::commit();
+                return response()->json(['result' => 1]);
+            } else {
+                DB::rollBack();
+                return response()->json(['result' => 0]); 
+            }
+        } else {
+            DB::rollBack();
+            return response()->json(['result' => 0]);
+        }
     }
 
     /**

@@ -12,7 +12,7 @@
                 <div class="mb-3 mt-3">
                     <h5>List Item Barang Selisih</h5>
                 </div>
-                <div class="card card-secondary">
+                <div class="card card-secondary mb-3">
                     <div class="card-header bg-secondary text-white">
                         <h3 class="card-title">Item tertukar</h3>
                     </div>
@@ -21,24 +21,27 @@
                         @method('PUT')
                         <input type="text" name="type" value="1" hidden>
                         <div class="card-body small">
-                            <table class="table table-striped table-hover text-center">
+                            <div style="overflow-x: scroll; overflow-y: hidden; max-width: 82vw; ">
+                            <table class="table table-striped table-hover text-center" style="min-width:150%;">
                                 <thead>
                                     <tr>
                                         <th class="d-none"></th>
-                                        <th scope="col">No</th>
-                                        <th>Nama Item</th>
-                                        <th>Keputusan</th>
-                                        <th>SLS LBR</th>
-                                        <th>Realita LBR</th>
-                                        <th>Selisih Plus (qty)</th>
-                                        <th>Selisih Minus (qty)</th>
-                                        <th>HPP</th>
-                                        <th>Selisih Plus (nominal)</th>
-                                        <th>Selisih Minus (nominal)</th>
-                                        <th>Pembebanan (nominal)</th>
-                                        <th>Group</th>
-                                        <th>No Adjust (GI/SJ & GR)</th>
+                                        <th style="width: 2%">No</th>
+                                        <th style="width: 10%">Nama Item</th>
+                                        <th style="width: 5%">Keputusan</th>
+                                        <th style="width: 2%">SLS LBR</th>
+                                        <th style="width: 3%">Realita LBR</th>
+                                        <th style="width: 5%">Selisih<br>Plus (qty)</th>
+                                        <th style="width: 6%">Selisih<br>Minus (qty)</th>
+                                        <th style="width: 9%">HPP</th>
+                                        <th style="width: 9%">HPP Manual</th>
+                                        <th style="width: 9%">Selisih Plus<br>(nominal)</th>
+                                        <th style="width: 9%">Selisih Minus<br>(nominal)</th>
+                                        <th style="width: 9%">Pembebanan<br>(nominal)</th>
+                                        <th style="width: 5%">Group</th>
+                                        <th style="width: 6%">No Adjust<br>(GI/SJ & GR)</th>
                                         <th>Keterangan</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,6 +77,15 @@
                                             <td>{{ number_format($tertukar->selisihplus , 2, ',', '.') }}</td>
                                             <td>{{ number_format($tertukar->selisihmin , 2, ',', '.') }}</td>
                                             <td>Rp. {{ number_format($tertukar->cogs , 2, ',', '.') }}</td>
+                                            <td>
+                                                @if ($tertukar->cogs_manual != null)
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        name="hpp[]" value="{{ $tertukar->cogs_manual }}">
+                                                @else
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        name="hpp[]">
+                                                @endif
+                                            </td>
                                             <td>Rp. {{ number_format($tertukar->nominalplus , 2, ',', '.') }}</td>
                                             <td>Rp. {{ number_format($tertukar->nominalmin , 2, ',', '.         ') }}</td>
                                             <td>
@@ -108,6 +120,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            </div>
                             <button type="submit" name="simpan-itm-tertukar" class="btn btn-primary mt-3"><i
                                     class="fas fa-save pe-2"></i>save</button>
                         </div>
@@ -122,25 +135,28 @@
                         @csrf
                         @method('PUT')
                         <input type="text" name="type" value="2" hidden>
-                        <div class="card-body small">
-                            <table class="table table-striped table-hover text-center">
+                        <div class="card-body small" >
+                            <div style="overflow-x: scroll; overflow-y: hidden; max-width: 82vw; ">
+                            <table class="table table-striped table-hover text-center" style="min-width:150%;">
                                 <thead>
                                     <tr>
                                         <th class="d-none"></th>
-                                        <th scope="col">No</th>
-                                        <th>Nama Item</th>
-                                        <th>Keputusan</th>
-                                        <th>SLS LBR</th>
-                                        <th>Realita LBR</th>
-                                        <th>Selisih Plus (qty)</th>
-                                        <th>Selisih Minus (qty)</th>
-                                        <th>HPP</th>
-                                        <th>Selisih Plus (nominal)</th>
-                                        <th>Selisih Minus (nominal)</th>
-                                        <th>Pembebanan (nominal)</th>
-                                        <th>Group</th>
-                                        <th>No Adjust (GI/SJ & GR)</th>
+                                        <th style="width: 2%">No</th>
+                                        <th style="width: 10%">Nama Item</th>
+                                        <th style="width: 5%">Keputusan</th>
+                                        <th style="width: 2%">SLS LBR</th>
+                                        <th style="width: 3%">Realita LBR</th>
+                                        <th style="width: 5%">Selisih<br>Plus (qty)</th>
+                                        <th style="width: 6%">Selisih<br>Minus (qty)</th>
+                                        <th style="width: 9%">HPP</th>
+                                        <th style="width: 9%">HPP Manual</th>
+                                        <th style="width: 9%">Selisih Plus<br>(nominal)</th>
+                                        <th style="width: 9%">Selisih Minus<br>(nominal)</th>
+                                        <th style="width: 9%">Pembebanan<br>(nominal)</th>
+                                        <th style="width: 5%">Group</th>
+                                        <th style="width: 6%">No Adjust<br>(GI/SJ & GR)</th>
                                         <th>Keterangan</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -179,6 +195,15 @@
                                                 @if ($selisih->cogs != 0)
                                                     Rp.{{ number_format($selisih->cogs, 2, '.', ',') }}
                                                 
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($selisih->cogs_manual != null)
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        name="hpp[]" value="{{ $selisih->cogs_manual }}">
+                                                @else
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        name="hpp[]">
                                                 @endif
                                             </td>
                                             <td>
@@ -225,6 +250,136 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            </div>
+                            <button type="submit" name="simpan-itm-selisih" class="btn btn-primary mt-3"><i
+                                    class="fas fa-save pe-2"></i>save</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card card-secondary mt-3">
+                    <div class="card-header bg-secondary text-white">
+                        <h3 class="card-title">Kesalahan Admin</h3>
+                    </div>
+                    <form action="{{ route('barang-selisih.update', 'barang_selisih') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type="text" name="type" value="3" hidden>
+                        <div class="card-body small" >
+                            <div style="overflow-x: scroll; overflow-y: hidden; max-width: 82vw; ">
+                            <table class="table table-striped table-hover text-center" style="min-width:150%;">
+                                <thead>
+                                    <tr>
+                                        <th class="d-none"></th>
+                                        <th style="width: 2%">No</th>
+                                        <th style="width: 10%">Nama Item</th>
+                                        <th style="width: 5%">Keputusan</th>
+                                        <th style="width: 2%">SLS LBR</th>
+                                        <th style="width: 3%">Realita LBR</th>
+                                        <th style="width: 5%">Selisih<br>Plus (qty)</th>
+                                        <th style="width: 6%">Selisih<br>Minus (qty)</th>
+                                        <th style="width: 9%">HPP</th>
+                                        <th style="width: 9%">HPP Manual</th>
+                                        <th style="width: 9%">Selisih Plus<br>(nominal)</th>
+                                        <th style="width: 9%">Selisih Minus<br>(nominal)</th>
+                                        <th style="width: 9%">Pembebanan<br>(nominal)</th>
+                                        <th style="width: 5%">Group</th>
+                                        <th style="width: 6%">No Adjust<br>(GI/SJ & GR)</th>
+                                        <th>Keterangan</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($kesalahan_admin as $index => $admin)
+                                        <tr>
+                                            <td hidden><input type="text" name="trsdetid[]"
+                                                    value="{{ $admin->trsdetid }}"></td>
+                                            <td>{{ $index + 1 }}</th>
+                                            <td>{{ $admin->itemname }}</td>
+                                            <td><select class="form-select form-select-sm" name="keputusan[]">
+                                                    @if ($admin->keputusan != null)
+                                                        <option value="{{ $admin->keputusan }}" selected>
+                                                            @foreach ($keputusan as $kep)
+                                                            @if ($kep->keputusanid == $admin->keputusan)
+                                                            {{ $kep->keputusandesc }}
+                                                            @endif                                                                
+                                                            @endforeach
+                                                            </option>
+                                                        @foreach ($keputusan as $kep)
+                                                            <option value="{{ $kep->keputusanid }}">
+                                                                {{ $kep->keputusandesc }}</option>
+                                                        @endforeach
+                                                    @else
+                                                        <option selected>Pilih Keputusan</option>
+                                                        @foreach ($keputusan as $kep)
+                                                            <option value="{{ $kep->keputusanid }}">
+                                                                {{ $kep->keputusandesc }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select> </td>
+                                            <td>{{ $admin->onhand }}</td>
+                                            <td>{{ $admin->statuscso }}</td>
+                                            <td>{{ number_format($admin->selisihplus, 2, '.', ',') }}</td>
+                                            <td>{{ number_format($admin->selisihmin, 2, '.', ',') }}</td>
+                                            <td>
+                                                @if ($admin->cogs != 0)
+                                                    Rp.{{ number_format($admin->cogs, 2, '.', ',') }}
+                                                
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($admin->cogs_manual != null)
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        name="hpp[]" value="{{ $admin->cogs_manual }}">
+                                                @else
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        name="hpp[]">
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($admin->nominalplus != 0)
+                                                    Rp.{{ number_format($admin->nominalplus, 2, '.', ',') }}
+                                               
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($admin->nominalmin != 0)
+                                                    Rp.{{ number_format($admin->nominalmin, 2, '.', ',') }}
+                                               
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($admin->pembebanan != null)
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        name="pembebanan[]" value="{{ $admin->pembebanan }}">
+                                                @else
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        name="pembebanan[]">
+                                                @endif
+                                            </td>
+                                            <td>{{ $admin->groupid }}</td>
+                                            <td>
+                                                @if ($admin->nodoc != null)
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        name="nodok[]" value="{{ $admin->nodoc }}">
+                                                @else
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        name="nodok[]">
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($admin->keterangan != null)
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        name="keterangan[]" value="{{ $admin->keterangan }}">
+                                                @else
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        name="keterangan[]">
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            </div>
                             <button type="submit" name="simpan-itm-selisih" class="btn btn-primary mt-3"><i
                                     class="fas fa-save pe-2"></i>save</button>
                         </div>

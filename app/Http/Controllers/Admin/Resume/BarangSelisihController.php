@@ -16,10 +16,16 @@ class BarangSelisihController extends Controller
     public function index()
     {
         $tertukar = DB::select('CALL ReportTertukar()');
-        $selisih = DB::select('CALL ReportSelisih()');        
+        $selisih = DB::select('CALL ReportSelisih()');
+        $kesalahan_admin = DB::select('CALL ReportKesalahanAdmin()');
         $keputusan = Keputusan::all();
 
-        return view('admin.resume.barang-selisih',['tertukar'=>$tertukar,'selisih'=>$selisih,'keputusan'=>$keputusan]);
+        return view('admin.resume.barang-selisih', [
+            'tertukar' => $tertukar,
+            'selisih' => $selisih,
+            'keputusan' => $keputusan,
+            'kesalahan_admin' => $kesalahan_admin
+        ]);
     }
 
     /**
@@ -61,68 +67,40 @@ class BarangSelisihController extends Controller
     {
         DB::beginTransaction();
 
-        if ($request->type == 1) {
-            $statusUpdate = true;
-            for ($i = 0; $i < count($request->trsdetid); $i++) {
-                $trsDetId = $request->trsdetid[$i];
-                $keputusan = $request->keputusan[$i];
-                $pembebanan = $request->pembebanan[$i];
-                $nodoc = $request->nodok[$i];
-                $keterangan = $request->keterangan[$i];
+        $statusUpdate = true;
+        for ($i = 0; $i < count($request->trsdetid); $i++) {
+            $trsDetId = $request->trsdetid[$i];
+            $keputusan = $request->keputusan[$i];
+            $pembebanan = $request->pembebanan[$i];
+            $nodoc = $request->nodok[$i];
+            $keterangan = $request->keterangan[$i];
+            $hpp = $request->hpp[$i];
 
-                $checkStatusUpdate = DB::table('dbttrsdet')
-                    ->where('trsdetid', '=', $trsDetId)
-                    ->update([
-                        'keputusan' => $keputusan, 
-                        'pembebanan' => $pembebanan,
-                        'nodoc' => $nodoc, 
-                        'keterangan' => $keterangan
-                    ]);
-                
-                    if($checkStatusUpdate == false) {
-                        $statusUpdate = false;
-                        break;
-                    }
+            $checkStatusUpdate = DB::table('dbttrsdet')
+                ->where('trsdetid', '=', $trsDetId)
+                ->update([
+                    'keputusan' => $keputusan,
+                    'pembebanan' => $pembebanan,
+                    'nodoc' => $nodoc,
+                    'keterangan' => $keterangan,
+                    'cogs_manual' => $hpp
+                ]);
+
+            if ($checkStatusUpdate == false) {
+                $statusUpdate = false;
+                break;
             }
-            if($statusUpdate == true) {
-                DB::commit();
-                return redirect()->route("barang-selisih.index")->with('status', "Data item tertukar berhasil disimpan");
-            } else {
-                DB::rollback();
-                return redirect()->route("barang-selisih.index")->with('error', "Gagal menyimpan data item tertukar ");
-            }
-            
+        }
+        if ($statusUpdate == true) {
+            DB::commit();
+            if ($request->type == 1) return redirect()->route("barang-selisih.index")->with('status',  "Data item tertukar berhasil disimpan");
+            elseif ($request->type == 2) return redirect()->route("barang-selisih.index")->with('status',  "Data item selisih berhasil disimpan");
+            else return redirect()->route("barang-selisih.index")->with('status',  "Data item kesalahan admin berhasil disimpan");
         } else {
-
-            $statusUpdate = true;
-            for ($i = 0; $i < count($request->trsdetid); $i++) {
-                $trsDetId = $request->trsdetid[$i];
-                $keputusan = $request->keputusan[$i];
-                $pembebanan = $request->pembebanan[$i];
-                $nodoc = $request->nodok[$i];
-                $keterangan = $request->keterangan[$i];
-
-                $checkStatusUpdate = DB::table('dbttrsdet')
-                    ->where('trsdetid', '=', $trsDetId)
-                    ->update([
-                        'keputusan' => $keputusan, 
-                        'pembebanan' => $pembebanan,
-                        'nodoc' => $nodoc, 
-                        'keterangan' => $keterangan
-                    ]);
-                
-                    if($checkStatusUpdate == false) {
-                        $statusUpdate = false;
-                        break;
-                    }
-            }
-            if($statusUpdate == true) {
-                DB::commit();
-                return redirect()->route("barang-selisih.index")->with('status', "Data item selisih berhasil disimpan");
-            } else {
-                DB::rollback();
-                return redirect()->route("barang-selisih.index")->with('error', "Gagal menyimpan data item selisih ");
-            }
+            DB::rollback();
+            if ($request->type == 1) return redirect()->route("barang-selisih.index")->with('error', "Gagal menyimpan data item tertukar ");
+            elseif ($request->type == 2) return redirect()->route("barang-selisih.index")->with('error', "Gagal menyimpan data item selisih ");
+            else return redirect()->route("barang-selisih.index")->with('error', "Gagal menyimpan data item kesalahan admin ");
         }
     }
 

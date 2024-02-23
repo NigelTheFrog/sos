@@ -55,7 +55,8 @@ class ItemController extends Controller
         ]);
     }
 
-    public function checkItemBlmProses() {
+    public function checkItemBlmProses()
+    {
         $itemBlmProses = ViewDashboard::where('status', '=', '0')->get();
 
         return response()->json(['data' => count($itemBlmProses)]);
@@ -405,6 +406,7 @@ class ItemController extends Controller
         if ($request->batchno == null) {
             $updateAvalan = DB::table('dbttrsdet')
                 ->where('itemid', $request->itemid)
+                ->where('dbttrsdet.trsdetid', '=', $request->trsdetid)
                 ->update([
                     'koreksi' => $request->koreksi,
                     'deviasi' => $request->deviasi,
@@ -417,6 +419,7 @@ class ItemController extends Controller
             $updateAvalan = DB::table('dbttrsdet')
                 ->where('itemid', $request->itemid)
                 ->where('batchno', $request->batchno)
+                ->where('dbttrsdet.trsdetid', '=', $request->trsdetid)
                 ->update([
                     'koreksi' => $request->koreksi,
                     'deviasi' => $request->deviasi,
@@ -452,7 +455,7 @@ class ItemController extends Controller
                 ->get();
 
             $cekCso = DB::table('dbtcsodet2')
-                ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
+                ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbttrsdet.statusitem', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.csodetid', '=', 'dbtcsodet2.csodetid')
                 ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet2.csoid')
                 ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
@@ -462,6 +465,13 @@ class ItemController extends Controller
                 ->whereColumn('csocount', 'viewdashboard.statuscso')
                 ->where('statussubmit', 'P')
                 ->where('dbtcsohed.status', 'A')
+                ->get();
+
+            $cekItem = DB::table('dbttrsdet')
+                ->select('dbttrsdet.statusitem','dbttrsdet.trsid')
+                ->leftjoin('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+                ->where('dbttrsdet.itemid', '=', $request->id)
+                ->where('dbttrshed.statusdoc', '=', 'A')
                 ->get();
         } else {
             $data = ViewDashboard::where('itembatchid', '=', $request->id . $request->batchno)->get();
@@ -477,7 +487,7 @@ class ItemController extends Controller
                 ->get();
 
             $cekCso = DB::table('dbtcsodet2')
-                ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
+                ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbttrsdet.statusitem', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.csodetid', '=', 'dbtcsodet2.csodetid')
                 ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet2.csoid')
                 ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
@@ -487,6 +497,13 @@ class ItemController extends Controller
                 ->whereColumn('csocount', 'viewdashboard.statuscso')
                 ->where('statussubmit', 'P')
                 ->where('dbtcsohed.status', 'A')
+                ->get();
+
+            $cekItem = DB::table('dbttrsdet')
+                ->select('dbttrsdet.statusitem','dbttrsdet.trsid')
+                ->leftjoin('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+                ->where('dbttrsdet.itembatchid', '=', $request->id . $request->batchno)
+                ->where('dbttrshed.statusdoc', '=', 'A')
                 ->get();
         }
 
@@ -518,10 +535,10 @@ class ItemController extends Controller
             ->select(['userid', 'name'])
             ->distinct()
             ->get();
-
         return view('admin.dashboard.table.item.detail-cso-item', [
             "itemid" => $data[0]->itemid,
             "batchno" => $data[0]->batchno,
+            "trsdetid" => $data[0]->trsdetid,
             "heatno" => $data[0]->heatno,
             "dimension" => $data[0]->dimension,
             "tolerance" => $data[0]->tolerance,
@@ -531,15 +548,61 @@ class ItemController extends Controller
             "selisih" => $data[0]->selisih,
             "koreksi" => $data[0]->koreksi,
             "deviasi" => $data[0]->deviasi,
+            "keterangan" => $data[0]->keterangan,
             "tableDetailDashboard" => $dataDetailDashboard,
             "dataCso" => $dataCsoCount,
             "totalCso" => $dataTotalCso,
             "analisator" => $dataAnalisator,
             "group" => $dataGroup,
             "dbxJob" => $dataDbxJob,
-            "checkCso" => count($cekCso)
+            "checkCso" => count($cekCso),
+            "checkItemType" => $cekItem[0]
         ]);
-        // return response()->json(['data'=>$dataAnalisator]); 
+        // return response()->json(["itemid" => $data[0]->itemid,
+        // "batchno" => $data[0]->batchno,
+        // "heatno" => $data[0]->heatno,
+        // "dimension" => $data[0]->dimension,
+        // "tolerance" => $data[0]->tolerance,
+        // "kondisi" => $data[0]->kondisi,
+        // "onhand" => $data[0]->onhand,
+        // "totalcso" => $data[0]->totalcso,
+        // "selisih" => $data[0]->selisih,
+        // "koreksi" => $data[0]->koreksi,
+        // "deviasi" => $data[0]->deviasi,
+        // "tableDetailDashboard" => $dataDetailDashboard,
+        // "dataCso" => $dataCsoCount,
+        // "totalCso" => $dataTotalCso,
+        // "analisator" => $dataAnalisator,
+        // "group" => $dataGroup,
+        // "dbxJob" => $dataDbxJob,
+        // "checkCso" => count($cekCso),
+        // "checkItemType" => $cekCsoType[0]]); 
+    }
+
+    public function hapusTemuanItem(Request $request)
+    {
+        DB::beginTransaction();
+
+        $deleteDataFromDbtTrsDet = DB::table('dbttrsdet')
+            ->where('dbttrsdet.itembatchid', '=', $request->itemid . $request->batchno)
+            ->where('dbttrsdet.trsdetid', '=', $request->trsdetid)
+            ->delete();
+
+        if ($deleteDataFromDbtTrsDet == true) {
+            $deleteDataFromDbxImpor = DB::table('dbximpor')
+                ->where('dbximpor.itemid', '=', $request->itemid)
+                ->delete();
+            if ($deleteDataFromDbxImpor == true) {
+                DB::commit();
+                return response()->json(['result' => 1]);
+            } else {
+                DB::rollBack();
+                return response()->json(['result' => 0]); 
+            }
+        } else {
+            DB::rollBack();
+            return response()->json(['result' => 0]);
+        }
     }
 
     /**

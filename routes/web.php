@@ -46,8 +46,10 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
         Route::post('item/detail-cso-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showDetailCso'])->name('item.detail-cso');
         Route::post('item/update-cso-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'updateCsoItem'])->name('item.update-cso');
         Route::post('item/cso-ulang', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'csoUlang'])->name('item.cso-ulang');
+        Route::post('item/hapus-temuan-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'hapusTemuanItem'])->name('item.hapus-temuan-item');
         Route::post('avalan/detail-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showDetailCsoAvalan'])->name('avalan.detail-cso');
         Route::post('avalan/update-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'updateCsoAvalan'])->name('avalan.update-cso');
+        Route::post('avalan/hapus-temuan-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'hapusTemuanAvalan'])->name('avalan.hapus-temuan-avalan');
         Route::post('avalan/cso-ulang', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'csoUlang']);
         Route::post("main-table-avalan",[App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showMainTable']);
         Route::post("main-table-item",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
@@ -91,5 +93,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function() {
 });
 
 Auth::routes();
+Route::get("/",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index'])->middleware(['auth','isAdmin']);
+Route::get("home",[App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index'])->middleware(['auth','isAdmin']);
 
 

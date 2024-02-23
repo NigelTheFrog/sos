@@ -5,45 +5,42 @@
 @section('content')
 
     <div class="container-fluid px-4">
-        <div class="row justify-content-between align-items-center mt-4">
-            <div class="col-4">
+        <div class="row justify-content-between align-items-center my-4">
+            <div class="col">
                 <h1>Dashboard Item</h1>
             </div>
-            <input type="text" id="countCsoActive" value="{{$countCsoActive}}" hidden>
+            <input type="text" id="countCsoActive" value="{{ $countCsoActive }}" hidden>
             @if (Auth::user()->level == 1 || Auth::user()->level == 2)
                 <div class="col-4">
-                    @if ($countCsoActive > 0)
-                        <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1" 
-                        id="buttonTutupCso" @if ($countCsoActive > 0) disabled @endif>
-                            <i class="bi bi-stopwatch-fill"></i> Tutup Akses Mobile
-                        </button>
-                    @elseif ($countCsoEnd > 0)
-                        <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end"
-                            value="2">
-                            <i class="bi bi-stopwatch-fill"></i> Finish CSO
-                        </button>
-                    @else
-                        <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end"
-                            value="3">
-                            <i class="bi bi-stopwatch-fill"></i> Mulai CSO Item
-                        </button>
-                    @endif
+                    <div class="d-flex justify-content-end">
+                        <div class="col align-items-end">
+                            <input class=" form-control col-9 text-center bg-dark-subtle float-end" type="text"
+                                placeholder="{{ $csodate }}" aria-label="Disabled input example" style="width: 200px"
+                                disabled>
+                        </div>
+                        <div class="col align-items-end">
+                            @if ($countCsoActive > 0)
+                                <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end"
+                                    value="1" id="buttonTutupCso" @if ($countCsoActive > 0) disabled @endif>
+                                    <i class="bi bi-stopwatch-fill"></i> Tutup Akses Mobile
+                                </button>
+                            @elseif ($countCsoEnd > 0)
+                                <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end"
+                                    value="2">
+                                    <i class="bi bi-stopwatch-fill"></i> Finish CSO
+                                </button>
+                            @else
+                                <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end"
+                                    value="3">
+                                    <i class="bi bi-stopwatch-fill"></i> Mulai CSO Item
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+
                 </div>
             @endif
 
-        </div>
-        <div class="row justify-content-between align-items-center mb-2">
-            <div class="col-4">
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Dashboard Item</li>
-                </ol>
-            </div>
-            @if (Auth::user()->level == 1 || Auth::user()->level == 2)
-                <div class="col-5">
-                    <input class=" form-control col-9 text-center bg-dark-subtle float-end" type="text"
-                        placeholder="{{ $csodate }}" aria-label="Disabled input example" style="width: 200px" disabled>
-                </div>
-            @endif
         </div>
 
         <div class="row" id="banner-item">
@@ -79,7 +76,7 @@
                     </div>
                 </div>
             </div>
-        </div>       
+        </div>
         <div class="modal fade text-left" id="ModalItemOk" tabindex="-1">
             <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -160,7 +157,7 @@
 
                 </div>
             </div>
-            <div class="card-body ms-4 me-3" id="main-table-item" style="overflow: auto; max-height: 100vh;">
+            <div class="card-body" id="main-table-item" style="overflow: auto">
                 @include('admin.dashboard.table.item.main-table-item')
             </div>
         </div>
@@ -318,6 +315,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button id="buttonSubmit" type="button" class="btn btn-primary">Simpan</button>
                     </div>
@@ -333,21 +331,21 @@
         var intervalCheckItemBlmProses = undefined;
         var buttonTutupCso = document.getElementById('buttonTutupCso');
 
-        if($('#countCsoActive').val() == 1) {
+        if ($('#countCsoActive').val() == 1) {
             setInterval(function(event) {
-            $.ajax({
-                url: "{{ url('admin/dashboard/check-item') }}",
-                type: 'GET',
-                
-                success: function(data) {
-                    if(data['data']) {
-                        buttonTutupCso.disabled = true;
-                    } else {
-                        buttonTutupCso.disabled = false;
+                $.ajax({
+                    url: "{{ url('admin/dashboard/check-item') }}",
+                    type: 'GET',
+
+                    success: function(data) {
+                        if (data['data']) {
+                            buttonTutupCso.disabled = true;
+                        } else {
+                            buttonTutupCso.disabled = false;
+                        }
                     }
-                }
-            });       
-        }, 1000);
+                });
+            }, 1000);
         } else {
             if (typeof myTimeout != undefined) clearTimeout(intervalCheckItemBlmProses);
         }
@@ -372,7 +370,6 @@
                     $('#detailCso').html(data);
                     $('#formSubmitCso').attr('action', `{{ route('item.update-cso') }}`);
                     $("#buttonSubmit").attr('type', 'submit');
-                    // console.log(data.data[0].kesalahan_admin);
                 },
                 error: function() {
                     alert("Error");
@@ -389,11 +386,13 @@
         }
 
         setInterval(function(event) {
-            var searchValue = $("#searchModItem").val();     
+            var searchValue = $("#searchModItem").val();
             $.ajax({
                 url: "{{ url('admin/dashboard/main-table-item') }}",
                 type: 'POST',
-                data: { search: searchValue },
+                data: {
+                    search: searchValue
+                },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -401,18 +400,18 @@
                     // console.log(data);
                     $('#main-table-item').html(data);
                 }
-            });       
+            });
         }, 1000);
 
         setInterval(function(event) {
             $.ajax({
                 url: "{{ url('admin/dashboard/banner-item') }}",
                 type: 'GET',
-                
+
                 success: function(data) {
                     $('#banner-item').html(data);
                 }
-            });       
+            });
         }, 1000);
 
         function openModalBlmProses(button) {

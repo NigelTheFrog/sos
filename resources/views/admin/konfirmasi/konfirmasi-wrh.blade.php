@@ -44,7 +44,6 @@
         silentInitialValueSet: false,
         maxWidth: '92%',
         noSearchResultsText: "Nama Pelaku tidak ditemukan"
-        // dropboxWidth:200px
     });
 
     function showData(button) {

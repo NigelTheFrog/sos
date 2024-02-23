@@ -16,9 +16,16 @@ class AvalanSelisihController extends Controller
     {
         $tertukar = DB::select('CALL ReportAvalanTertukar()');
         $selisih = DB::select('CALL ReportAvalanSelisih()');
+        $kesalahan_admin = DB::select('CALL ReportAvalanKesalahanAdmin()');
         $keputusan = Keputusan::all();
 
-        return view('admin.resume.avalan-selisih', ['tertukar' => $tertukar, 'selisih' => $selisih, 'keputusan' => $keputusan]);
+        return view('admin.resume.avalan-selisih', [
+            'tertukar' => $tertukar, 
+            'selisih' => $selisih, 
+            'keputusan' => $keputusan,
+            'kesalahan_admin' => $kesalahan_admin
+
+        ]);
     }
 
     /**
@@ -36,14 +43,14 @@ class AvalanSelisihController extends Controller
     {
         DB::beginTransaction();
 
-        if ($request->type == 1) {
-            $statusUpdateTertukar = true;
+            $statusUpdate = true;
             for ($i = 0; $i < count($request->trsdetid); $i++) {
                 $trsDetId = $request->trsdetid[$i];
                 $keputusan = $request->keputusan[$i];
                 $pembebanan = $request->pembebanan[$i];
                 $nodoc = $request->nodok[$i];
                 $keterangan = $request->keterangan[$i];
+                $hpp = $request->hpp[$i];
 
                 $checkStatusUpdate = DB::table('dbttrsdeta')
                     ->where('trsdetid', '=', $trsDetId)
@@ -51,44 +58,31 @@ class AvalanSelisihController extends Controller
                         'keputusan' => $keputusan,
                         'pembebanan' => $pembebanan,
                         'nodoc' => $nodoc,
-                        'keterangan' => $keterangan
+                        'keterangan' => $keterangan,
+                        'cogs_manual' => $hpp
                     ]);
 
-                // if ($checkStatusUpdate == false) {
-                //     $statusUpdateTertukar = false;
-                //     break;
-                // }
+                if ($checkStatusUpdate == false) {
+                        $statusUpdate = false;
+                        break;
+                    }
+
+                
             }
 
-            // if ($statusUpdateTertukar == true) {
+            if ($statusUpdate == true) {
                 DB::commit();
-                return redirect()->route("avalan-selisih.index")->with('status', "Data avalan tertukar berhasil disimpan");
-            // } else {
-            //     DB::rollback();
-            //     return redirect()->route("avalan-selisih.index")->with('error', "Gagal menyimpan data avalan tertukar ");
-            // }
-        } else {
-
-            for ($i = 0; $i < count($request->trsdetid); $i++) {
-                $trsDetId = $request->trsdetid[$i];
-                $keputusan = $request->keputusan[$i];
-                $pembebanan = $request->pembebanan[$i];
-                $nodoc = $request->nodok[$i];
-                $keterangan = $request->keterangan[$i];
-
-                $checkStatusUpdate = DB::table('dbttrsdeta')
-                    ->where('trsdetid', '=', $trsDetId)
-                    ->update([
-                        'keputusan' => $keputusan,
-                        'pembebanan' => $pembebanan,
-                        'nodoc' => $nodoc,
-                        'keterangan' => $keterangan
-                    ]);
+                if ($request->type == 1) return redirect()->route("avalan-selisih.index")->with('status',  "Data avalan tertukar berhasil disimpan");
+                elseif ($request->type == 2) return redirect()->route("avalan-selisih.index")->with('status',  "Data avalan selisih berhasil disimpan");
+                else return redirect()->route("avalan-selisih.index")->with('status',  "Data avalan kesalahan admin berhasil disimpan");
+            } else {
+                DB::rollback();
+                if ($request->type == 1) return redirect()->route("avalan-selisih.index")->with('error', "Gagal menyimpan data avalan tertukar ");
+                elseif ($request->type == 2) return redirect()->route("avalan-selisih.index")->with('error', "Gagal menyimpan data avalan selisih ");
+                else return redirect()->route("avalan-selisih.index")->with('error', "Gagal menyimpan data avalan kesalahan admin ");
             }
-                DB::commit();
-                return redirect()->route("avalan-selisih.index")->with('status', "Data avalan selisih berhasil disimpan");
-            
-        }
+
+              
     }
 
     /**

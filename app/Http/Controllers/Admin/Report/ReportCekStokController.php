@@ -56,6 +56,7 @@ class ReportCekStokController extends Controller
                     'dbttrsdet.onhand',
                     'dbttrsdet.nodoc',
                     DB::raw('dbttrsdet.cogs as hpp'),
+                    DB::raw('dbttrsdet.cogs_manual as hpp_manual'),
                     'dbttrsdet.keterangan',
                     DB::raw('coalesce(dbttrsdet.pembebanan,0) as pembebanan'),
                     DB::raw('sum(coalesce(dbtcsodet2.qty,0)) as hasilcso'),
@@ -77,6 +78,7 @@ class ReportCekStokController extends Controller
                     'dbttrsdet.onhand',
                     'dbttrsdet.nodoc',
                     DB::raw('dbttrsdet.cogs as hpp'),
+                    DB::raw('dbttrsdet.cogs_manual as hpp_manual'),
                     'dbttrsdet.keterangan',
                     DB::raw('coalesce(dbttrsdet.pembebanan,0) as pembebanan'),
                     DB::raw('sum(coalesce(dbtcsodet2.qty,0)) as hasilcso'),
@@ -99,6 +101,7 @@ class ReportCekStokController extends Controller
                     'dbttrsdet.onhand',
                     'dbttrsdet.nodoc',
                     DB::raw('dbttrsdet.cogs as hpp'),
+                    DB::raw('dbttrsdet.cogs_manual as hpp_manual'),
                     'dbttrsdet.keterangan',
                     DB::raw('coalesce(dbttrsdet.pembebanan,0) as pembebanan'),
                     DB::raw('sum(coalesce(dbtcsodet2.qty,0)) as hasilcso'),
@@ -110,39 +113,50 @@ class ReportCekStokController extends Controller
                 ->whereRaw('coalesce(dbttrsdet.kesalahan_admin,0) = 0')
                 ->groupBy('dbttrsdet.trsdetid')
                 ->get();
+            
+            $endOfDatePreviousMonth = Carbon::parse($dataDbtTrsHed[0]->startcsodate)
+            ->copy()
+            ->subMonth()
+            ->endOfMonth()
+            ->toDateString();
 
+            $startDatePreviou3sMonth = Carbon::parse($dataDbtTrsHed[0]->startcsodate)
+            ->copy()
+            ->subMonths(3)
+            ->startOfMonth()
+            ->toDateString();            
+            
             $item_ok = DB::table('dbttrshed')
                 ->join('dbttrsdet', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->select(DB::raw("COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
+                ->select(DB::raw("dbttrshed.trsid as trsid, COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
                 ->where('dbttrshed.statusdoc', 'P')
                 ->whereRaw('(coalesce(dbttrsdet.koreksi, 0) + coalesce(dbttrsdet.deviasi, 0) + coalesce(dbtcsodet2.qty, 0)) = dbttrsdet.onhand')
-                ->whereRaw("dbttrshed.startcsodate >= DATE_SUB(DATE_SUB('".$dataDbtTrsHed[0]->startcsodate."', interval 1 month), interval 3 month)")
-                ->whereRaw("dbttrshed.startcsodate < DATE_SUB('".$dataDbtTrsHed[0]->startcsodate."', interval 1 month)")
-                // ->setBindings([$dataDbtTrsHed[0]->startcsodate, $dataDbtTrsHed[0]->startcsodate]) 
-                ->groupBy('monthstart', 'dbttrshed.csomaterial');
-
+                ->whereBetween('dbttrshed.startcsodate',[$startDatePreviou3sMonth,$endOfDatePreviousMonth])
+                ->orderBy('dbttrshed.startcsodate')
+                ->groupBy('dbttrshed.trsid');
+                
             $item_ada = DB::table('dbttrshed')
                 ->join('dbttrsdet', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->select(DB::raw("COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
+                ->select(DB::raw("dbttrshed.trsid as trsid, COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
                 ->where('dbttrshed.statusdoc', 'P')
                 ->whereRaw('coalesce(dbtcsodet2.qty, 0) > 0')
-                ->whereRaw("dbttrshed.startcsodate >= DATE_SUB(DATE_SUB('".$dataDbtTrsHed[0]->startcsodate."', interval 1 month), interval 3 month)")
-                ->whereRaw("dbttrshed.startcsodate < DATE_SUB('".$dataDbtTrsHed[0]->startcsodate."', interval 1 month)")
-                // ->setBindings([$dataDbtTrsHed[0]->startcsodate, $dataDbtTrsHed[0]->startcsodate]) 
-                ->groupBy('monthstart', 'dbttrshed.csomaterial');
+                ->whereBetween('dbttrshed.startcsodate',[$startDatePreviou3sMonth,$endOfDatePreviousMonth])
+                ->orderBy('dbttrshed.startcsodate')
+                ->groupBy('dbttrshed.trsid');
+                
 
             $data3BulanTerakhir = DB::query()
                 ->fromSub($item_ok, 'item_ok')
                 ->joinSub($item_ada, 'item_ada', function ($join) {
-                    $join->on('item_ok.monthstart', '=', 'item_ada.monthstart');
-                    $join->on('item_ok.csomaterial', '=', 'item_ada.csomaterial');
+                    $join->on('item_ok.trsid', '=', 'item_ada.trsid');
                 })
                 ->select('item_ok.monthstart', 'item_ok.csomaterial', 'item_ok.count as item_ok', 'item_ada.count as item_ada')
                 ->get();
+           
 
             $view = view("admin.report.stok-item.pdf-resume", [
                 "data3BulanTerakhir" => $data3BulanTerakhir,
@@ -152,8 +166,6 @@ class ReportCekStokController extends Controller
                 "dataCso" => $dataDbtTrsHed[0],
                 "dataAnalisator" => $dataAnalisator,
                 "dataPelaku" => $dataPelaku,
-                // "dataTertukar" => $dataTertukar,
-                // "dataSelisih" => $dataSelisih,
                 "dataRekapitulasi" => $dataRekapitulasi[0],
             ]);
         } else {

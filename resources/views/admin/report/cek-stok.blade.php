@@ -56,15 +56,13 @@
                     <div class="modal-body">
                         <div class="form-group row col">
                             <label class="col=sm-e col-form-label">Nomor Dokumen </label>
-                            <div class="col-sm-9">
-                                <select class="form-select" style="width: 110%" name="trsidresume">
+                                <select style="width: 110%" id="select-resume" name="trsidresume" placeholder="Daftar CSO">
                                     @foreach ($listNodoc as $nodoc)
                                         <option value="{{ $nodoc->trsid }}">{{ $nodoc->doccsoid }} -
                                             {{ $nodoc->csomaterial }}
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -92,15 +90,13 @@
                     <div class="modal-body">
                         <div class="form-group row col">
                             <label class="col=sm-e col-form-label">Nomor Dokumen </label>
-                            <div class="col-sm-9">
-                                <select class="form-select" style="width: 110%" name="trsidlaporan">
+                                <select style="width: 110%" name="trsidlaporan" id="select-laporan" placeholder="Daftar CSO">
                                     @foreach ($listNodoc as $nodoc)
                                         <option value="{{ $nodoc->trsid }}">{{ $nodoc->doccsoid }} -
                                             {{ $nodoc->csomaterial }}
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -112,6 +108,26 @@
         </div>
     </div>
     <script>
+    document.getElementById("select-resume").selectedIndex = -1;
+    
+        VirtualSelect.init({
+        search: true,
+        ele: '#select-resume',
+        silentInitialValueSet: false,
+        maxWidth: '92%',
+        noSearchResultsText: "CSO Tidak ditemukan"
+        });
+    
+    document.getElementById("select-laporan").selectedIndex = -1;
+
+        VirtualSelect.init({
+        search: true,
+        ele: '#select-laporan',
+        silentInitialValueSet: false,
+        maxWidth: '92%',
+        noSearchResultsText: "CSO Tidak ditemukan"
+        });
+
         function closeLaporanCSO(button) {
             $('#modalLaporanCSO').modal('hide');
         }
