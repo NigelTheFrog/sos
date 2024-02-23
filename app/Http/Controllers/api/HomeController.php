@@ -89,21 +89,31 @@ class HomeController extends Controller
         }   
     }
 
-    public function checkCsoItemStatus() {
+    public function checkCsoItemStatus(Request $request) {
         $data = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'A')->orderByDesc('trsid')->limit(1)->get();
 
         if(count($data) > 0) {
-            return response()->json(['result' => 1, 'trsid' => $data[0]->trsid]);
+            $checkDbxJob = DB::table('dbxjob')->where('username', '=', $request->username)->get();
+            if(count($checkDbxJob) > 0 ) {
+                return response()->json(['result' => 1, 'trsid' => $data[0]->trsid]);
+            } else {
+                return response()->json(['result' => 0]); 
+            }            
         } else {
             return response()->json(['result' => 0]);
         }
     }
 
-    public function checkCsoAvalanStatus() {
+    public function checkCsoAvalanStatus(Request $request) {
         $data = DB::table('dbttrsheda')->where('dbttrsheda.statusdoc', '=', 'A')->orderByDesc('trsid')->limit(1)->get();
 
         if(count($data) > 0) {
-            return response()->json(['result' => 1, 'trsid' => $data[0]->trsid]);
+            $checkDbxJob = DB::table('dbxjob')->where('username', '=', $request->username)->get();
+            if(count($checkDbxJob) > 0 ) {
+                return response()->json(['result' => 1, 'trsid' => $data[0]->trsid]);
+            } else {
+                return response()->json(['result' => 0]); 
+            }            
         } else {
             return response()->json(['result' => 0]);
         }

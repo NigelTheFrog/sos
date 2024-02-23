@@ -46,11 +46,13 @@ Route::post('update-perhitungan',[DetailController::class,'updatePerhitungan']);
 Route::post('update-item',[DetailController::class,'updateItem']);
 Route::post('update-temuan',[DetailController::class,'updateTemuan']);
 
+Route::post('delete-item',[DetailController::class,'deleteItem']);
+
 Route::post('daftar-item',[HomeController::class,'listItem']);
 Route::post('daftar-avalan',[HomeController::class,'listAvalan']);
 Route::post('submit-item',[HomeController::class,'submitItem']);
-Route::get('check-status-cso-item',[HomeController::class,'checkCsoItemStatus']);
-Route::get('check-status-cso-avalan',[HomeController::class,'checkCsoAvalanStatus']);
+Route::post('check-status-cso-item',[HomeController::class,'checkCsoItemStatus']);
+Route::post('check-status-cso-avalan',[HomeController::class,'checkCsoAvalanStatus']);
 
 Route::post('daftar-item-analisator',[AnalisaatorController::class,'listItemAnalisator']);
 Route::post('daftar-avalan-analisator',[AnalisaatorController::class,'listAvalanAnalisator']);
