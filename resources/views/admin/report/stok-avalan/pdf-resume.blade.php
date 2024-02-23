@@ -1,4 +1,3 @@
-
 <style>
     .title-info {
         padding-top: 25px;
@@ -101,7 +100,8 @@
             I. PELAKSANAAN CEK STOK
         </h4>
         <p>Nama perusahaan : PT. Sutindo Raya Mulia Surabaya</p>
-        <p>Tanggal pelaksanaan cek stok : {{ \Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')  }} </p>
+        <p>Tanggal pelaksanaan cek stok : {{ \Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y') }}
+        </p>
         <p>Lokasi/kelompok produk yang di cek stok : {{ $dataCso->csomaterial }} </p>
     </div>
     <div>
@@ -223,7 +223,7 @@
             IV. LIST ITEM BARANG YANG SELISIH
         </h4>
 
-        <table style=" border-collapse: collapse;width: 100%;" class="table">
+        <table style=" border-collapse: collapse;width: 100%;">
             <tbody>
                 <tr class="tr-head">
                     <th class="th-content" rowspan="2" style="width: 0.5cm">No</th>
@@ -234,8 +234,10 @@
                     <th class="th-content" colspan="2" style="width: 1.75cm">Barang Selisih</th>
                     <th class="th-content" rowspan="2" style="width: 3cm">HPP</th>
                     <th class="th-content" colspan="2">Nominal</th>
-                    <th class="th-content" rowspan="2" style="width: 2.25cm">Nominal <br> Pembebanan</th>
-                    <th class="th-content" rowspan="2" style="width: 2.25cm">No. Adjust <br> (GI/SJ & GR)</th>
+                    <th class="th-content" rowspan="2" style="width: 2.25cm">Nominal <br>
+                        Pembebanan</th>
+                    <th class="th-content" rowspan="2" style="width: 2.25cm">No. Adjust <br>
+                        (GI/SJ & GR)</th>
                     <th class="th-content" rowspan="2" style="width: 2.5cm">Keterangan</th>
                 </tr>
                 <tr class="tr-head">
@@ -251,30 +253,32 @@
                     @foreach ($dataItemKesalahanAdmin as $index => $itemKesalahanAdmin)
                 <tr class="tr-selisih">
                     <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
-                    <td class="td-content" style="padding-left: 5px">{{ $itemKesalahanAdmin->itemname }}</td>
+                    <td class="td-content" style="padding-left: 5px">
+                        {{ $itemKesalahanAdmin->itemname }}</td>
                     <td class="td-content" style="text-align: center">
                         @if ($itemKesalahanAdmin->keputusan != 0)
-                            {{ $itemKesalahanAdmin->keputusan }}
+                            {{ $itemKesalahanAdmin->keputusandesc }}
                         @else
                             -
                         @endif
                     </td>
-                    <td class="td-content" style="text-align: center">{{ $itemKesalahanAdmin->onhand }}</td>
                     <td class="td-content" style="text-align: center">
-                        {{ $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi }}
+                        {{ number_format($itemKesalahanAdmin->onhand, 2, ',', '.') }}</td>
+                    <td class="td-content" style="text-align: center">
+                        {{ number_format($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi, 2, ',', '.') }}
                     </td>
                     <td class="td-content" style="text-align: center">
                         @if (
                             $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi >
                                 $itemKesalahanAdmin->onhand)
-                            {{ $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand }}
+                            {{ number_format( $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand, 2, ',', '.') }}
                         @endif
                     </td>
                     <td style="text-align: center" class="td-selisih-minus">
                         @if (
                             $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi <
                                 $itemKesalahanAdmin->onhand)
-                            {{ $itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi) }}
+                            {{ number_format($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi), 2, ',', '.') }}
                         @endif
                     </td>
                     <td class="td-content" style="text-align: center">Rp.
@@ -309,8 +313,10 @@
                     </td>
                     <td class="td-content" style="text-align: center">Rp.
                         {{ number_format($itemKesalahanAdmin->pembebanan, 2, ',', '.') }}</td>
-                    <td class="td-content" style="text-align: center">{{ $itemKesalahanAdmin->nodoc }}</td>
-                    <td class="td-content" style="text-align: center">{{ $itemKesalahanAdmin->keterangan }}</td>
+                    <td class="td-content" style="text-align: center">
+                        {{ $itemKesalahanAdmin->nodoc }}</td>
+                    <td class="td-content" style="text-align: center">
+                        {{ $itemKesalahanAdmin->keterangan }}</td>
                 </tr>
                 @endforeach
                 </tr>
@@ -323,8 +329,10 @@
                     <th class="th-content" colspan="2" style="width: 1.75cm">Barang Selisih</th>
                     <th class="th-content" rowspan="2" style="width: 3cm">HPP</th>
                     <th class="th-content" colspan="2">Nominal</th>
-                    <th class="th-content" rowspan="2" style="width: 2.25cm">Nominal <br> Pembebanan</th>
-                    <th class="th-content" rowspan="2" style="width: 2.25cm">No. Adjust <br> (GI/SJ & GR)</th>
+                    <th class="th-content" rowspan="2" style="width: 2.25cm">Nominal <br>
+                        Pembebanan</th>
+                    <th class="th-content" rowspan="2" style="width: 2.25cm">No. Adjust <br>
+                        (GI/SJ & GR)</th>
                     <th class="th-content" rowspan="2" style="width: 2.5cm">Keterangan</th>
                 </tr>
                 <tr class="tr-head">
@@ -340,25 +348,29 @@
                     @foreach ($dataItemTertukar as $index => $itemTertukar)
                 <tr class="tr-selisih">
                     <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
-                    <td class="td-content" style="padding-left: 5px">{{ $itemTertukar->itemname }}</td>
+                    <td class="td-content" style="padding-left: 5px">{{ $itemTertukar->itemname }}
+                    </td>
                     <td class="td-content" style="text-align: center">
                         @if ($itemTertukar->keputusan != 0)
-                            {{ $itemTertukar->keputusan }}
+                            {{ $itemTertukar->keputusandesc }}
                         @else
                             -
                         @endif
                     </td>
-                    <td class="td-content" style="text-align: center">{{ $itemTertukar->onhand }}</td>
                     <td class="td-content" style="text-align: center">
-                        {{ $itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi }}</td>
+                        {{ number_format($itemTertukar->onhand, 2, ',', '.') }}
+                    </td>
+                    <td class="td-content" style="text-align: center">
+                        {{ number_format($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi, 2, ',', '.') }}
+                    </td>
                     <td class="td-content" style="text-align: center">
                         @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi > $itemTertukar->onhand)
-                            {{ $itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi - $itemTertukar->onhand }}
+                            {{ number_format($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi - $itemTertukar->onhand, 2, ',', '.') }}
                         @endif
                     </td>
                     <td style="text-align: center" class="td-selisih-minus">
                         @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi < $itemTertukar->onhand)
-                            {{ $itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi) }}
+                            {{ number_format($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi), 2, ',', '.') }}
                         @endif
                     </td>
                     <td class="td-content" style="text-align: center">Rp.
@@ -391,7 +403,8 @@
                     <td class="td-content" style="text-align: center"> Rp.
                         {{ number_format($itemTertukar->pembebanan, 2, ',', '.') }}</td>
                     <td class="td-content" style="text-align: center">{{ $itemTertukar->nodoc }}</td>
-                    <td class="td-content" style="text-align: center">{{ $itemTertukar->keterangan }}</td>
+                    <td class="td-content" style="text-align: center">{{ $itemTertukar->keterangan }}
+                    </td>
                 </tr>
                 @endforeach
                 </tr>
@@ -404,8 +417,10 @@
                     <th class="th-content" colspan="2" style="width: 1.75cm">Barang Selisih</th>
                     <th class="th-content" rowspan="2" style="width: 3cm">HPP</th>
                     <th class="th-content" colspan="2">Nominal</th>
-                    <th class="th-content" rowspan="2" style="width: 2.25cm">Nominal <br> Pembebanan</th>
-                    <th class="th-content" rowspan="2" style="width: 2.25cm">No. Adjust <br> (GI/SJ & GR)</th>
+                    <th class="th-content" rowspan="2" style="width: 2.25cm">Nominal <br>
+                        Pembebanan</th>
+                    <th class="th-content" rowspan="2" style="width: 2.25cm">No. Adjust <br>
+                        (GI/SJ & GR)</th>
                     <th class="th-content" rowspan="2" style="width: 2.5cm">Keterangan</th>
                 </tr>
                 <tr class="tr-head">
@@ -422,25 +437,28 @@
                 @foreach ($dataItemSelisih as $index => $itemSelisih)
                     <tr class="tr-selisih">
                         <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
-                        <td class="td-content" style="padding-left: 5px">{{ $itemSelisih->itemname }}</td>
+                        <td class="td-content" style="padding-left: 5px">{{ $itemSelisih->itemname }}
+                        </td>
                         <td class="td-content" style="text-align: center">
                             @if ($itemSelisih->keputusan != 0)
-                                {{ $itemSelisih->keputusan }}
+                                {{ $itemSelisih->keputusandesc }}
                             @else
                                 -
                             @endif
                         </td>
-                        <td class="td-content" style="text-align: center">{{ $itemSelisih->onhand }}</td>
+                        <td class="td-content" style="text-align: center">{{ number_format($itemSelisih->onhand, 2, ',', '.') }}
+                        </td>
                         <td class="td-content" style="text-align: center">
-                            {{ $itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi }}</td>
+                            {{ number_format($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi, 2, ',', '.') }}
+                        </td>
                         <td class="td-content" style="text-align: center">
                             @if ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi > $itemSelisih->onhand)
-                                {{ $itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi - $itemSelisih->onhand }}
+                                {{ number_format($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi - $itemSelisih->onhand, 2, ',', '.') }}
                             @endif
                         </td>
                         <td style="text-align: center" class="td-selisih-minus">
                             @if ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi < $itemSelisih->onhand)
-                                {{ $itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi) }}
+                                {{number_format($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi), 2, ',', '.') }}
                             @endif
                         </td>
                         <td class="td-content" style="text-align: center">Rp.
@@ -472,8 +490,10 @@
                         </td>
                         <td class="td-content" style="text-align: center">Rp.
                             {{ number_format($itemSelisih->pembebanan, 2, ',', '.') }}</td>
-                        <td class="td-content" style="text-align: center">{{ $itemSelisih->nodoc }}</td>
-                        <td class="td-content" style="text-align: center">{{ $itemSelisih->keterangan }}</td>
+                        <td class="td-content" style="text-align: center">{{ $itemSelisih->nodoc }}
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            {{ $itemSelisih->keterangan }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -552,7 +572,7 @@
                         </td>
                         <td class="td-content">{{ $data->item_ok }}</td>
                         <td class="td-content">{{ $data->item_ada }}</td>
-                        <td class="td-content">{{ round(($data->item_ada/$data->item_ok) * 100,2) }}%</td>
+                        <td class="td-content">{{ round(($data->item_ada / $data->item_ok) * 100, 2) }}%</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -562,34 +582,49 @@
         <table>
             <thead>
                 <tr>
+                    @if ($type == 1)
                     <th>Dibuat Oleh</th>
-                    <th></th>
-                    <th colspan="3">Diperiksa Oleh</th>
+                    <th colspan="2">Diperiksa Oleh</th>
                     <th colspan="2">Disetujui Oleh</th>
                     <th>Diketahui Oleh</th>
+                    @else
+                    <th>Dibuat Oleh</th>
+                    <th></th>
+                    <th>Diperiksa Oleh</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td style="height: 2cm"></td>
-                    <td style="height: 2cm"></td>
-                    <td style="height: 2cm"></td>
-                    <td style="height: 2cm"></td>
-                    <td style="height: 2cm"></td>
-                    <td style="height: 2cm"></td>
-                    <td style="height: 2cm"></td>
-                    <td style="height: 2cm"></td>
-                </tr>
-                <tr>
-                    <td class="td-persetujuan">Staff Stock Control</td>
-                    <td class="td-persetujuan">PIC Warehouse</td>
-                    <td class="td-persetujuan">Ka Warehouse</td>
-                    <td class="td-persetujuan">Ka Fac</td>
-                    <td class="td-persetujuan">Ka Purch</td>
-                    <td class="td-persetujuan">Ka Ops</td>
-                    <td class="td-persetujuan">Reg. Man.</td>
-                    <td class="td-persetujuan">BOD</td>
-                </tr>
+                @if ($type == 1)
+                    <tr>
+                        <td style="height: 2cm"></td>
+                        <td style="height: 2cm"></td>
+                        <td style="height: 2cm"></td>
+                        <td style="height: 2cm"></td>
+                        <td style="height: 2cm"></td>
+                        <td style="height: 2cm"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-persetujuan">Staff Stock Control</td>
+                        <td class="td-persetujuan">Ka Fac</td>
+                        <td class="td-persetujuan">Ka Purch</td>
+                        <td class="td-persetujuan">Ka Ops</td>
+                        <td class="td-persetujuan">Reg. Man.</td>
+                        <td class="td-persetujuan">BOD</td>
+                    </tr>
+                @else
+                    <tr>
+                        <td style="height: 2cm"></td>
+                        <td style="height: 2cm"></td>
+                        <td style="height: 2cm"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-persetujuan">Staff Stock Control</td>
+                        <td class="td-persetujuan">PIC Warehouse</td>
+                        <td class="td-persetujuan">Ka Warehouse</td>
+                    </tr>
+                @endif
+
 
             </tbody>
         </table>

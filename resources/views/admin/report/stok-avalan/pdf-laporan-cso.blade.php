@@ -116,7 +116,6 @@
                 <thead>
                     <tr class="tr-head">
                         <th class="th-content-noncso" style="width: 0.5cm">No</th>
-                        <th class="th-content-noncso" style="width: 1.25cm">Item Code</th>
                         <th class="th-content-noncso"style="width: 1.25cm">Nama Item</th>
                         <th class="th-content-noncso"style="width: 0.5cm">UOM</th>
                         <th class="th-content-noncso" style="width: 0.75cm">Analisator</th>
@@ -130,7 +129,6 @@
                     @foreach ($dataLaporan as $index => $laporan)
                         <tr class="tr-rekapitulasi-global">
                             <td class="td-content">{{ $index + 1 }}</td>
-                            <td class="td-content">{{ $laporan->itemcode }}</td>
                             <td class="td-content">{{ $laporan->itemname }}</td>
                             <td class="td-content">{{ $laporan->uom }}</td>
                             <td class="td-content">{{ $laporan->name }}</td>

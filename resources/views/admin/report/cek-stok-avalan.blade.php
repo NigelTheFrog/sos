@@ -45,8 +45,9 @@
     <div class="modal fade text-left" id="modalLaporanResume" tabindex="-1">
         <div class="modal-dialog modal modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form action="{{ route('cek-stok-avalan.store') }}" method="POST">
+                <form action="{{ route('cek-stok-avalan.update','cek_stok_avalan') }}" method="POST">
                     @csrf
+                    @method('PUT')
                     <input type="text" name="type" value="1" hidden>
                     <div class="modal-header bg-secondary text-white">
                         <h1 class="modal-title fs-5" id="mdlMoreLabel">Laporan Hasil Pelaksanaan Cek Stok</h1>
@@ -56,20 +57,17 @@
                     <div class="modal-body">
                         <div class="form-group row col">
                             <label class="col=sm-e col-form-label">Nomor Dokumen </label>
-                            <div class="col-sm-9">
-                                <select class="form-select" style="width: 110%" name="trsidresume">
+                                <select style="width: 100%" id="select-resume" name="trsidresume" placeholder="Daftar CSO">
                                     @foreach ($listNodoc as $nodoc)
                                         <option value="{{ $nodoc->trsid }}">{{ $nodoc->doccsoid }} -
                                             {{ $nodoc->csomaterial }}
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary text-white"><i
-                                class="fas fa-print pe-2"></i>Preview</button>
+                        <button type="submit" class="btn btn-primary text-white">Preview</button>
                     </div>
                 </form>
             </div>
@@ -86,32 +84,50 @@
                         aria-label="Close">
                     </button>
                 </div>
-                <form action="{{ route('cek-stok-avalan.store') }}" method="POST">
+                <form action="{{ route('cek-stok-avalan.update','cek_stok_avalan') }}" method="POST">
                     @csrf
+                    @method('PUT')
                     <input type="text" name="type" value="2" hidden>
                     <div class="modal-body">
                         <div class="form-group row col">
                             <label class="col=sm-e col-form-label">Nomor Dokumen </label>
-                            <div class="col-sm-9">
-                                <select class="form-select" style="width: 110%" name="trsidlaporan">
+                                <select style="width: 100%" id="select-resume" name="trsidlaporan" placeholder="Daftar CSO">
                                     @foreach ($listNodoc as $nodoc)
                                         <option value="{{ $nodoc->trsid }}">{{ $nodoc->doccsoid }} -
                                             {{ $nodoc->csomaterial }}
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary text-white"><i
-                                class="fas fa-print pe-2"></i>Preview</button>
+                        <button type="submit" class="btn btn-primary text-white">Preview</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
     <script>
+
+document.getElementById("select-resume").selectedIndex = -1;
+    
+    VirtualSelect.init({
+    search: true,
+    ele: '#select-resume',
+    silentInitialValueSet: false,
+    maxWidth: '92%',
+    noSearchResultsText: "CSO Tidak ditemukan"
+    });
+
+document.getElementById("select-laporan").selectedIndex = -1;
+
+    VirtualSelect.init({
+    search: true,
+    ele: '#select-laporan',
+    silentInitialValueSet: false,
+    maxWidth: '92%',
+    noSearchResultsText: "CSO Tidak ditemukan"
+    });
         function closeLaporanCSO(button) {
             $('#modalLaporanCSO').modal('hide');
         }
