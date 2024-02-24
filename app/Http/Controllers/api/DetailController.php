@@ -51,13 +51,13 @@ class DetailController extends Controller
 
 
 
-        if ($simpanItem == true) {
+        // if ($simpanItem == true) {
             DB::commit();
             return response()->json(['result' => 1, 'data' => $simpanItem]);
-        } else {
-            DB::rollBack();
-            return response()->json(['result' => 0, 'message' => 'Penambahan data item gagal']);
-        }
+        // } else {
+        //     DB::rollBack();
+        //     return response()->json(['result' => 0, 'message' => 'Penambahan data item gagal']);
+        // }
     }
 
     public function deleteItem(Request $request)

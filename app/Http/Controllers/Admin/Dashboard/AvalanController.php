@@ -158,7 +158,7 @@ class AvalanController extends Controller
                 ->select(DB::raw("dbtcsodet.csoid, dbtcsodet.itemid, dbtcsodet.itembatchid, dbtcsodet.locationid, dbtcsodet.grade, 'A', 'D', 'T' "))
                 ->where('dbtcsodet.itembatchid', $request->itemid . $request->batchno)
                 ->where('dbtcsohed.status', '=', 'A')
-                ->distinct();
+                ->groupBy('dbtcsodet.itemid');
 
             $insertDbtCsoDet = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'itembatchid', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $getDataDbtCsoDet);
 
@@ -179,7 +179,7 @@ class AvalanController extends Controller
                     ->where('dbtcsodet.itembatchid', $request->itemid . $request->batchno)
                     ->where('dbtcsodet.statushslcso', '=', 'T')
                     ->where('dbtcsohed.status', '=', 'A')
-                    ->distinct();
+                    ->groupBy('dbtcsodet.itemid');
 
                 $insertDbtCsoDet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount'], $getDbtCsoDetOnDbtCsoHed);
 

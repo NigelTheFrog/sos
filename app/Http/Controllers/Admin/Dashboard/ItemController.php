@@ -279,12 +279,12 @@ class ItemController extends Controller
             if ($updateLCso == true) {
                 $getDataDbtCsoDet = DB::table('dbtcsodet')
                     ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
-                    ->select(DB::raw("dbtcsodet.csoid, dbtcsodet.itemid, dbtcsodet.itemid as 'itembatchid', dbtcsodet.locationid, dbtcsodet.grade, 'R', 'D', 'T'"))
+                    ->select(DB::raw("dbtcsodet.csoid, dbtcsodet.itemid, dbtcsodet.itemid as 'itembatchid', dbtcsodet.color, dbtcsodet.locationid, dbtcsodet.grade, 'R', 'D', 'T'"))
                     ->where('dbtcsodet.itemid', '=', $request->itemid)
                     ->where('dbtcsohed.status', '=', 'A')
-                    ->distinct();
+                    ->groupBy('dbtcsodet.itemid');
 
-                $insertDbtCsoDet = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'itembatchid', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $getDataDbtCsoDet);
+                $insertDbtCsoDet = DB::table('dbtcsodet')->insertUsing(['csoid', 'itemid', 'itembatchid', 'color', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $getDataDbtCsoDet);
 
                 if ($insertDbtCsoDet == true) {
                     $getDbtCsoDetOnDbtCsoDet2 = DB::table('dbtcsodet')
@@ -293,6 +293,7 @@ class ItemController extends Controller
                         ->where('dbtcsodet.itemid', '=', $request->itemid)
                         ->where('dbtcsodet.statushslcso', '=', 'C')
                         ->distinct();
+                        // ->groupBy('dbtcsodet.itemid');
 
                     $getDbtCsoDetOnDbtCsoHed = DB::table('dbtcsodet')
                         ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet.csoid')
@@ -303,7 +304,8 @@ class ItemController extends Controller
                         ->where('dbtcsodet.itemid', '=', $request->itemid)
                         ->where('dbtcsodet.statushslcso', '=', 'T')
                         ->where('dbtcsohed.status', '=', 'A')
-                        ->distinct();
+                        // ->distinct();
+                        ->groupBy('dbtcsodet.itemid');
 
                     $insertDbtCsoDet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount'], $getDbtCsoDetOnDbtCsoHed);
 
