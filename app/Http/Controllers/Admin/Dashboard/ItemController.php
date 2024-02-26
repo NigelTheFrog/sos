@@ -463,7 +463,7 @@ class ItemController extends Controller
                 ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
                 ->leftJoin('viewdashboard', 'viewdashboard.itemid', '=', 'dbtcsodet.itemid')
                 ->where('dbtcsodet.itemid', '=', $request->id)
-                ->whereRaw('ifnull(qty,0) <> 0')
+                ->whereNotNull('dbtcsodet2.qty')
                 ->whereColumn('csocount', 'viewdashboard.statuscso')
                 ->where('statussubmit', 'P')
                 ->where('dbtcsohed.status', 'A')
@@ -495,7 +495,7 @@ class ItemController extends Controller
                 ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
                 ->leftJoin('viewdashboard', 'viewdashboard.itembatchid', '=', 'dbtcsodet.itembatchid')
                 ->where('dbttrsdet.itembatchid', '=', $request->id . $request->batchno)
-                ->whereRaw('ifnull(qty,0) <> 0')
+                ->whereNotNull('dbtcsodet2.qty')
                 ->whereColumn('csocount', 'viewdashboard.statuscso')
                 ->where('statussubmit', 'P')
                 ->where('dbtcsohed.status', 'A')
@@ -560,25 +560,7 @@ class ItemController extends Controller
             "checkCso" => count($cekCso),
             "checkItemType" => $cekItem[0]
         ]);
-        // return response()->json(["itemid" => $data[0]->itemid,
-        // "batchno" => $data[0]->batchno,
-        // "heatno" => $data[0]->heatno,
-        // "dimension" => $data[0]->dimension,
-        // "tolerance" => $data[0]->tolerance,
-        // "kondisi" => $data[0]->kondisi,
-        // "onhand" => $data[0]->onhand,
-        // "totalcso" => $data[0]->totalcso,
-        // "selisih" => $data[0]->selisih,
-        // "koreksi" => $data[0]->koreksi,
-        // "deviasi" => $data[0]->deviasi,
-        // "tableDetailDashboard" => $dataDetailDashboard,
-        // "dataCso" => $dataCsoCount,
-        // "totalCso" => $dataTotalCso,
-        // "analisator" => $dataAnalisator,
-        // "group" => $dataGroup,
-        // "dbxJob" => $dataDbxJob,
-        // "checkCso" => count($cekCso),
-        // "checkItemType" => $cekCsoType[0]]); 
+
     }
 
     public function hapusTemuanItem(Request $request)

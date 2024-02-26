@@ -270,6 +270,7 @@ class ProcessController extends Controller
 
             $insertDbxImpor = DB::table('dbximpor')->insert([
                 'itemid' => $itemId,
+                'itembatchid' => $itemId,
                 'itemname' => trim(ucwords($request->temuanname)),
                 'statusitem' => 'T'
             ]);
@@ -282,6 +283,7 @@ class ProcessController extends Controller
                 $insertdbttrsdet = DB::table('dbttrsdet')->insert([
                     'trsid' => $trsId,
                     'itemid' => $itemId,
+                    'itembatchid' => $itemId,
                     'itemname' => trim(ucwords($request->temuanname)),
                     'statusitem' => 'T',
                     'statuscso' => 1
@@ -382,6 +384,7 @@ class ProcessController extends Controller
             $insertDbxImpor = DB::table('dbximporavalan')->insert([
                 'itemid' => $itemId,
                 'itemname' => trim(ucwords($request->temuanname)),
+                'itembatchid' => $itemId,
                 'statusitem' => 'T'
             ]);
 
@@ -394,6 +397,7 @@ class ProcessController extends Controller
                     'trsid' => $trsId,
                     'itemid' => $itemId,
                     'itemname' => trim(ucwords($request->temuanname)),
+                    'itembatchid' => $itemId,
                     'statusitem' => 'T',
                     'statuscso' => 1
                 ]);

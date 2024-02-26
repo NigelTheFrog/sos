@@ -148,7 +148,7 @@ class AvalanController extends Controller
         DB::beginTransaction();
         $updateLCso = DB::table('dbtcsodet')
             ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
-            ->where('dbtcsodet.itembatchid', $request->itemid . $request->batchno)
+            ->where('dbtcsodet.itembatchid', $request->itembatchid)
             ->where('dbtcsohed.status', 'A')
             ->update(['statushslcso' => 'C']);
 
@@ -156,7 +156,7 @@ class AvalanController extends Controller
             $getDataDbtCsoDet = DB::table('dbtcsodet')
                 ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
                 ->select(DB::raw("dbtcsodet.csoid, dbtcsodet.itemid, dbtcsodet.itembatchid, dbtcsodet.locationid, dbtcsodet.grade, 'A', 'D', 'T' "))
-                ->where('dbtcsodet.itembatchid', $request->itemid . $request->batchno)
+                ->where('dbtcsodet.itembatchid', $request->itembatchid)
                 ->where('dbtcsohed.status', '=', 'A')
                 ->groupBy('dbtcsodet.itemid');
 
@@ -166,9 +166,8 @@ class AvalanController extends Controller
                 $getDbtCsoDetOnDbtCsoDet2 = DB::table('dbtcsodet')
                     ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
                     ->select(DB::raw("dbtcsodet.itemid, dbtcsodet.itembatchid, (dbtcsodet2.csocount+1) as count"))
-                    ->where('dbtcsodet.itembatchid', $request->itemid . $request->batchno)
-                    ->where('dbtcsodet.statushslcso', '=', 'C')
-                    ->distinct();
+                    ->where('dbtcsodet.itembatchid', $request->itembatchid)
+                    ->where('dbtcsodet.statushslcso', '=', 'C');
 
                 $getDbtCsoDetOnDbtCsoHed = DB::table('dbtcsodet')
                     ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet.csoid')
@@ -176,7 +175,7 @@ class AvalanController extends Controller
                         $join->on('dbtcsodet2.itemid', '=', 'dbtcsodet.itemid');
                     })
                     ->select(['dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet2.count'])
-                    ->where('dbtcsodet.itembatchid', $request->itemid . $request->batchno)
+                    ->where('dbtcsodet.itembatchid', $request->itembatchid)
                     ->where('dbtcsodet.statushslcso', '=', 'T')
                     ->where('dbtcsohed.status', '=', 'A')
                     ->groupBy('dbtcsodet.itemid');
@@ -185,7 +184,7 @@ class AvalanController extends Controller
 
                 if ($insertDbtCsoDet2 == true) {
                     $updateDbtTrsDet = DB::table('dbttrsdeta')
-                        ->where('itembatchid', $request->itemid . $request->batchno)
+                        ->where('itembatchid', $request->itembatchid)
                         ->increment('statuscso');
                     if ($updateDbtTrsDet == true) {
                         DB::commit();
@@ -216,9 +215,9 @@ class AvalanController extends Controller
         } else {
             $kesalahan = 0;
         }
+
         $updateAvalan = DB::table('dbttrsdeta')
-            ->where('itemid', $request->itemid)
-            ->where('batchno', $request->batchno)
+        ->where('dbttrsdeta.itembatchid', '=', $request->itembatchid)
             ->where('dbttrsdeta.trsdetid', '=', $request->trsdetid)
             ->update([
                 'koreksi' => $request->koreksi,
@@ -227,7 +226,7 @@ class AvalanController extends Controller
                 'keterangan' => $request->keterangan,
                 'groupid' => $request->grouping,
                 'kesalahan_admin' => $kesalahan
-            ]);
+            ]);        
 
         if ($updateAvalan == true) {
             DB::commit();
@@ -240,19 +239,20 @@ class AvalanController extends Controller
 
     public function showDetailCsoAvalan(Request $request)
     {
-        $data = ViewDashboardAvalan::where('itemid', '=', $request->id)->where('batchNo', '=', $request->batchno)->get();
+        $data = ViewDashboardAvalan::where('itembatchid', '=', $request->itembatchid)->get();
 
         $dataAnalisator = DB::table('dbttrsdeta')
             ->join('dbttrsheda', 'dbttrsheda.trsid', '=', 'dbttrsdeta.trsid')
             ->leftJoin('dbmuser', 'dbttrsdeta.analisatorid', '=', 'dbmuser.userid')
             ->leftJoin('dbmgroup', 'dbmgroup.groupid', '=', 'dbttrsdeta.groupid')
             ->select(["dbttrsdeta.groupid", "dbttrsdeta.analisatorid", "dbmgroup.groupdesc", "name", "kesalahan_admin"])
-            ->where('itembatchid', '=', $request->id.$request->batchno)
+            ->where('itembatchid', '=', $request->itembatchid)
             ->where('dbttrsheda.statusdoc', '=', 'A')
             ->whereNotNull('analisatorid')
             ->get();
+        
 
-        $dataDetailDashboard = DB::table('viewdetaildashbavalan')->distinct()->where('itembatchid', '=', $request->id.$request->batchno)->get();
+        $dataDetailDashboard = DB::table('viewdetaildashbavalan')->distinct()->where('itembatchid', '=', $request->itembatchid)->get();
 
         $dataTotalCso = DB::table('dbttrsdeta')
             ->leftJoin('totalcso1avalan', 'totalcso1avalan.itembatchid', '=', 'dbttrsdeta.itembatchid')
@@ -264,7 +264,7 @@ class AvalanController extends Controller
             ->selectRaw('ifnull(totalcso2avalan.qtytot,0) as totalcso2')
             ->selectRaw('ifnull(totalcso3avalan.qtytot,0) as totalcso3')
             ->selectRaw('ifnull(totalcso4avalan.qtytot,0) as totalcso4')
-            ->where('dbttrsdeta.itembatchid', '=', $request->id.$request->batchno)
+            ->where('dbttrsdeta.itembatchid', '=', $request->itembatchid)
             ->distinct()
             ->get();
 
@@ -274,8 +274,8 @@ class AvalanController extends Controller
             ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet2.csoid')
             ->leftJoin('dbttrsdeta', 'dbttrsdeta.itembatchid', '=', 'dbtcsodet.itembatchid')
             ->leftJoin('viewdashboardavalan', 'viewdashboardavalan.itembatchid', '=', 'dbtcsodet.itembatchid')
-            ->where('dbttrsdeta.itembatchid', '=', $request->id.$request->batchno)
-            ->whereRaw('ifnull(qty,0) <> 0')
+            ->where('dbttrsdeta.itembatchid', '=',  $request->itembatchid)
+            ->whereNotNull('dbtcsodet2.qty')
             ->whereColumn('csocount', 'viewdashboardavalan.statuscso')
             ->where('statussubmit', 'P')
             ->where('dbtcsohed.status', 'A')
@@ -283,7 +283,7 @@ class AvalanController extends Controller
 
         $dataCsoCount = DB::table('viewdetaildashbavalan')
             ->select(['name', 'csocount', 'cso1', 'cso2', 'cso3', 'cso4'])
-            ->where('itembatchid', '=', $request->id.$request->batchno)
+            ->where('itembatchid', '=',  $request->itembatchid)
             ->distinct()
             ->get();
 
@@ -295,31 +295,32 @@ class AvalanController extends Controller
             ->get();
 
          $cekItem = DB::table('dbttrsdeta')
-            ->select('dbttrsdeta.statusitem','a.trsid')
+            ->select('dbttrsdeta.statusitem','dbttrsdeta.trsid')
             ->leftjoin('dbttrsheda', 'dbttrsheda.trsid', '=', 'dbttrsdeta.trsid')
-            ->where('dbttrsdeta.itemid', '=', $request->id)
+            ->where('dbttrsdeta.itembatchid', '=',  $request->itembatchid)
             ->where('dbttrsheda.statusdoc', '=', 'A')
-            ->get();
+            ->get();        
 
         return view('admin.dashboard.table.avalan.detail-cso-avalan', [
-            "itemid" => $data[0]->itemid,
-            "batchno" => $data[0]->batchno,
-            "trsdetid" => $data[0]->trsdetid,
-            "tolerance" => $data[0]->tolerance,
-            "onhand" => $data[0]->onhand,
-            "totalcso" => $data[0]->totalcso,
-            "selisih" => $data[0]->selisih,
-            "koreksi" => $data[0]->koreksi,
-            "deviasi" => $data[0]->deviasi,
-            "keterangan" => $data[0]->keterangan,
-            "tableDetailDashboard" => $dataDetailDashboard,
-            "dataCso" => $dataCsoCount,
-            "totalCso" => $dataTotalCso,
-            "analisator" => $dataAnalisator,
-            "group" => $dataGroup,
-            "dbxJob" => $dataDbxJob,
-            "checkCso" => count($cekCso),
-            "checkItemType" => $cekItem[0]
+                "itemid" => $data[0]->itemid,
+                "batchno" => $data[0]->batchno,
+                "itembatchid" => $data[0]->itembatchid,
+                "trsdetid" => $data[0]->trsdetid,
+                "tolerance" => $data[0]->tolerance,
+                "onhand" => $data[0]->onhand,
+                "totalcso" => $data[0]->totalcso,
+                "selisih" => $data[0]->selisih,
+                "koreksi" => $data[0]->koreksi,
+                "deviasi" => $data[0]->deviasi,
+                "keterangan" => $data[0]->keterangan,
+                "tableDetailDashboard" => $dataDetailDashboard,
+                "dataCso" => $dataCsoCount,
+                "totalCso" => $dataTotalCso,
+                "analisator" => $dataAnalisator,
+                "group" => $dataGroup,
+                "dbxJob" => $dataDbxJob,
+                "checkCso" => count($cekCso),
+                "checkItemType" => $cekItem[0]
         ]);
     }
 
@@ -328,13 +329,13 @@ class AvalanController extends Controller
         DB::beginTransaction();
 
         $deleteDataFromDbtTrsDet = DB::table('dbttrsdeta')
-            ->where('dbttrsdeta.itembatchid', '=', $request->itemid . $request->batchno)
+            ->where('dbttrsdeta.itembatchid', '=', $request->itembatchid)
             ->where('dbttrsdeta.trsdetid', '=', $request->trsdetid)
             ->delete();
 
         if ($deleteDataFromDbtTrsDet == true) {
             $deleteDataFromDbxImpor = DB::table('dbximporavalan')
-                ->where('dbximporavalan.itemid', '=', $request->itemid)
+                ->where('dbximporavalan.itemid', '=', $request->itembatchid)
                 ->delete();
             if ($deleteDataFromDbxImpor == true) {
                 DB::commit();

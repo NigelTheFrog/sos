@@ -255,6 +255,7 @@ class ImportAvalanController extends Controller
 
             $insertDbxImporAvalan = DB::table('dbximporavalan')->insert([
                 'itemid' => $itemId,
+                'itembatchid' => $itemId,
                 'itemname' => trim(ucwords($request->temuanname)),
                 'batchid' => '0',
                 'heatno' => trim(ucwords($request->temuanheatno)),
@@ -268,6 +269,7 @@ class ImportAvalanController extends Controller
                 DB::table('dbximpordetavalan')->insert([
                     'itemid' => $itemId,
                     'batchid' => '0',
+                    'itembatchid' => $itemId,
                     'qty' => $request->temuanstok
                 ]);
                 DB::commit();

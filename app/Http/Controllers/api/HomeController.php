@@ -75,7 +75,7 @@ class HomeController extends Controller
         $submitItem = DB::table('dbtcsodet')
             ->leftJoin('dbtcsodet2', 'dbtcsodet.csodetid', '=', 'dbtcsodet2.csodetid')
             ->where('dbtcsodet.csoid','=', $request->csoid)
-            ->whereRaw('IFNULL(dbtcsodet2.qty, 0) <> 0')
+            ->whereNotNull('dbtcsodet2.qty')
             ->update([
                 'statussubmit' => 'P',
             ]);
