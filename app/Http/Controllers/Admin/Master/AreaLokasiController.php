@@ -14,7 +14,7 @@ class AreaLokasiController extends Controller
      */
     public function index()
     {
-        $lokasi = AreaLokasi::all();
+        $lokasi = AreaLokasi::orderBy('locationcode')->get();
         return view("admin.master.area-lokasi",["lokasi"=> $lokasi]);
     }
 

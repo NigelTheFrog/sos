@@ -7,7 +7,7 @@
 </div>
 @endif
 <div id="warning" class="alert alert-warning d-none"></div>
-<input type="text" name="itemid" class="d-none" value="{{ $itemid }}">
+<input type="text" name="itembatchid" id="itembatchid" class="d-none" value="{{ $itembatchid }}">
 <input type="text" name="batchno" class="d-none" value="{{ $batchno }}">
 <input type="text" name="trsdetid" id="trsdetidparam" class="d-none" value="{{ $trsdetid }}">
 
@@ -80,23 +80,23 @@
             <tbody>
                 @foreach ($dataCso as $cso)
                     <tr>
-                        <td>{{ $cso->name }}</td>
-                        @if ($cso->csocount == 1)
+                        <td>{{ $cso->name }}</td>                        
+                        @if ($cso->cso1 > 0 )
                             <td class="bg-info">{{ number_format($cso->cso1, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso1 }}</td>
                         @endif
-                        @if ($cso->csocount == 2)
+                        @if ($cso->cso2 > 0)
                             <td class="bg-info">{{ number_format($cso->cso2, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso2 }}</td>
                         @endif
-                        @if ($cso->csocount == 3)
+                        @if ($cso->cso3 > 0)
                             <td class="bg-info">{{ number_format($cso->cso3, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso3 }}</td>
                         @endif
-                        @if ($cso->csocount == 4)
+                        @if ($cso->cso4 > 0)
                             <td class="bg-info">{{ number_format($cso->cso4, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso4 }}</td>
@@ -118,8 +118,7 @@
     </div>
     <div class="col-2">
         
-            <input type="text" id="itemid" class="d-none" value="{{ $itemid }}">
-        <input type="text" id="batchno" class="d-none" value="{{ $batchno }}">
+
         <button type="button" id="csoulang" onclick="csoUlang(this)" name="csoorder" class="btn btn-info mb-3"
             @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
         <div class="form-check">
@@ -179,12 +178,12 @@
 
 <div class="">
     <label for="vketerangan" class="input-group-text">Keterangan Koreksi</label>
-    <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan">{{keterangan}}</textarea>
+    <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan">{{$keterangan}}</textarea>
 </div>
 
 <script>
     function hapusAvalanTemuan(button) {
-        var itemidparam = $("#itemid").val(); // Get the selected gudang values
+        var itembatchidparam = $("#itembatchid").val(); // Get the selected gudang values
         var batchnoparam = $("#batchno").val();
         var trsdetidparam = $("#trsdetidparam").val();
 
@@ -192,8 +191,7 @@
             url: "{{ url('admin/dashboard/item/hapus-temuan-avalan') }}",
             method: "POST",
             data: {
-                itemid: itemidparam,
-                batchno: batchnoparam,
+                itembatchid: itembatchidparam,
                 trsdetid: trsdetidparam
 
             },
@@ -205,7 +203,7 @@
                     Swal.fire({
                         icon: "success",
                         title: "Berhasil",
-                        text: `Temuan item dengan id ${itemidparam}\nberhasil dihapus`,
+                        text: `Temuan item dengan batch ${itembatchidparam}\nberhasil dihapus`,
                     });
                 } else {
                     Swal.fire({
@@ -226,25 +224,24 @@
         });
     }
     function csoUlang(button) {
-        var itemidparam = $("#itemid").val(); // Get the selected gudang values
-        var batchnoparam = $("#batchno").val();
+        var itembatchidparam = $("#itembatchid").val(); // Get the selected gudang values
         var buttonCsoUlang = document.getElementById("csoulang");
         $.ajax({
             url: "{{ url('admin/dashboard/avalan/cso-ulang') }}",
             method: "POST",
             data: {
-                itemid: itemidparam,
-                batchno: batchnoparam
+                itembatchid: itembatchidparam,
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(data) {
+                console.log(data);
                 if (data['result'] == 1) {                    
                     Swal.fire({
                         icon: "success",
                         title: "Berhasil",
-                        text: `Item dengan id ${itemidparam} dan batch number ${batchnoparam}\nberhasil di CSO Ulang`,
+                        text: `Item dengan batch ${itembatchidparam} berhasil di CSO Ulang`,
                     });                    
                     buttonCsoUlang.disabled = true;
                 } else {

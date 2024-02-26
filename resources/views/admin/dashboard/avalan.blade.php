@@ -5,44 +5,42 @@
 @section('content')
 
     <div class="container-fluid px-4">
-        <div class="row justify-content-between align-items-center mt-4">
-            <div class="col-4">
-                <h1>Dashboard Avalan</h1>
+        <div class="row justify-content-between align-items-center my-4">
+            <div class="col">
+                <h1>Dashboard Item</h1>
             </div>
-            <input type="text" id="countCsoActive" value="{{$countCsoActive}}" hidden>
+            <input type="text" id="countCsoActive" value="{{ $countCsoActive }}" hidden>
             @if (Auth::user()->level == 1 || Auth::user()->level == 2)
                 <div class="col-4">
-                    @if ($countCsoActive > 0)
-                        <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end" value="1"
-                        id="buttonTutupCso" @if ($countCsoActive > 0) disabled @endif>
-                            <i class="bi bi-stopwatch-fill"></i> Tutup Akses Mobile
-                        </button>
-                    @elseif ($countCsoEnd > 0)
-                        <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end"
-                            value="2">
-                            <i class="bi bi-stopwatch-fill"></i> Finish CSO
-                        </button>
-                    @else
-                        <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end"
-                            value="3">
-                            <i class="bi bi-stopwatch-fill"></i> Mulai CSO Avalan
-                        </button>
-                    @endif
+                    <div class="d-flex justify-content-end">
+                        <div class="col align-items-end">
+                            <input class=" form-control col-9 text-center bg-dark-subtle float-end" type="text"
+                                placeholder="{{ $csodate }}" aria-label="Disabled input example" style="width: 200px"
+                                disabled>
+                        </div>
+                        <div class="col align-items-end">
+                            @if ($countCsoActive > 0)
+                                <button type="button" onclick="openModalCSO(this,1)" class="btn btn-warning float-end"
+                                    value="1" id="buttonTutupCso" @if ($countCsoActive > 0) disabled @endif>
+                                    <i class="bi bi-stopwatch-fill"></i> Tutup Akses Mobile
+                                </button>
+                            @elseif ($countCsoEnd > 0)
+                                <button type="button" onclick="openModalCSO(this,2)" class="btn btn-danger float-end"
+                                    value="2">
+                                    <i class="bi bi-stopwatch-fill"></i> Finish CSO
+                                </button>
+                            @else
+                                <button type="button" onclick="openModalCSO(this,3)" class="btn btn-primary float-end"
+                                    value="3">
+                                    <i class="bi bi-stopwatch-fill"></i> Mulai CSO Item
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+
                 </div>
             @endif
-        </div>
-        <div class="row justify-content-between align-items-center mb-2">
-            <div class="col-4">
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Dashboard Avalan</li>
-                </ol>
-            </div>
-            @if (Auth::user()->level == 1 || Auth::user()->level == 2)
-                <div class="col-4">
-                    <input class=" form-control col-9 text-center bg-dark-subtle float-end" type="text"
-                        placeholder="{{ $csodate }}" aria-label="Disabled input example" style="width: 200px" disabled>
-                </div>
-            @endif
+
         </div>
         <div class="row" id="banner-avalan">
             @include('admin.dashboard.banner.banner-avalan')
@@ -185,7 +183,7 @@
         </div>
     </div>
     <div class="modal fade text-left" id="ModalDetailCsoAvalan" tabindex="-1">
-        <form id="formSubmitCso" action="" method="POST">
+        <form id="formSubmitCso" action="{{ route('avalan.update-cso') }}" method="POST">
             @csrf
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -359,7 +357,7 @@
 
         function openModalDetailCSOAvalan(button) {
             const row = $(button).closest('tr');
-            const itemId = row.find('td:nth-child(1)').text();
+            const itemBatchId = row.find('td:nth-child(1)').text();
             const batchId = row.find('td:nth-child(2)').text();
             const itemName = row.find('td:nth-child(3)').text();
             document.getElementById("detailCsoHeader").innerText =
@@ -369,15 +367,14 @@
                 url: "{{ route('avalan.detail-cso') }}",
                 type: 'POST',
                 data: {
-                    id: itemId.replace(/\s/g, ''),
-                    batchno: batchId.replace(/\s/g, '')
+                    itembatchid: itemBatchId.replace(/\s/g, '')
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
                     $('#detailCsoAvalan').html(data);
-                    $('#formSubmitCso').attr('action', `{{ route('avalan.update-cso') }}`);
+                    // $('#formSubmitCso').attr('action', `{{ route('avalan.update-cso') }}`);
                     $("#buttonSubmit").attr('type', 'submit');
                     // console.log(response.data.itemid);
                     // console.log(data);

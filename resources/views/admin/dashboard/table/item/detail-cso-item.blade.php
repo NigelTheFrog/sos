@@ -124,23 +124,23 @@
             <tbody>
                 @foreach ($dataCso as $cso)
                     <tr>
-                        <td>{{ $cso->name }}</td>
-                        @if ($cso->csocount == 1)
+                        <td>{{ $cso->name }}</td>                        
+                        @if ($cso->cso1 > 0 )
                             <td class="bg-info">{{ number_format($cso->cso1, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso1 }}</td>
                         @endif
-                        @if ($cso->csocount == 2)
+                        @if ($cso->cso2 > 0)
                             <td class="bg-info">{{ number_format($cso->cso2, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso2 }}</td>
                         @endif
-                        @if ($cso->csocount == 3)
+                        @if ($cso->cso3 > 0)
                             <td class="bg-info">{{ number_format($cso->cso3, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso3 }}</td>
                         @endif
-                        @if ($cso->csocount == 4)
+                        @if ($cso->cso4 > 0)
                             <td class="bg-info">{{ number_format($cso->cso4, 2, ',', '.') }}</td>
                         @else
                             <td>{{ $cso->cso4 }}</td>

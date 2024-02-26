@@ -373,6 +373,7 @@ class ImportItemController extends Controller
 
             $insertDbxImpor = DB::table('dbximpor')->insert([
                 'itemid' => $itemId,
+                'itembatchid' => $itemId,
                 'itemname' => trim(ucwords($request->temuanname)),
                 'batchid' => '0',
                 'heatno' => trim(ucwords($request->temuanheatno)),
@@ -385,6 +386,7 @@ class ImportItemController extends Controller
             if($insertDbxImpor == true) {
                 DB::table('dbximpordet')->insert([
                     'itemid' => $itemId,
+                    'itembatchid' => $itemId,
                     'batchid' => '0',
                     'qty' => $request->temuanstok
                 ]);

@@ -63,13 +63,16 @@ class AccountController extends Controller
         ->select(["dbmcoy.coycode AS coycode","dbmuser.userid AS userid","dbmuser.coyid AS coyid"])
         ->where('username','=',$request->username)->get();
 
+
         $generateNewCSOID=DB::table('dbtcsohed')
         ->select(DB::raw('csoID + 1 AS nextCsoId'))
         ->orderBy('csoid', 'desc')
         ->limit(1)
         ->get();
 
-        $getNewCSOID=$generateNewCSOID??1;
+
+        $getNewCSOID = count($generateNewCSOID) == 0 ? 1 : $generateNewCSOID[0]->nextCsoId;
+
         $docRefId="CS{$getUserData[0]->coycode}-$request->username". '-' . Carbon::now()->format('Ym') . '-' . str_pad($getNewCSOID,2,'0', STR_PAD_LEFT);
 
         $getTrsID = DB::table('dbttrshed')
@@ -80,8 +83,9 @@ class AccountController extends Controller
         ->limit(1)
         ->get();
 
+
         $insertValues = [
-            'csoid' => $getNewCSOID[0]->nextCsoId,
+            'csoid' => $getNewCSOID,
             'trsid' => $getTrsID[0]->trsid,
             'docrefid' => $docRefId,
             'pelakuid' => $getUserData[0]->userid,
@@ -95,7 +99,7 @@ class AccountController extends Controller
 
         if($insertHed == true) {
             DB::commit();
-            return response()->json(['result' => 1, 'csoid' => $getNewCSOID[0]->nextCsoId, 'trsid' => $getTrsID[0]->trsid]);
+            return response()->json(['result' => 1, 'csoid' => $getNewCSOID, 'trsid' => $getTrsID[0]->trsid]);
         } else {
             DB::rollBack();
             return response()->json(['result' => 0, 'message' => 'Start CSO Gagal']);

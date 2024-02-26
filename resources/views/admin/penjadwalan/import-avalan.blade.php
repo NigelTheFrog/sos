@@ -243,8 +243,8 @@
                     <div class="row justify-content-between ps-2 mb-2 pe-2 bg-light align-items-center"
                         style="height: 50px">
                         <div class="col">
-                            <div class="d-flex justify-content-between" style="width: 50%">
-                                <b class="mt-1">Pilih Gudang:</b>
+                            <div class="d-flex flex-row">
+                                <b class="mt-1 me-2">Pilih Gudang:</b>
                                 <select id="wrhSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
                                     data-search="true" data-silent-initial-value-set="true">
                                     @foreach ($response_wrh['data'] as $wrh)
@@ -276,7 +276,8 @@
     </div>
     <script>
         VirtualSelect.init({
-            ele: '#wrhSelect'
+            ele: '#wrhSelect',
+            maxWidth: '70%'
         });
 
         function tarikAvalan(button) {

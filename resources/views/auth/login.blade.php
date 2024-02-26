@@ -7,6 +7,7 @@
 <div class="container-xl">
     <div class="row justify-content-md-center">
         <div class="col-3">
+            
             <div class="d-block text-center pb-3">
                 <h3><strong>Stock Opname System</strong></h3>
             </div>

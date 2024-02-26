@@ -19,7 +19,7 @@ class AddController extends Controller
     }
 
     public function lokasi() {
-        $lokasi = AreaLokasi::all()->sortBy('locationcode');
+        $lokasi = AreaLokasi::orderBy('locationcode')->get();
         return response()->json(['data'=>$lokasi]); 
     }
 

@@ -13,7 +13,7 @@
                     <h4 class="card-title pt-2">Data Lokasi</h4>
                 </div>                   
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                    <table class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
+                    <table class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255); overflow: auto; max-height: 160vh;">
                         <thead class="table-dark">
                             <tr class="text-center ">
                                 <th class="align-middle" style="width: 2%">No</th>

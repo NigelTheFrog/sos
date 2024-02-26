@@ -22,7 +22,7 @@
         @else
             class = "table-light" @endif>
             <td hidden>
-                {{ $barang->itemid }}
+                {{ $barang->itembatchid }}
             </td>
             <td hidden>
                 {{ $barang->batchno }}

@@ -73,7 +73,7 @@
                                                 @endif      
                                                 </select> </td>
                                             <td>{{ $tertukar->onhand }}</td>
-                                            <td>{{ $tertukar->statuscso }}</td>
+                                            <td>{{ $tertukar->onhand }}</td>
                                             <td>{{ number_format($tertukar->selisihplus , 2, ',', '.') }}</td>
                                             <td>{{ number_format($tertukar->selisihmin , 2, ',', '.') }}</td>
                                             <td>Rp. {{ number_format($tertukar->cogs , 2, ',', '.') }}</td>
@@ -188,7 +188,7 @@
                                                     @endif
                                                 </select> </td>
                                             <td>{{ $selisih->onhand }}</td>
-                                            <td>{{ $selisih->statuscso }}</td>
+                                            <td>{{ $selisih->onhand }}</td>
                                             <td>{{ number_format($selisih->selisihplus, 2, '.', ',') }}</td>
                                             <td>{{ number_format($selisih->selisihmin, 2, '.', ',') }}</td>
                                             <td>
@@ -317,7 +317,7 @@
                                                     @endif
                                                 </select> </td>
                                             <td>{{ $admin->onhand }}</td>
-                                            <td>{{ $admin->statuscso }}</td>
+                                            <td>{{ $admin->onhand }}</td>
                                             <td>{{ number_format($admin->selisihplus, 2, '.', ',') }}</td>
                                             <td>{{ number_format($admin->selisihmin, 2, '.', ',') }}</td>
                                             <td>

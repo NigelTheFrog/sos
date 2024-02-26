@@ -463,7 +463,7 @@ class ItemController extends Controller
                 ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
                 ->leftJoin('viewdashboard', 'viewdashboard.itemid', '=', 'dbtcsodet.itemid')
                 ->where('dbtcsodet.itemid', '=', $request->id)
-                ->whereRaw('ifnull(qty,0) <> 0')
+                ->whereNotNull('dbtcsodet2.qty')
                 ->whereColumn('csocount', 'viewdashboard.statuscso')
                 ->where('statussubmit', 'P')
                 ->where('dbtcsohed.status', 'A')
@@ -495,7 +495,7 @@ class ItemController extends Controller
                 ->leftJoin('dbttrsdet', 'dbttrsdet.itemid', '=', 'dbtcsodet.itemid')
                 ->leftJoin('viewdashboard', 'viewdashboard.itembatchid', '=', 'dbtcsodet.itembatchid')
                 ->where('dbttrsdet.itembatchid', '=', $request->id . $request->batchno)
-                ->whereRaw('ifnull(qty,0) <> 0')
+                ->whereNotNull('dbtcsodet2.qty')
                 ->whereColumn('csocount', 'viewdashboard.statuscso')
                 ->where('statussubmit', 'P')
                 ->where('dbtcsohed.status', 'A')
@@ -526,7 +526,11 @@ class ItemController extends Controller
             ->get();
 
         $dataCsoCount = DB::table('viewdetaildashb')
-            ->select(['name', 'csocount', 'cso1', 'cso2', 'cso3', 'cso4'])
+            ->select(['name'])
+            ->selectRaw('SUM(cso1) over (partition by name) as cso1')
+            ->selectRaw('SUM(cso2) over (partition by name) as cso2')
+            ->selectRaw('SUM(cso3) over (partition by name) as cso3')
+            ->selectRaw('SUM(cso4) over (partition by name) as cso4')
             ->where('itembatchid', '=', $request->id . $request->batchno)
             ->distinct()
             ->get();
@@ -560,25 +564,7 @@ class ItemController extends Controller
             "checkCso" => count($cekCso),
             "checkItemType" => $cekItem[0]
         ]);
-        // return response()->json(["itemid" => $data[0]->itemid,
-        // "batchno" => $data[0]->batchno,
-        // "heatno" => $data[0]->heatno,
-        // "dimension" => $data[0]->dimension,
-        // "tolerance" => $data[0]->tolerance,
-        // "kondisi" => $data[0]->kondisi,
-        // "onhand" => $data[0]->onhand,
-        // "totalcso" => $data[0]->totalcso,
-        // "selisih" => $data[0]->selisih,
-        // "koreksi" => $data[0]->koreksi,
-        // "deviasi" => $data[0]->deviasi,
-        // "tableDetailDashboard" => $dataDetailDashboard,
-        // "dataCso" => $dataCsoCount,
-        // "totalCso" => $dataTotalCso,
-        // "analisator" => $dataAnalisator,
-        // "group" => $dataGroup,
-        // "dbxJob" => $dataDbxJob,
-        // "checkCso" => count($cekCso),
-        // "checkItemType" => $cekCsoType[0]]); 
+
     }
 
     public function hapusTemuanItem(Request $request)
@@ -622,24 +608,6 @@ class ItemController extends Controller
             ->where('status', '=', 'A')
             ->where('tipecso', '=', 'R')
             ->update(['status' => 'P',]);
-
-        // $subquery = DB::table('dbttrshed')
-        //     ->select('trsid')
-        //     ->where('statusdoc', 'statusdoc', 'P')
-        //     ->orderByDesc('trsid')
-        //     ->limit(1);
-
-        // $selectDbtCsoHed = DB::table('dbxjob')        
-        // ->join('dbtcsohed', 'dbxjob.userid', '=', 'dbtcsohed.pelakuid')
-        // ->selectRaw('DISTINCT dbtcsohed.trsid,userid,username,name,dbxjob.coyid,jobtypeid,"D" as status')
-        // ->where('dbtcsohed.trsid', '=', $subquery);
-
-        // $selectDbtTrsDet = DB::table('dbxjob')        
-        // ->join('dbttrsdet', 'dbttrsdet.analisatorid', '=', 'dbxjob.userid')
-        // ->selectRaw('DISTINCT dbttrsdet.trsid,userid,username,name,dbxjob.coyid,jobtypeid,"D" as status')
-        // ->where('dbttrsdet.trsid', '=', $subquery);
-
-        // $unionQuery = $selectDbtCsoHed->union($selectDbtTrsDet);
 
         // $inserDbtCsoPrsn = DB::table('dbtcsoprsn')->insertUsing(['trsid', 'userid', 'username', 'name', 'coyid', 'jobtypeid', 'status'],$unionQuery);
         $insertDbtCsoPrsn = DB::insert("INSERT INTO dbtcsoprsn (trsid,userid,username,name,coyid,jobtypeid,status,tipecso)

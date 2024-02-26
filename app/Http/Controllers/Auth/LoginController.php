@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+use function Laravel\Prompts\alert;
 
 class LoginController extends Controller
 {
@@ -33,7 +36,13 @@ class LoginController extends Controller
         if($user->level == 1) {
             return redirect('admin/dashboard/item')->with("status","Selamat datang $user->name");
         } else  {
-            return redirect('/home')->with("status","Logged in");
+            $checkDbxJob = DB::table('dbxjob')->where('username', '=', $user->username)->get();
+            if(count($checkDbxJob) > 0) {
+                return redirect('/home')->with("status","Logged in");
+            } else {
+                Auth::logout();
+                return redirect('login')->with('error', 'Anda tidak memiliki akses memasuki halaman CSO');
+            }            
         }
     }
 
@@ -61,4 +70,5 @@ class LoginController extends Controller
     {
         return 'level';
     }
+
 }

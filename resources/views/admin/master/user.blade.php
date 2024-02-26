@@ -25,7 +25,7 @@
                                 <i class="nav-icon fas fa-file-import"></i> Import User
                             </button>
                         </div>                       
-                        <table id="datatable" class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
+                        <table id="datatable" class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255);overflow: auto; max-height: 160vh;">
                             <thead class="table-dark">
                                 <tr class="text-center ">
                                     <th class="align-middle" style="width: 2%">No</th>
