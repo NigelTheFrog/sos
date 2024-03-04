@@ -115,7 +115,7 @@ document.getElementById("select-resume").selectedIndex = -1;
     search: true,
     ele: '#select-resume',
     silentInitialValueSet: false,
-    maxWidth: '92%',
+    maxWidth: '93%',
     noSearchResultsText: "CSO Tidak ditemukan"
     });
 
