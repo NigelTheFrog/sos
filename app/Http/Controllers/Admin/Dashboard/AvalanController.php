@@ -166,8 +166,9 @@ class AvalanController extends Controller
                 $getDbtCsoDetOnDbtCsoDet2 = DB::table('dbtcsodet')
                     ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
                     ->select(DB::raw("dbtcsodet.itemid, dbtcsodet.itembatchid, (dbtcsodet2.csocount+1) as count"))
-                    ->where('dbtcsodet.itembatchid', $request->itembatchid)
-                    ->where('dbtcsodet.statushslcso', '=', 'C');
+                    ->where('dbtcsodet.itembatchid', $request->itemid . $request->batchno)
+                    ->where('dbtcsodet.statushslcso', '=', 'C')
+                    ->distinct();
 
                 $getDbtCsoDetOnDbtCsoHed = DB::table('dbtcsodet')
                     ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet.csoid')
@@ -281,13 +282,9 @@ class AvalanController extends Controller
             ->where('dbtcsohed.status', 'A')
             ->get();
 
-            $dataCsoCount = DB::table('viewdetaildashb')
-            ->select(['name'])
-            ->selectRaw('SUM(cso1) over (partition by name) as cso1')
-            ->selectRaw('SUM(cso2) over (partition by name) as cso2')
-            ->selectRaw('SUM(cso3) over (partition by name) as cso3')
-            ->selectRaw('SUM(cso4) over (partition by name) as cso4')
-            ->where('itembatchid', '=', $request->id . $request->batchno)
+        $dataCsoCount = DB::table('viewdetaildashbavalan')
+            ->select(['name', 'csocount', 'cso1', 'cso2', 'cso3', 'cso4'])
+            ->where('itembatchid', '=', $request->id.$request->batchno)
             ->distinct()
             ->get();
 
