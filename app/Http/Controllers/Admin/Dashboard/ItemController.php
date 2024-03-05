@@ -604,12 +604,6 @@ class ItemController extends Controller
             ->where('statusdoc', '=', 'A')
             ->update(['endcsodate' => Carbon::now(), 'statusdoc' => 'E']);
 
-        DB::table('dbtcsohed')
-            ->where('status', '=', 'A')
-            ->where('tipecso', '=', 'R')
-            ->update(['status' => 'P',]);
-
-        // $inserDbtCsoPrsn = DB::table('dbtcsoprsn')->insertUsing(['trsid', 'userid', 'username', 'name', 'coyid', 'jobtypeid', 'status'],$unionQuery);
         $insertDbtCsoPrsn = DB::insert("INSERT INTO dbtcsoprsn (trsid,userid,username,name,coyid,jobtypeid,status,tipecso)
         SELECT DISTINCT ch.trsid,userid,username,name,j.coyid,jobtypeid,'D','R' as status FROM dbxjob j 
         INNER JOIN dbtcsohed ch ON j.userid = ch.pelakuid 
@@ -619,7 +613,7 @@ class ItemController extends Controller
         INNER JOIN dbttrsdet td ON td.analisatorid =j.userid
         INNER JOIN dbtcsohed ch ON td.analisatorid = ch.pelakuid 
         WHERE td.trsid = (SELECT trsid FROM dbttrshed WHERE statusdoc='E' ORDER BY trsid DESC LIMIT 1) AND ch.tipecso = 'R'");
-        if ($updateDbtTrsHed == true) {
+        if ($insertDbtCsoPrsn == true) {
             DB::commit();
             return redirect()->route("item.index")->with('status', 'CSO Item berhasil diberhentikan');
         } else {

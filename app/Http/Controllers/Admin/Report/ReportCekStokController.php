@@ -37,7 +37,7 @@ class ReportCekStokController extends Controller
         Carbon::setLocale('id');
         $pdf = App::make('dompdf.wrapper');
         if ($request->type == 1 || $request->type == 2) {
-            
+
             $dataDbtTrsHed = DB::table('dbttrshed')->where('trsid', '=', $request->trsidresume)->get();
 
             $dataAnalisator = SusunanCso::where('trsid', '=', $request->trsidresume)->where('joBtypeid', '=', '2')->where('tipecso', '=', 'R')->get();
@@ -49,7 +49,7 @@ class ReportCekStokController extends Controller
             $dataItemKesalahanAdmin = DB::table('dbttrsdet')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->leftJoin('dbmkeputusan','dbttrsdet.keputusan','=','dbmkeputusan.keputusanid')
+                ->leftJoin('dbmkeputusan', 'dbttrsdet.keputusan', '=', 'dbmkeputusan.keputusanid')
                 ->select(
                     'dbttrsdet.itemname',
                     'dbttrsdet.batchno',
@@ -67,13 +67,20 @@ class ReportCekStokController extends Controller
                 )
                 ->where('dbttrsdet.trsid', '=', $request->trsidresume)
                 ->whereRaw('coalesce(dbttrsdet.kesalahan_admin,0) = 1')
+                ->where('dbtcsodet2.csocount', '=', function ($query) {
+                    $query->from('dbtcsodet')
+                        ->join('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->whereColumn('dbtcsodet.itembatchid', 'dbttrsdet.itembatchid')
+                        ->selectRaw('max(dbtcsodet2.csocount)');
+                })
                 ->groupBy('dbttrsdet.trsdetid')
+                ->havingRaw("dbttrsdet.onhand = (SUM(COALESCE(dbtcsodet2.qty, 0)) + koreksi + deviasi)")
                 ->get();
 
             $dataItemSelisihTertukar = DB::table('dbttrsdet')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->leftJoin('dbmkeputusan','dbttrsdet.keputusan','=','dbmkeputusan.keputusanid')
+                ->leftJoin('dbmkeputusan', 'dbttrsdet.keputusan', '=', 'dbmkeputusan.keputusanid')
                 ->select(
                     'dbttrsdet.itemname',
                     'dbttrsdet.batchno',
@@ -92,15 +99,26 @@ class ReportCekStokController extends Controller
                 ->where('dbttrsdet.trsid', '=', $request->trsidresume)
                 ->whereRaw('not (coalesce(dbttrsdet.groupid,0) = 0)')
                 ->whereRaw('coalesce(dbttrsdet.kesalahan_admin,0) = 0')
+                ->where('dbtcsodet2.csocount', '=', function ($query) {
+                    $query->from('dbtcsodet')
+                        ->join('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->whereColumn('dbtcsodet.itembatchid', 'dbttrsdet.itembatchid')
+                        ->selectRaw('max(dbtcsodet2.csocount)');
+                })
                 ->groupBy('dbttrsdet.trsdetid')
+                ->havingRaw("dbttrsdet.onhand = (SUM(COALESCE(dbtcsodet2.qty, 0)) + koreksi + deviasi)")
                 ->get();
 
             $dataItemSelisih = DB::table('dbttrsdet')
-                ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
+                ->leftJoin('dbtcsodet', function ($join) {
+                    $join->on('dbtcsodet.itembatchid', '=', 'dbttrsdet.itembatchid');
+                })
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->leftJoin('dbmkeputusan','dbttrsdet.keputusan','=','dbmkeputusan.keputusanid')
+                ->leftJoin('dbmkeputusan', 'dbttrsdet.keputusan', '=', 'dbmkeputusan.keputusanid')
                 ->select(
+                    'dbttrsdet.itemid',
                     'dbttrsdet.itemname',
+                    'dbttrsdet.itembatchid',
                     'dbttrsdet.batchno',
                     'dbttrsdet.keputusan',
                     'dbmkeputusan.keputusandesc',
@@ -117,21 +135,28 @@ class ReportCekStokController extends Controller
                 ->where('dbttrsdet.trsid', '=', $request->trsidresume)
                 ->whereRaw('coalesce(dbttrsdet.groupid,0) = 0')
                 ->whereRaw('coalesce(dbttrsdet.kesalahan_admin,0) = 0')
+                ->where('dbtcsodet2.csocount', '=', function ($query) {
+                    $query->from('dbtcsodet')
+                        ->join('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->whereColumn('dbtcsodet.itembatchid', 'dbttrsdet.itembatchid')
+                        ->selectRaw('max(dbtcsodet2.csocount)');
+                })
                 ->groupBy('dbttrsdet.trsdetid')
+                ->havingRaw("NOT dbttrsdet.onhand = (SUM(COALESCE(dbtcsodet2.qty, 0)) + koreksi + deviasi)")
                 ->get();
-            
+
             $endOfDatePreviousMonth = Carbon::parse($dataDbtTrsHed[0]->startcsodate)
-            ->copy()
-            ->subMonth()
-            ->endOfMonth()
-            ->toDateString();
+                ->copy()
+                ->subMonth()
+                ->endOfMonth()
+                ->toDateString();
 
             $startDatePreviou3sMonth = Carbon::parse($dataDbtTrsHed[0]->startcsodate)
-            ->copy()
-            ->subMonths(3)
-            ->startOfMonth()
-            ->toDateString();            
-            
+                ->copy()
+                ->subMonths(3)
+                ->startOfMonth()
+                ->toDateString();
+
             $item_ok = DB::table('dbttrshed')
                 ->join('dbttrsdet', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
@@ -139,7 +164,7 @@ class ReportCekStokController extends Controller
                 ->select(DB::raw("dbttrshed.trsid as trsid, COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
                 ->where('dbttrshed.statusdoc', 'P')
                 ->whereRaw('(coalesce(dbttrsdet.koreksi, 0) + coalesce(dbttrsdet.deviasi, 0) + coalesce(dbtcsodet2.qty, 0)) = dbttrsdet.onhand')
-                ->whereBetween('dbttrshed.startcsodate',[$startDatePreviou3sMonth,$endOfDatePreviousMonth])
+                ->whereBetween('dbttrshed.startcsodate', [$startDatePreviou3sMonth, $endOfDatePreviousMonth])
                 ->orderBy('dbttrshed.startcsodate')
                 ->groupBy('dbttrshed.trsid');
 
@@ -150,10 +175,10 @@ class ReportCekStokController extends Controller
                 ->select(DB::raw("dbttrshed.trsid as trsid, COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
                 ->where('dbttrshed.statusdoc', 'P')
                 ->whereRaw('coalesce(dbtcsodet2.qty, 0) > 0')
-                ->whereBetween('dbttrshed.startcsodate',[$startDatePreviou3sMonth,$endOfDatePreviousMonth])
+                ->whereBetween('dbttrshed.startcsodate', [$startDatePreviou3sMonth, $endOfDatePreviousMonth])
                 ->orderBy('dbttrshed.startcsodate')
                 ->groupBy('dbttrshed.trsid');
-                
+
 
             $data3BulanTerakhir = DB::query()
                 ->fromSub($item_ok, 'item_ok')
@@ -162,7 +187,6 @@ class ReportCekStokController extends Controller
                 })
                 ->select('item_ok.monthstart', 'item_ok.csomaterial', 'item_ok.count as item_ok', 'item_ada.count as item_ada')
                 ->get();
-           
 
             $view = view("admin.report.stok-item.pdf-resume", [
                 "data3BulanTerakhir" => $data3BulanTerakhir,
@@ -216,7 +240,7 @@ class ReportCekStokController extends Controller
     {
         Carbon::setLocale('id');
         if ($request->type == 1) {
-            
+
             $dataDbtTrsHed = DB::table('dbttrshed')->where('trsid', '=', $request->trsidresume)->get();
 
             $dataAnalisator = SusunanCso::where('trsid', '=', $request->trsidresume)->where('joBtypeid', '=', '2')->where('tipecso', '=', 'R')->get();
@@ -228,7 +252,7 @@ class ReportCekStokController extends Controller
             $dataItemKesalahanAdmin = DB::table('dbttrsdet')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->leftJoin('dbmkeputusan','dbttrsdet.keputusan','=','dbmkeputusan.keputusanid')
+                ->leftJoin('dbmkeputusan', 'dbttrsdet.keputusan', '=', 'dbmkeputusan.keputusanid')
                 ->select(
                     'dbttrsdet.itemname',
                     'dbttrsdet.batchno',
@@ -246,13 +270,20 @@ class ReportCekStokController extends Controller
                 )
                 ->where('dbttrsdet.trsid', '=', $request->trsidresume)
                 ->whereRaw('coalesce(dbttrsdet.kesalahan_admin,0) = 1')
+                ->where('dbtcsodet2.csocount', '=', function ($query) {
+                    $query->from('dbtcsodet')
+                        ->join('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->whereColumn('dbtcsodet.itembatchid', 'dbttrsdet.itembatchid')
+                        ->selectRaw('max(dbtcsodet2.csocount)');
+                })
                 ->groupBy('dbttrsdet.trsdetid')
+                ->havingRaw("dbttrsdet.onhand = (SUM(COALESCE(dbtcsodet2.qty, 0)) + koreksi + deviasi)")
                 ->get();
 
             $dataItemSelisihTertukar = DB::table('dbttrsdet')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->leftJoin('dbmkeputusan','dbttrsdet.keputusan','=','dbmkeputusan.keputusanid')
+                ->leftJoin('dbmkeputusan', 'dbttrsdet.keputusan', '=', 'dbmkeputusan.keputusanid')
                 ->select(
                     'dbttrsdet.itemname',
                     'dbttrsdet.batchno',
@@ -271,15 +302,26 @@ class ReportCekStokController extends Controller
                 ->where('dbttrsdet.trsid', '=', $request->trsidresume)
                 ->whereRaw('not (coalesce(dbttrsdet.groupid,0) = 0)')
                 ->whereRaw('coalesce(dbttrsdet.kesalahan_admin,0) = 0')
+                ->where('dbtcsodet2.csocount', '=', function ($query) {
+                    $query->from('dbtcsodet')
+                        ->join('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->whereColumn('dbtcsodet.itembatchid', 'dbttrsdet.itembatchid')
+                        ->selectRaw('max(dbtcsodet2.csocount)');
+                })
                 ->groupBy('dbttrsdet.trsdetid')
+                ->havingRaw("dbttrsdet.onhand = (SUM(COALESCE(dbtcsodet2.qty, 0)) + koreksi + deviasi)")
                 ->get();
 
             $dataItemSelisih = DB::table('dbttrsdet')
-                ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
+                ->leftJoin('dbtcsodet', function ($join) {
+                    $join->on('dbtcsodet.itembatchid', '=', 'dbttrsdet.itembatchid');
+                })
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->leftJoin('dbmkeputusan','dbttrsdet.keputusan','=','dbmkeputusan.keputusanid')
+                ->leftJoin('dbmkeputusan', 'dbttrsdet.keputusan', '=', 'dbmkeputusan.keputusanid')
                 ->select(
+                    'dbttrsdet.itemid',
                     'dbttrsdet.itemname',
+                    'dbttrsdet.itembatchid',
                     'dbttrsdet.batchno',
                     'dbttrsdet.keputusan',
                     'dbmkeputusan.keputusandesc',
@@ -296,21 +338,28 @@ class ReportCekStokController extends Controller
                 ->where('dbttrsdet.trsid', '=', $request->trsidresume)
                 ->whereRaw('coalesce(dbttrsdet.groupid,0) = 0')
                 ->whereRaw('coalesce(dbttrsdet.kesalahan_admin,0) = 0')
+                ->where('dbtcsodet2.csocount', '=', function ($query) {
+                    $query->from('dbtcsodet')
+                        ->join('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
+                        ->whereColumn('dbtcsodet.itembatchid', 'dbttrsdet.itembatchid')
+                        ->selectRaw('max(dbtcsodet2.csocount)');
+                })
                 ->groupBy('dbttrsdet.trsdetid')
+                ->havingRaw("NOT dbttrsdet.onhand = (SUM(COALESCE(dbtcsodet2.qty, 0)) + koreksi + deviasi)")
                 ->get();
-            
+
             $endOfDatePreviousMonth = Carbon::parse($dataDbtTrsHed[0]->startcsodate)
-            ->copy()
-            ->subMonth()
-            ->endOfMonth()
-            ->toDateString();
+                ->copy()
+                ->subMonth()
+                ->endOfMonth()
+                ->toDateString();
 
             $startDatePreviou3sMonth = Carbon::parse($dataDbtTrsHed[0]->startcsodate)
-            ->copy()
-            ->subMonths(3)
-            ->startOfMonth()
-            ->toDateString();            
-            
+                ->copy()
+                ->subMonths(3)
+                ->startOfMonth()
+                ->toDateString();
+
             $item_ok = DB::table('dbttrshed')
                 ->join('dbttrsdet', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
@@ -318,10 +367,10 @@ class ReportCekStokController extends Controller
                 ->select(DB::raw("dbttrshed.trsid as trsid, COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
                 ->where('dbttrshed.statusdoc', 'P')
                 ->whereRaw('(coalesce(dbttrsdet.koreksi, 0) + coalesce(dbttrsdet.deviasi, 0) + coalesce(dbtcsodet2.qty, 0)) = dbttrsdet.onhand')
-                ->whereBetween('dbttrshed.startcsodate',[$startDatePreviou3sMonth,$endOfDatePreviousMonth])
+                ->whereBetween('dbttrshed.startcsodate', [$startDatePreviou3sMonth, $endOfDatePreviousMonth])
                 ->orderBy('dbttrshed.startcsodate')
                 ->groupBy('dbttrshed.trsid');
-                
+
             $item_ada = DB::table('dbttrshed')
                 ->join('dbttrsdet', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbtcsodet', 'dbtcsodet.itemid', '=', 'dbttrsdet.itemid')
@@ -329,10 +378,10 @@ class ReportCekStokController extends Controller
                 ->select(DB::raw("dbttrshed.trsid as trsid, COUNT(distinct dbttrsdet.trsdetid) as count, DATE_FORMAT(dbttrshed.startcsodate, '%m') as monthstart, dbttrshed.csomaterial"))
                 ->where('dbttrshed.statusdoc', 'P')
                 ->whereRaw('coalesce(dbtcsodet2.qty, 0) > 0')
-                ->whereBetween('dbttrshed.startcsodate',[$startDatePreviou3sMonth,$endOfDatePreviousMonth])
+                ->whereBetween('dbttrshed.startcsodate', [$startDatePreviou3sMonth, $endOfDatePreviousMonth])
                 ->orderBy('dbttrshed.startcsodate')
                 ->groupBy('dbttrshed.trsid');
-                
+
 
             $data3BulanTerakhir = DB::query()
                 ->fromSub($item_ok, 'item_ok')
@@ -341,7 +390,6 @@ class ReportCekStokController extends Controller
                 })
                 ->select('item_ok.monthstart', 'item_ok.csomaterial', 'item_ok.count as item_ok', 'item_ada.count as item_ada')
                 ->get();
-           
 
             $view = view("admin.report.preview-item.preview-resume", [
                 "title" => "Preview Resume",

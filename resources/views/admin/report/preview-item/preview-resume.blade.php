@@ -236,7 +236,8 @@
                                         <td class="td-content">{{ $dataRekapitulasi->item_ok }}</td>
                                         <td class="td-content">{{ $dataRekapitulasi->item_selisih }}</td>
                                         <td class="td-content">
-                                            {{ ($dataRekapitulasi->item_ok / $dataRekapitulasi->item_ada) * 100 }}%</td>
+                                            {{ ($dataRekapitulasi->item_ok / $dataRekapitulasi->item_ada) * 100 }}%
+                                        </td>
                                         <td class="td-content">{{ $dataRekapitulasi->item_selisih_plus }}</td>
                                         <td class="td-content">{{ $dataRekapitulasi->item_selisih_minus }}</td>
                                         <td class="td-content">6</td>
@@ -529,10 +530,10 @@
                                             <td class="td-content" style="text-align: center">
                                                 @if ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi > $itemSelisih->onhand)
                                                     Rp.
-                                                    @if ($itemTertukar->hpp_manual == null)
-                                                        {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
+                                                    @if ($itemSelisih->hpp_manual == null)
+                                                        {{ number_format(($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi)) * $itemSelisih->hpp, 2, ',', '.') }}
                                                     @else
-                                                        {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp_manual, 2, ',', '.') }}
+                                                        {{ number_format(($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi)) * $itemSelisih->hpp_manual, 2, ',', '.') }}
                                                     @endif
                                                 @endif
                                             </td>
