@@ -158,9 +158,9 @@
                                                 @endforeach
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.75cm">Total
                                                 </th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2cm">CSO 1</th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2cm">CSO 2</th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2cm">CSO 3</th>
+                                                <th class="th-content-cso" colspan="4" style="width: 2cm">CSO 1</th>
+                                                <th class="th-content-cso" colspan="4" style="width: 2cm">CSO 2</th>
+                                                <th class="th-content-cso" colspan="4" style="width: 2cm">CSO 3</th>
                                                 <th class="th-content-cso" colspan="3" style="width: 2cm">Trace</th>
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">Warna</th>
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">Keterangan
@@ -170,19 +170,16 @@
                                             <tr class="tr-head">
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">No Form</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Kesimpulan</th>
 
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">No Form</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Kesimpulan</th>
 
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">No Form</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Kesimpulan</th>
 
@@ -200,18 +197,20 @@
                                                     <td class="td-content">{{ $laporan->name }}</td>
                                                     @foreach ($dataWrh as $wrh)
                                                         <td class="td-content">
-                                                            @if ($wrh->wrh == $laporan->wrh)
-                                                                {{ $laporan->wrhqty }}
-                                                            @endif
+                                                            @foreach ($dataWrhQty as $qtyWrh)
+                                                                @if ($qtyWrh->wrh == $wrh->wrh && $qtyWrh->trsdetid == $laporan->trsdetid)
+                                                                    {{ $qtyWrh->qty }}
+                                                                @endif
+                                                            @endforeach
                                                         </td>
                                                     @endforeach
                                                     <td class="td-content">{{ $laporan->onhand }}</td>
+
                                                     <td class="td-content">{{ $laporan->qtycso1 }}</td>
                                                     <td class="td-content">{{ $laporan->onhand - $laporan->qtycso1 }}</td>
-                                                    <td class="td-content">1</td>
                                                     <td class="td-content">{{ $laporan->loctcso1 }}</td>
                                                     <td class="td-content">
-                                                        @if ($laporan->qtycso1 != $laporan->onhand || $laporan->qtycso1 == null)
+                                                        @if ($laporan->qtycso1 != $laporan->onhand)
                                                             False
                                                         @else
                                                             True
@@ -219,11 +218,14 @@
                                                     </td>
 
                                                     <td class="td-content">{{ $laporan->qtycso2 }}</td>
-                                                    <td class="td-content"></td>
-                                                    <td class="td-content">2</td>
+                                                    <td class="td-content">
+                                                        @if ($laporan->qtycso1 != $laporan->onhand)
+                                                            {{ $laporan->onhand - $laporan->qtycso2 }}
+                                                        @endif
+                                                    </td>
                                                     <td class="td-content">{{ $laporan->loctcso2 }}</td>
                                                     <td class="td-content">
-                                                        @if ($laporan->qtycso2 != $laporan->onhand || $laporan->qtycso2 == null)
+                                                        @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
                                                             False
                                                         @else
                                                             True
@@ -231,11 +233,17 @@
                                                     </td>
 
                                                     <td class="td-content">{{ $laporan->qtycso3 }}</td>
-                                                    <td class="td-content"></td>
-                                                    <td class="td-content">3</td>
+                                                    <td class="td-content">
+                                                        @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
+                                                            {{ $laporan->onhand - $laporan->qtycso3 }}
+                                                        @endif
+                                                    </td>
                                                     <td class="td-content">{{ $laporan->loctcso3 }}</td>
                                                     <td class="td-content">
-                                                        @if ($laporan->qtycso3 != $laporan->onhand || $laporan->qtycso3 == null)
+                                                        @if (
+                                                            $laporan->qtycso1 != $laporan->onhand &&
+                                                                $laporan->qtycso2 != $laporan->onhand &&
+                                                                $laporan->qtycso3 != $laporan->onhand)
                                                             False
                                                         @else
                                                             True
@@ -243,17 +251,21 @@
                                                     </td>
 
                                                     <td class="td-content">
-                                                        {{ $laporan->qtycso1 + $laporan->qtycso2 + $laporan->qtycso3 }}
+                                                        {{ $laporan->trace }}
                                                     </td>
-                                                    <td class="td-content"></td>
                                                     <td class="td-content">
                                                         @if (
-                                                            $laporan->qtycso1 != $laporan->onhand ||
-                                                                $laporan->qtycso1 == null ||
-                                                                $laporan->qtycso2 != $laporan->onhand ||
-                                                                $laporan->qtycso2 == null ||
-                                                                $laporan->qtycso3 != $laporan->onhand ||
-                                                                $laporan->qtycso3 == null)
+                                                            $laporan->qtycso1 != $laporan->onhand &&
+                                                                $laporan->qtycso2 != $laporan->onhand &&
+                                                                $laporan->qtycso3 != $laporan->onhand)
+                                                            {{ $laporan->onhand - $laporan->trace }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="td-content">
+                                                        @if (
+                                                            $laporan->qtycso1 != $laporan->onhand &&
+                                                                $laporan->qtycso2 != $laporan->onhand &&
+                                                                $laporan->trace != $laporan->onhand)
                                                             False
                                                         @else
                                                             True

@@ -208,10 +208,16 @@ class ReportCekStokController extends Controller
                 ->select('dbttrsdet2.wrh')
                 ->groupBy('dbttrsdet2.wrh')
                 ->get();
+            $dataWrhQty = DB::table('dbttrsdet')
+                ->join('dbttrsdet2', 'dbttrsdet.trsdetid', '=', 'dbttrsdet2.trsdetid')
+                ->where('dbttrsdet.trsid', '=', $request->trsidlaporan)
+                ->select('dbttrsdet2.wrh','dbttrsdet2.trsdetid', 'dbttrsdet2.qty')
+                ->get();
             $view = view("admin.report.stok-item.pdf-laporan-cso", [
                 "dataCso" => $dataDbtTrsHed[0],
                 "dataWrh" => $dataWrh,
-                "dataLaporan" => $dataLaporan
+                "dataLaporan" => $dataLaporan,
+                "dataWrhQty" => $dataWrhQty
             ]);
         }
         $pdf->loadHTML($view)->setPaper('a4', 'landscape')->add_info('Title', 'Your meta title');
@@ -412,11 +418,17 @@ class ReportCekStokController extends Controller
                 ->select('dbttrsdet2.wrh')
                 ->groupBy('dbttrsdet2.wrh')
                 ->get();
+            $dataWrhQty = DB::table('dbttrsdet')
+            ->join('dbttrsdet2', 'dbttrsdet.trsdetid', '=', 'dbttrsdet2.trsdetid')
+            ->where('dbttrsdet.trsid', '=', $request->trsidlaporan)
+            ->select('dbttrsdet2.wrh','dbttrsdet2.trsdetid', 'dbttrsdet2.qty')
+            ->get();
             $view = view("admin.report.preview-item.preview-laporan-cso", [
                 "title" => "Preview Laporan",
                 "trsidlaporan" => $request->trsidlaporan,
                 "dataCso" => $dataDbtTrsHed[0],
                 "dataWrh" => $dataWrh,
+                "dataWrhQty" => $dataWrhQty,
                 "dataLaporan" => $dataLaporan
             ]);
         }

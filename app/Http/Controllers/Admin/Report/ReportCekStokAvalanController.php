@@ -201,10 +201,16 @@ class ReportCekStokAvalanController extends Controller
                 ->select('dbttrsdet2a.wrh')
                 ->groupBy('dbttrsdet2a.wrh')
                 ->get();
+            $dataWrhQty = DB::table('dbttrsdeta')
+                ->join('dbttrsdet2a', 'dbttrsdeta.trsdetid', '=', 'dbttrsdet2a.trsdetid')
+                ->where('dbttrsdeta.trsid', '=', $request->trsidlaporan)
+                ->select('dbttrsdet2a.wrh','dbttrsdet2a.trsdetid', 'dbttrsdet2a.qty')
+                ->get();
             $view = view("admin.report.stok-item.pdf-laporan-cso", [
                 "dataCso" => $dataDbtTrsHed[0],
                 "dataWrh" => $dataWrh,
-                "dataLaporan" => $dataLaporan
+                "dataLaporan" => $dataLaporan,
+                "dataWrhQty" => $dataWrhQty
             ]);
         }
         $pdf->loadHTML($view)->setPaper('a4', 'landscape')->add_info('Title', 'Your meta title');;
@@ -402,11 +408,17 @@ class ReportCekStokAvalanController extends Controller
                 ->select('dbttrsdet2a.wrh')
                 ->groupBy('dbttrsdet2a.wrh')
                 ->get();
+            $dataWrhQty = DB::table('dbttrsdeta')
+                ->join('dbttrsdet2a', 'dbttrsdeta.trsdetid', '=', 'dbttrsdet2a.trsdetid')
+                ->where('dbttrsdeta.trsid', '=', $request->trsidlaporan)
+                ->select('dbttrsdet2a.wrh','dbttrsdet2a.trsdetid', 'dbttrsdet2a.qty')
+                ->get();
             $view = view("admin.report.preview-avalan.preview-laporan-cso", [
                 "title" => "Preview Laporan",
                 "dataCso" => $dataDbtTrsHed[0],
                 "trsidlaporan" => $request->trsidlaporan,
                 "dataWrh" => $dataWrh,
+                "dataWrhQty" => $dataWrhQty,
                 "dataLaporan" => $dataLaporan
             ]);
         }
