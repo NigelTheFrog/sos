@@ -405,6 +405,12 @@ class ItemController extends Controller
         } else {
             $kesalahan = 0;
         }
+
+        if (!empty($request->check_batch_tertukar)) {
+            $batch_tertukar = 1;
+        } else {
+            $batch_tertukar = 0;
+        }
         if ($request->batchno == null) {
             $updateAvalan = DB::table('dbttrsdet')
                 ->where('itemid', $request->itemid)
@@ -415,7 +421,8 @@ class ItemController extends Controller
                     'analisatorid' => $request->analisator,
                     'keterangan' => $request->keterangan,
                     'groupid' => $request->grouping,
-                    'kesalahan_admin' => $kesalahan
+                    'kesalahan_admin' => $kesalahan,
+                    "batch_tertukar" => $batch_tertukar
                 ]);
         } else {
             $updateAvalan = DB::table('dbttrsdet')
@@ -428,7 +435,8 @@ class ItemController extends Controller
                     'analisatorid' => $request->analisator,
                     'keterangan' => $request->keterangan,
                     'groupid' => $request->grouping,
-                    'kesalahan_admin' => $kesalahan
+                    'kesalahan_admin' => $kesalahan,
+                    "batch_tertukar" => $batch_tertukar
                 ]);
         }
 
@@ -450,11 +458,18 @@ class ItemController extends Controller
                 ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbmuser', 'dbttrsdet.analisatorid', '=', 'dbmuser.userid')
                 ->leftJoin('dbmgroup', 'dbmgroup.groupid', '=', 'dbttrsdet.groupid')
-                ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name", "kesalahan_admin"])
+                ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name"])
                 ->where('itemid', '=', $request->id)
-                ->where('dbttrshed.statusdoc', '=', 'A')
+                ->whereNot('dbttrshed.statusdoc', '=', 'P')
                 ->whereNotNull('analisatorid')
                 ->get();
+            
+            $dataAdminBatch = DB::table('dbttrsdet')
+                ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+                ->select(['kesalahan_admin', 'batch_tertukar'])
+                ->where('dbttrsdet.itemid', '=', $request->id)
+                ->whereNot('dbttrshed.statusdoc', '=', 'P')
+                ->get(); 
 
             $cekCso = DB::table('dbtcsodet2')
                 ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbttrsdet.statusitem', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
@@ -473,7 +488,7 @@ class ItemController extends Controller
                 ->select('dbttrsdet.statusitem','dbttrsdet.trsid')
                 ->leftjoin('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->where('dbttrsdet.itemid', '=', $request->id)
-                ->where('dbttrshed.statusdoc', '=', 'A')
+                ->whereNot('dbttrshed.statusdoc', '=', 'P')
                 ->get();
         } else {
             $data = ViewDashboard::where('itembatchid', '=', $request->id . $request->batchno)->get();
@@ -482,11 +497,18 @@ class ItemController extends Controller
                 ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->leftJoin('dbmuser', 'dbttrsdet.analisatorid', '=', 'dbmuser.userid')
                 ->leftJoin('dbmgroup', 'dbmgroup.groupid', '=', 'dbttrsdet.groupid')
-                ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name", "kesalahan_admin"])
+                ->select(["dbttrsdet.groupid", "dbttrsdet.analisatorid", "dbmgroup.groupdesc", "name"])
                 ->where('dbttrsdet.itembatchid', '=', $request->id . $request->batchno)
-                ->where('dbttrshed.statusdoc', '=', 'A')
+                ->whereNot('dbttrshed.statusdoc', '=', 'P')
                 ->whereNotNull('analisatorid')
-                ->get();
+                ->get();            
+            
+            $dataAdminBatch = DB::table('dbttrsdet')
+                ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+                ->select(['kesalahan_admin', 'batch_tertukar'])
+                ->where('dbttrsdet.itembatchid', '=', $request->id . $request->batchno)
+                ->whereNot('dbttrshed.statusdoc', '=', 'P')
+                ->get();      
 
             $cekCso = DB::table('dbtcsodet2')
                 ->select('dbtcsodet2.csodet2id', 'dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet.itemid', 'dbttrsdet.itemname', 'dbttrsdet.statusitem', 'dbtcsodet2.csocount', 'dbtcsodet2.qty', 'dbttrsdet.statuscso')
@@ -505,7 +527,7 @@ class ItemController extends Controller
                 ->select('dbttrsdet.statusitem','dbttrsdet.trsid')
                 ->leftjoin('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
                 ->where('dbttrsdet.itembatchid', '=', $request->id . $request->batchno)
-                ->where('dbttrshed.statusdoc', '=', 'A')
+                ->whereNot('dbttrshed.statusdoc', '=', 'P')
                 ->get();
         }
 
@@ -541,6 +563,7 @@ class ItemController extends Controller
             ->select(['userid', 'name'])
             ->distinct()
             ->get();
+
         return view('admin.dashboard.table.item.detail-cso-item', [
             "itemid" => $data[0]->itemid,
             "batchno" => $data[0]->batchno,
@@ -555,6 +578,7 @@ class ItemController extends Controller
             "koreksi" => $data[0]->koreksi,
             "deviasi" => $data[0]->deviasi,
             "keterangan" => $data[0]->keterangan,
+            "dataAdminBatch" => $dataAdminBatch[0],
             "tableDetailDashboard" => $dataDetailDashboard,
             "dataCso" => $dataCsoCount,
             "totalCso" => $dataTotalCso,

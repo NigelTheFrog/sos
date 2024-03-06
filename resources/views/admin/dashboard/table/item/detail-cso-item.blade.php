@@ -165,14 +165,22 @@
         <input type="text" id="batchno" class="d-none" value="{{ $batchno }}">
         @if (Auth::user()->level == 1 || Auth::user()->level == 2)
             <button type="button" id="csoulang" onclick="csoUlang(this)" name="csoorder" class="btn btn-info mb-3"
-                @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
+                @if ($checkCso == 0 ) disabled @endif>CSO Ulang</button>
         @endif
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin"
-                @if (count($analisator) > 0 && $analisator[0]->kesalahan_admin == 1) checked @endif 
+                @if ($dataAdminBatch->kesalahan_admin == 1) checked @endif 
                 @if (Auth::user()->level != 1 && Auth::user()->level != 2) disabled @endif>
             <label class="form-check-label small" for="checkkesalahanadmin">
                 Kesalahan Admin
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="checkbatchTertukar" name="check_batch_tertukar"
+                @if ($dataAdminBatch->batch_tertukar == 1) checked @endif 
+                @if (Auth::user()->level != 1 && Auth::user()->level != 2) disabled @endif>
+            <label class="form-check-label small" for="checkbatchTertukar">
+                Beda Batch
             </label>
         </div>
     </div>

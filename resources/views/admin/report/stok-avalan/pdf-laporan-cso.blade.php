@@ -102,7 +102,8 @@
 <body>
     <div>
         <h2>
-            CSO SRM TANGGAL: {{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}
+            {{ substr($dataCso->doccsoid, 0, 3) }} SRM TANGGAL:
+            {{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}
         </h2>
         <h2>
             MATERIAL: {{ Str::upper($dataCso->csomaterial) }}
@@ -134,9 +135,11 @@
                             <td class="td-content">{{ $laporan->name }}</td>
                             @foreach ($dataWrh as $wrh)
                                 <td class="td-content">
-                                    @if ($wrh->wrh == $laporan->wrh)
-                                        {{ $laporan->wrhqty }}
-                                    @endif
+                                    @foreach ($dataWrhQty as $qtyWrh)
+                                        @if ($qtyWrh->wrh == $wrh->wrh && $qtyWrh->trsdetid == $laporan->trsdetid)
+                                            {{ $qtyWrh->qty }}
+                                        @endif
+                                    @endforeach
                                 </td>
                             @endforeach
                             <td class="td-content">{{ $laporan->onhand }}</td>
@@ -192,51 +195,67 @@
                         <tr class="tr-rekapitulasi-global">
                             <td class="td-content">{{ $laporan->qtycso1 }}</td>
                             <td class="td-content">{{ $laporan->onhand - $laporan->qtycso1 }}</td>
-                            <td class="td-content">1</td>
                             <td class="td-content">{{ $laporan->loctcso1 }}</td>
-                            <td class="td-content">
-                                @if ($laporan->qtycso1 <> $laporan->onhand || $laporan->qtycso1 == null)
-                                    False
-                                @else
-                                    True
-                                @endif
-                            </td>
+                            @if ($laporan->qtycso1 != $laporan->onhand)
+                                <td class="td-content" style="background-color: #FFC8AA">False
+                                </td>
+                            @else
+                                <td class="td-content" style="background-color: #D4EBBC">True</td>
+                            @endif
+
 
                             <td class="td-content">{{ $laporan->qtycso2 }}</td>
-                            <td class="td-content"></td>
-                            <td class="td-content">2</td>
-                            <td class="td-content">{{ $laporan->loctcso2 }}</td>
                             <td class="td-content">
-                                @if ($laporan->qtycso2 <> $laporan->onhand || $laporan->qtycso2 == null)
-                                    False
-                                @else
-                                    True
+                                @if ($laporan->qtycso1 != $laporan->onhand)
+                                    {{ $laporan->onhand - $laporan->qtycso2 }}
                                 @endif
                             </td>
+                            <td class="td-content">{{ $laporan->loctcso2 }}</td>
+                            @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
+                                <td class="td-content" style="background-color: #FFC8AA">False
+                                </td>
+                            @else
+                                <td class="td-content" style="background-color: #D4EBBC">True</td>
+                            @endif
 
                             <td class="td-content">{{ $laporan->qtycso3 }}</td>
-                            <td class="td-content"></td>
-                            <td class="td-content">3</td>
-                            <td class="td-content">{{ $laporan->loctcso3 }}</td>
                             <td class="td-content">
-                                @if ($laporan->qtycso3 <> $laporan->onhand || $laporan->qtycso3 == null)
-                                    False
-                                @else
-                                    True
+                                @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
+                                    {{ $laporan->onhand - $laporan->qtycso3 }}
+                                @endif
+                            </td>
+                            <td class="td-content">{{ $laporan->loctcso3 }}</td>
+                            @if (
+                                $laporan->qtycso1 != $laporan->onhand &&
+                                    $laporan->qtycso2 != $laporan->onhand &&
+                                    $laporan->qtycso3 != $laporan->onhand)
+                                <td class="td-content" style="background-color: #FFC8AA">False
+                                </td>
+                            @else
+                                <td class="td-content" style="background-color: #D4EBBC">True</td>
+                            @endif
+                            <td class="td-content">
+                                {{ $laporan->trace }}
+                            </td>
+                            <td class="td-content">
+                                @if (
+                                    $laporan->qtycso1 != $laporan->onhand &&
+                                        $laporan->qtycso2 != $laporan->onhand &&
+                                        $laporan->qtycso3 != $laporan->onhand)
+                                    {{ $laporan->onhand - $laporan->trace }}
                                 @endif
                             </td>
 
-                            <td class="td-content">{{ $laporan->qtycso1 + $laporan->qtycso2 +  $laporan->qtycso3 }}
-                            </td>
-                            <td class="td-content"></td>
-                            <td class="td-content"> 
-                            @if ( $laporan->qtycso1 <> $laporan->onhand || $laporan->qtycso1 == null || $laporan->qtycso2 <> $laporan->onhand || $laporan->qtycso2 == null
-                            || $laporan->qtycso3 <> $laporan->onhand || $laporan->qtycso3 == null)
-                                False
+                            @if (
+                                $laporan->qtycso1 != $laporan->onhand &&
+                                    $laporan->qtycso2 != $laporan->onhand &&
+                                    $laporan->qtycso3 != $laporan->onhand &&
+                                    $laporan->trace != $laporan->onhand)
+                                <td class="td-content" style="background-color: #FFC8AA">False
+                                </td>
                             @else
-                                True
-                            @endif 
-                        </td>
+                                <td class="td-content" style="background-color: #D4EBBC">True</td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>

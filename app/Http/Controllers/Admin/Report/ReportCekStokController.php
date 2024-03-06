@@ -429,7 +429,7 @@ class ReportCekStokController extends Controller
                 "dataCso" => $dataDbtTrsHed[0],
                 "dataWrh" => $dataWrh,
                 "dataWrhQty" => $dataWrhQty,
-                "dataLaporan" => $dataLaporan
+                "dataLaporan" => $dataLaporan,
             ]);
         }
         return $view;

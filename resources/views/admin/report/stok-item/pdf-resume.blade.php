@@ -190,7 +190,7 @@
                     <td class="td-content">{{ ($dataRekapitulasi->item_ok / $dataRekapitulasi->item_ada) * 100 }}%</td>
                     <td class="td-content">{{ $dataRekapitulasi->item_selisih_plus }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->item_selisih_minus }}</td>
-                    <td class="td-content">6</td>
+                    <td class="td-content">{{ $dataRekapitulasi->beda_batch }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->tertukar }}</td>
                     <td class="td-content">{{ ($dataRekapitulasi->item_selisih / $dataRekapitulasi->item_ada) * 100 }}%
                     </td>

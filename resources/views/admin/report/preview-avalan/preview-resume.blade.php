@@ -110,30 +110,30 @@
                             <div class="col-md-8">
                                 <h3 class="card-title">{{ $title }}</h3>
                             </div>
-                            @if ($dataCso->statusdoc == "P")
-                            <div class="col-md-4 text-end">
-                                <div class="d-flex flex-row-reverse">
-                                    <div>
-                                        <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
-                                            @csrf
-                                            <input type="text" name="trsidresume" value="{{$trsidresume}}" hidden>
-                                            <input type="text" name="type" value="1" hidden>
-                                            <button type="submit" class="btn btn-primary text-white"><i
-                                                    class="fas fa-print pe-2"></i>Print Keseluruhan</button>
-                                        </form>
-                                    </div>
-                                    <div class="me-2">
-                                        <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
-                                            @csrf
-                                            <input type="text" name="trsidresume" value="{{$trsidresume}}" hidden>
-                                            <input type="text" name="type" value="2" hidden>
-                                            <button type="submit" class="btn btn-primary text-white"><i
-                                                    class="fas fa-print pe-2"></i>Print Warehouse</button>
-                                        </form>
+                            @if ($dataCso->statusdoc == 'P')
+                                <div class="col-md-4 text-end">
+                                    <div class="d-flex flex-row-reverse">
+                                        <div>
+                                            <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
+                                                @csrf
+                                                <input type="text" name="trsidresume" value="{{ $trsidresume }}" hidden>
+                                                <input type="text" name="type" value="1" hidden>
+                                                <button type="submit" class="btn btn-primary text-white"><i
+                                                        class="fas fa-print pe-2"></i>Print Keseluruhan</button>
+                                            </form>
+                                        </div>
+                                        <div class="me-2">
+                                            <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
+                                                @csrf
+                                                <input type="text" name="trsidresume" value="{{ $trsidresume }}" hidden>
+                                                <input type="text" name="type" value="2" hidden>
+                                                <button type="submit" class="btn btn-primary text-white"><i
+                                                        class="fas fa-print pe-2"></i>Print Warehouse</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div> 
-                            @endif                             
+                            @endif
                         </div>
                     </div>
                     <div class="card-body" style="background-color: #f8f8f8; max-height: 1330px; overflow: auto;">
@@ -166,14 +166,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($dataAnalisator as $index => $analisator)
+                                    @if (count($dataAnalisator) > 0)
+                                        @foreach ($dataAnalisator as $index => $analisator)
+                                            <tr class="tr-body">
+                                                <th class="td-content">{{ $index + 1 }}</th>
+                                                <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
+                                                <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
+                                                <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr class="tr-body">
-                                            <th class="td-content">{{ $index + 1 }}</th>
-                                            <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
-                                            <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
-                                            <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
+                                            <td class="td-content">&nbsp</th>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
+
                                 </tbody>
                             </table>
                             <h5>Pelaku</h5>
@@ -187,14 +197,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($dataPelaku as $index => $pelaku)
+                                    @if (count($dataPelaku) > 0)
+                                        @foreach ($dataPelaku as $index => $pelaku)
+                                            <tr class="tr-body">
+                                                <th class="td-content">{{ $index + 1 }}</th>
+                                                <td class="td-content" style="padding: 8px">{{ $pelaku->name }}</td>
+                                                <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
+                                                <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr class="tr-body">
-                                            <th class="td-content">{{ $index + 1 }}</th>
-                                            <td class="td-content" style="padding: 8px">{{ $pelaku->name }}</td>
-                                            <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
-                                            <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
+                                            <td class="td-content">&nbsp</th>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
+
                                 </tbody>
                             </table>
                         </div>
@@ -214,7 +234,8 @@
                                         <th class="th-content" rowspan="2" style="width: 2.75cm">Item yang sudah dicek
                                             stok ada </th>
                                         <th class="th-content" colspan="2" style="width: 1.5cm">Hasil CSO</th>
-                                        <th class="th-content" rowspan="2" style="width: 2.5cm ">% Keakuratan Stok</th>
+                                        <th class="th-content" rowspan="2" style="width: 2.5cm ">% Keakuratan Stok
+                                        </th>
                                         <th class="th-content" colspan="4" style="">% Item Selisih</th>
                                         <th class="th-content" rowspan="2"style="width: 2cm">% Selisih</th>
                                     </tr>
@@ -239,7 +260,7 @@
                                             {{ ($dataRekapitulasi->item_ok / $dataRekapitulasi->item_ada) * 100 }}%</td>
                                         <td class="td-content">{{ $dataRekapitulasi->item_selisih_plus }}</td>
                                         <td class="td-content">{{ $dataRekapitulasi->item_selisih_minus }}</td>
-                                        <td class="td-content">6</td>
+                                        <td class="td-content">{{ $dataRekapitulasi->beda_batch }}</td>
                                         <td class="td-content">{{ $dataRekapitulasi->tertukar }}</td>
                                         <td class="td-content">
                                             {{ ($dataRekapitulasi->item_selisih / $dataRekapitulasi->item_ada) * 100 }}%
@@ -329,7 +350,7 @@
                                             @if (
                                                 $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi >
                                                     $itemKesalahanAdmin->onhand)
-                                                {{ number_format( $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand, 2, ',', '.') }}
+                                                {{ number_format($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand, 2, ',', '.') }}
                                             @endif
                                         </td>
                                         <td style="text-align: center" class="td-selisih-minus">
@@ -504,7 +525,8 @@
                                                     -
                                                 @endif
                                             </td>
-                                            <td class="td-content" style="text-align: center">{{ number_format($itemSelisih->onhand, 2, ',', '.') }}
+                                            <td class="td-content" style="text-align: center">
+                                                {{ number_format($itemSelisih->onhand, 2, ',', '.') }}
                                             </td>
                                             <td class="td-content" style="text-align: center">
                                                 {{ number_format($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi, 2, ',', '.') }}
@@ -516,7 +538,7 @@
                                             </td>
                                             <td style="text-align: center" class="td-selisih-minus">
                                                 @if ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi < $itemSelisih->onhand)
-                                                    {{number_format($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi), 2, ',', '.') }}
+                                                    {{ number_format($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi), 2, ',', '.') }}
                                                 @endif
                                             </td>
                                             <td class="td-content" style="text-align: center">Rp.

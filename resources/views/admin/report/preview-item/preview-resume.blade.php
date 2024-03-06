@@ -166,17 +166,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($dataAnalisator as $index => $analisator)
+                                    @if (count($dataAnalisator) > 0)
+                                        @foreach ($dataAnalisator as $index => $analisator)
+                                            <tr class="tr-body">
+                                                <th class="td-content">{{ $index + 1 }}</th>
+                                                <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
+                                                <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
+                                                <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr class="tr-body">
-                                            <th class="td-content">{{ $index + 1 }}</th>
-                                            <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
-                                            <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
-                                            <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
+                                            <td class="td-content">&nbsp</th>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
-                            <h5>Pelaku</h5>
+                            <h5 style="margin-top: 0.5cm">Pelaku</h5>
                             <table>
                                 <thead>
                                     <tr class="tr-head">
@@ -187,14 +196,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($dataPelaku as $index => $pelaku)
+                                    @if (count($dataPelaku) > 0)
+                                        @foreach ($dataPelaku as $index => $pelaku)
+                                            <tr class="tr-body">
+                                                <th class="td-content">{{ $index + 1 }}</th>
+                                                <td class="td-content" style="padding: 8px">{{ $pelaku->name }}</td>
+                                                <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
+                                                <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr class="tr-body">
-                                            <th class="td-content">{{ $index + 1 }}</th>
-                                            <td class="td-content" style="padding: 8px">{{ $pelaku->name }}</td>
-                                            <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
-                                            <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
+                                            <td class="td-content">&nbsp</th>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -240,7 +258,7 @@
                                         </td>
                                         <td class="td-content">{{ $dataRekapitulasi->item_selisih_plus }}</td>
                                         <td class="td-content">{{ $dataRekapitulasi->item_selisih_minus }}</td>
-                                        <td class="td-content">6</td>
+                                        <td class="td-content">{{ $dataRekapitulasi->beda_batch }}</td>
                                         <td class="td-content">{{ $dataRekapitulasi->tertukar }}</td>
                                         <td class="td-content">
                                             {{ ($dataRekapitulasi->item_selisih / $dataRekapitulasi->item_ada) * 100 }}%

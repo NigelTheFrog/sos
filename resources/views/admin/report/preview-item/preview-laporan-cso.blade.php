@@ -133,7 +133,7 @@
                             </div>
                             <div class="card-body" style="background-color: #f8f8f8;">
                                 <h2>
-                                    CSO SRM TANGGAL:
+                                    {{substr($dataCso->doccsoid,0,3)}} SRM TANGGAL:
                                     {{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}
                                 </h2>
                                 <h2>
@@ -145,7 +145,7 @@
 
                                 <div class="page-break"
                                     style="margin-top: 20px; max-width: 80vw; overflow-x: auto; overflow-y: auto">
-                                    <table style="border-collapse: collapse;min-width: 150%;">
+                                    <table style="border-collapse: collapse;min-width: 200%;">
                                         <thead>
                                             <tr class="tr-head">
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">No</th>
@@ -172,18 +172,18 @@
                                             <tr class="tr-head">
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Kesimpulan</th>
+                                                <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
+                                                <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
 
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Kesimpulan</th>
+                                                <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
+                                                <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
 
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Kesimpulan</th>
+                                                <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
+                                                <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
 
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
@@ -211,13 +211,13 @@
                                                     <td class="td-content">{{ $laporan->qtycso1 }}</td>
                                                     <td class="td-content">{{ $laporan->onhand - $laporan->qtycso1 }}</td>
                                                     <td class="td-content">{{ $laporan->loctcso1 }}</td>
-                                                    <td class="td-content">
-                                                        @if ($laporan->qtycso1 != $laporan->onhand)
-                                                            False
-                                                        @else
-                                                            True
-                                                        @endif
-                                                    </td>
+                                                    @if ($laporan->qtycso1 != $laporan->onhand)
+                                                        <td class="td-content" style="background-color: #FFC8AA">False
+                                                        </td>
+                                                    @else
+                                                        <td class="td-content" style="background-color: #D4EBBC">True</td>
+                                                    @endif
+
 
                                                     <td class="td-content">{{ $laporan->qtycso2 }}</td>
                                                     <td class="td-content">
@@ -226,13 +226,12 @@
                                                         @endif
                                                     </td>
                                                     <td class="td-content">{{ $laporan->loctcso2 }}</td>
-                                                    <td class="td-content">
-                                                        @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
-                                                            False
-                                                        @else
-                                                            True
-                                                        @endif
-                                                    </td>
+                                                    @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
+                                                        <td class="td-content" style="background-color: #FFC8AA">False
+                                                        </td>
+                                                    @else
+                                                        <td class="td-content" style="background-color: #D4EBBC">True</td>
+                                                    @endif
 
                                                     <td class="td-content">{{ $laporan->qtycso3 }}</td>
                                                     <td class="td-content">
@@ -241,17 +240,15 @@
                                                         @endif
                                                     </td>
                                                     <td class="td-content">{{ $laporan->loctcso3 }}</td>
-                                                    <td class="td-content">
-                                                        @if (
-                                                            $laporan->qtycso1 != $laporan->onhand &&
-                                                                $laporan->qtycso2 != $laporan->onhand &&
-                                                                $laporan->qtycso3 != $laporan->onhand)
-                                                            False
-                                                        @else
-                                                            True
-                                                        @endif
-                                                    </td>
-
+                                                    @if (
+                                                        $laporan->qtycso1 != $laporan->onhand &&
+                                                            $laporan->qtycso2 != $laporan->onhand &&
+                                                            $laporan->qtycso3 != $laporan->onhand)
+                                                        <td class="td-content" style="background-color: #FFC8AA">False
+                                                        </td>
+                                                    @else
+                                                        <td class="td-content" style="background-color: #D4EBBC">True</td>
+                                                    @endif
                                                     <td class="td-content">
                                                         {{ $laporan->trace }}
                                                     </td>
@@ -263,16 +260,17 @@
                                                             {{ $laporan->onhand - $laporan->trace }}
                                                         @endif
                                                     </td>
-                                                    <td class="td-content">
-                                                        @if (
-                                                            $laporan->qtycso1 != $laporan->onhand &&
-                                                                $laporan->qtycso2 != $laporan->onhand &&
-                                                                $laporan->trace != $laporan->onhand)
-                                                            False
-                                                        @else
-                                                            True
-                                                        @endif
-                                                    </td>
+
+                                                    @if (
+                                                        $laporan->qtycso1 != $laporan->onhand &&
+                                                            $laporan->qtycso2 != $laporan->onhand &&
+                                                            $laporan->qtycso3 != $laporan->onhand &&
+                                                            $laporan->trace != $laporan->onhand)
+                                                        <td class="td-content" style="background-color: #FFC8AA">False
+                                                        </td>
+                                                    @else
+                                                        <td class="td-content" style="background-color: #D4EBBC">True</td>
+                                                    @endif
                                                     <td class="td-content">{{ $laporan->color }}</td>
                                                     <td class="td-content">{{ $laporan->keterangan }}</td>
                                                     <td class="td-content">{{ $laporan->pelaku }}</td>

@@ -81,6 +81,7 @@
                     @csrf
                     @method('PUT')
                     <input type="text" name="type" value="2" hidden>
+                    <input type="text" name="csotype" value="" hidden>
                     <div class="modal-header bg-secondary text-white">
                         <h1 class="modal-title fs-5" id="mdlMoreLabel">Laporan Hasil Pelaksanaan Cek Stok</h1>
                         <button type="button" class="btn-close btn-close-white align-middle"
