@@ -192,6 +192,7 @@ class ReportCekStokAvalanController extends Controller
                 "dataRekapitulasi" => $dataRekapitulasi[0],
                 "type" => $request->type
             ]);
+            $pdf->loadHTML($view)->setPaper('a4');
         } else {
             $dataDbtTrsHed = DB::table('dbttrsheda')->where('trsid', '=', $request->trsidlaporan)->get();
             $dataLaporan = DB::select('CALL GetDataLaporanAvalan(?)', [$request->trsidlaporan]);
@@ -212,8 +213,9 @@ class ReportCekStokAvalanController extends Controller
                 "dataLaporan" => $dataLaporan,
                 "dataWrhQty" => $dataWrhQty
             ]);
+            $pdf->loadHTML($view)->setPaper('a4', 'landscape');
+
         }
-        $pdf->loadHTML($view)->setPaper('a4', 'landscape')->add_info('Title', 'Your meta title');;
         return $pdf->stream();
     }
 

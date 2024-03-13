@@ -1,94 +1,103 @@
-<style>
-    .title-info {
-        padding-top: 25px;
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    th {
-        text-align: center;
-        font-size: 9.5pt;
-        border: 1px solid;
-        padding-left: 2px;
-        padding-right: 2px;
-        line-height: 1.75;
-        vertical-align: middle;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Resume Item</title>
+    <style>
+        .title-info {
+            padding-top: 25px;
+        }
 
-    .th-content {
-        border-color: rgb(65, 65, 65);
-    }
+        th {
+            text-align: center;
+            font-size: 9.5pt;
+            border: 1px solid;
+            padding-left: 2px;
+            padding-right: 2px;
+            line-height: 1.75;
+            vertical-align: middle;
+        }
 
-    .tr-head {
-        background-color: #1c1c1c;
-        color: white;
-        border-color: rgb(65, 65, 65);
-    }
+        .th-content {
+            border-color: rgb(65, 65, 65);
+        }
 
-    td {
-        border: 1px solid;
-        vertical-align: middle;
-        height: 1cm;
-    }
+        .tr-head {
+            background-color: #1c1c1c;
+            color: white;
+            border-color: rgb(65, 65, 65);
+        }
 
-    .td-persetujuan {
-        vertical-align: middle;
-        text-align: center;
-        font-size: 9.5pt;
-        font-weight: bold;
-        width: 12.5%
-    }
+        td {
+            border: 1px solid;
+            vertical-align: middle;
+            height: 1cm;
+        }
 
-    .td-content {
-        border-color: rgb(192, 192, 192);
-    }
+        .td-persetujuan {
+            vertical-align: middle;
+            text-align: center;
+            font-size: 9.5pt;
+            font-weight: bold;
+            width: 12.5%
+        }
 
-    .td-selisih-minus {
-        color: red;
-        border-color: rgb(192, 192, 192);
-    }
+        .td-content {
+            border-color: rgb(192, 192, 192);
+        }
 
-    .td-non-itemname {
-        text-align: center;
-    }
+        .td-selisih-minus {
+            color: red;
+            border-color: rgb(192, 192, 192);
+        }
 
-    .tr-body:nth-child(odd) {
-        background-color: rgb(233, 233, 233)
-    }
+        .td-non-itemname {
+            text-align: center;
+        }
 
-    .tr-body:nth-child(even) {
-        background-color: rgb(247, 247, 247)
-    }
+        .tr-body:nth-child(odd) {
+            background-color: rgb(233, 233, 233)
+        }
 
-    .tr-body-divider {
-        background-color: #fcba03;
-        font-weight: bold;
-        padding-left: 2cm;
-        font-size: 9pt;
-        border-color: rgb(192, 192, 192);
-    }
+        .tr-body:nth-child(even) {
+            background-color: rgb(247, 247, 247)
+        }
 
-    .tr-selisih {
-        font-size: 8pt;
-        line-height: 0.5cm
-    }
+        .tr-body-divider {
+            background-color: #fcba03;
+            font-weight: bold;
+            padding-left: 2cm;
+            font-size: 9pt;
+            border-color: rgb(192, 192, 192);
+        }
 
-    .tr-rekapitulasi-global {
-        text-align: center;
-        align-items: center;
-        font-size: 9pt;
-        line-height: 2;
-    }
+        .tr-selisih {
+            font-size: 8pt;
+            line-height: 0.5cm
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: Arial, sans-serif;
-    }
+        .tr-rekapitulasi-global {
+            text-align: center;
+            align-items: center;
+            font-size: 9pt;
+            line-height: 2;
+        }
 
-    h2 {
-        font-family: Arial, sans-serif;
-        text-align: center;
-    }
-</style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
 
 <body>
     <h2 style="text-align: center">
@@ -152,7 +161,6 @@
             </tbody>
         </table>
     </div>
-    <br><br><br><br>
     <div style="margin-top: 20px">
         <h4>
             III. REKAPITULASI HASIL CSO GLOBAL
@@ -160,7 +168,7 @@
 
         <table style=" border-collapse: collapse;width: 100%;" class="table">
             <thead>
-                <tr class="tr-head">
+                <tr class="tr-head" style="page-break-after: avoid;">
                     <th class="th-content" rowspan="2" style="width: 1cm">Total Item </th>
                     <th class="th-content" rowspan="2" style="width: 2.5cm">Item yang tidak ada fisik</th>
                     <th class="th-content" rowspan="2" style="width: 2.75cm">Area / Kelompok produk </th>
@@ -225,7 +233,7 @@
 
         <table style=" border-collapse: collapse;width: 100%;">
             <tbody>
-                <tr class="tr-head">
+                <tr class="tr-head" style="page-break-after: avoid;">
                     <th class="th-content" rowspan="2" style="width: 0.5cm">No</th>
                     <th class="th-content" rowspan="2" style="width: 3cm">Nama Item</th>
                     <th class="th-content" rowspan="2" style="width: 1cm">Keputusan</th>
@@ -240,7 +248,7 @@
                         (GI/SJ & GR)</th>
                     <th class="th-content" rowspan="2" style="width: 2.5cm">Keterangan</th>
                 </tr>
-                <tr class="tr-head">
+                <tr class="tr-head" style="page-break-after: avoid;">
                     <th class="th-content" style="width:0.5cm">Plus</th>
                     <th class="th-content" style="width:0.5cm">Minus</th>
                     <th class="th-content" style="width: 2cm">Selisih Plus</th>
@@ -250,77 +258,77 @@
                     <td colspan="13" class="tr-body-divider">
                         Kesalahan Admin
                     </td>
-                    @foreach ($dataItemKesalahanAdmin as $index => $itemKesalahanAdmin)
-                <tr class="tr-selisih">
-                    <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
-                    <td class="td-content" style="padding-left: 5px">
-                        {{ $itemKesalahanAdmin->itemname }}</td>
-                    <td class="td-content" style="text-align: center">
-                        @if ($itemKesalahanAdmin->keputusan != 0)
-                            {{ $itemKesalahanAdmin->keputusandesc }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td class="td-content" style="text-align: center">
-                        {{ number_format($itemKesalahanAdmin->onhand, 2, ',', '.') }}</td>
-                    <td class="td-content" style="text-align: center">
-                        {{ number_format($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi, 2, ',', '.') }}
-                    </td>
-                    <td class="td-content" style="text-align: center">
-                        @if (
-                            $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi >
-                                $itemKesalahanAdmin->onhand)
-                            {{ number_format( $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand, 2, ',', '.') }}
-                        @endif
-                    </td>
-                    <td style="text-align: center" class="td-selisih-minus">
-                        @if (
-                            $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi <
-                                $itemKesalahanAdmin->onhand)
-                            {{ number_format($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi), 2, ',', '.') }}
-                        @endif
-                    </td>
-                    <td class="td-content" style="text-align: center">Rp.
-                        @if ($itemKesalahanAdmin->hpp_manual == null)
-                            {{ number_format($itemKesalahanAdmin->hpp, 2, ',', '.') }}
-                        @else
-                            {{ number_format($itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
-                        @endif
-                    </td>
-                    <td class="td-content" style="text-align: center">
-                        @if (
-                            $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi >
-                                $itemKesalahanAdmin->onhand)
-                            @if ($itemKesalahanAdmin->hpp_manual == null)
-                                {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp, 2, ',', '.') }}
-                            @else
-                                {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
-                            @endif
-                        @endif
-                    </td>
-                    <td style="text-align: center" class="td-selisih-minus">
-                        @if (
-                            $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi <
-                                $itemKesalahanAdmin->onhand)
-                            Rp.
-                            @if ($itemKesalahanAdmin->hpp_manual == null)
-                                {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp, 2, ',', '.') }}
-                            @else
-                                {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
-                            @endif
-                        @endif
-                    </td>
-                    <td class="td-content" style="text-align: center">Rp.
-                        {{ number_format($itemKesalahanAdmin->pembebanan, 2, ',', '.') }}</td>
-                    <td class="td-content" style="text-align: center">
-                        {{ $itemKesalahanAdmin->nodoc }}</td>
-                    <td class="td-content" style="text-align: center">
-                        {{ $itemKesalahanAdmin->keterangan }}</td>
                 </tr>
+                @foreach ($dataItemKesalahanAdmin as $index => $itemKesalahanAdmin)
+                    <tr class="tr-selisih">
+                        <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
+                        <td class="td-content" style="padding-left: 5px">
+                            {{ $itemKesalahanAdmin->itemname }}</td>
+                        <td class="td-content" style="text-align: center">
+                            @if ($itemKesalahanAdmin->keputusan != 0)
+                                {{ $itemKesalahanAdmin->keputusandesc }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            {{ number_format($itemKesalahanAdmin->onhand, 2, ',', '.') }}</td>
+                        <td class="td-content" style="text-align: center">
+                            {{ number_format($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi, 2, ',', '.') }}
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            @if (
+                                $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi >
+                                    $itemKesalahanAdmin->onhand)
+                                {{ number_format($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand, 2, ',', '.') }}
+                            @endif
+                        </td>
+                        <td style="text-align: center" class="td-selisih-minus">
+                            @if (
+                                $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi <
+                                    $itemKesalahanAdmin->onhand)
+                                {{ number_format($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi), 2, ',', '.') }}
+                            @endif
+                        </td>
+                        <td class="td-content" style="text-align: center">Rp.
+                            @if ($itemKesalahanAdmin->hpp_manual == null)
+                                {{ number_format($itemKesalahanAdmin->hpp, 2, ',', '.') }}
+                            @else
+                                {{ number_format($itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
+                            @endif
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            @if (
+                                $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi >
+                                    $itemKesalahanAdmin->onhand)
+                                @if ($itemKesalahanAdmin->hpp_manual == null)
+                                    {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp, 2, ',', '.') }}
+                                @else
+                                    {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
+                                @endif
+                            @endif
+                        </td>
+                        <td style="text-align: center" class="td-selisih-minus">
+                            @if (
+                                $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi <
+                                    $itemKesalahanAdmin->onhand)
+                                Rp.
+                                @if ($itemKesalahanAdmin->hpp_manual == null)
+                                    {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp, 2, ',', '.') }}
+                                @else
+                                    {{ number_format(($itemKesalahanAdmin->onhand - ($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi)) * $itemKesalahanAdmin->hpp_manual, 2, ',', '.') }}
+                                @endif
+                            @endif
+                        </td>
+                        <td class="td-content" style="text-align: center">Rp.
+                            {{ number_format($itemKesalahanAdmin->pembebanan, 2, ',', '.') }}</td>
+                        <td class="td-content" style="text-align: center">
+                            {{ $itemKesalahanAdmin->nodoc }}</td>
+                        <td class="td-content" style="text-align: center">
+                            {{ $itemKesalahanAdmin->keterangan }}</td>
+                    </tr>
                 @endforeach
-                </tr>
-                <tr class="tr-head">
+                <tr class="tr-head" style="page-break-after: avoid;">
                     <th class="th-content" rowspan="2" style="width: 0.5cm">No</th>
                     <th class="th-content" rowspan="2" style="width: 3cm">Nama Item</th>
                     <th class="th-content" rowspan="2" style="width: 1cm">Keputusan</th>
@@ -345,70 +353,70 @@
                     <td colspan="13" class="tr-body-divider">
                         Item Tertukar
                     </td>
-                    @foreach ($dataItemTertukar as $index => $itemTertukar)
-                <tr class="tr-selisih">
-                    <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
-                    <td class="td-content" style="padding-left: 5px">{{ $itemTertukar->itemname }}
-                    </td>
-                    <td class="td-content" style="text-align: center">
-                        @if ($itemTertukar->keputusan != 0)
-                            {{ $itemTertukar->keputusandesc }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td class="td-content" style="text-align: center">
-                        {{ number_format($itemTertukar->onhand, 2, ',', '.') }}
-                    </td>
-                    <td class="td-content" style="text-align: center">
-                        {{ number_format($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi, 2, ',', '.') }}
-                    </td>
-                    <td class="td-content" style="text-align: center">
-                        @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi > $itemTertukar->onhand)
-                            {{ number_format($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi - $itemTertukar->onhand, 2, ',', '.') }}
-                        @endif
-                    </td>
-                    <td style="text-align: center" class="td-selisih-minus">
-                        @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi < $itemTertukar->onhand)
-                            {{ number_format($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi), 2, ',', '.') }}
-                        @endif
-                    </td>
-                    <td class="td-content" style="text-align: center">Rp.
-                        @if ($itemTertukar->hpp_manual == null)
-                            {{ number_format($itemTertukar->hpp, 2, ',', '.') }}
-                        @else
-                            {{ number_format($itemTertukar->hpp_manual, 2, ',', '.') }}
-                        @endif
-                    </td>
-                    <td class="td-content" style="text-align: center">
-                        @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi > $itemTertukar->onhand)
-                            Rp.
-                            @if ($itemTertukar->hpp_manual == null)
-                                {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
-                            @else
-                                {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp_manual, 2, ',', '.') }}
-                            @endif
-                        @endif
-                    </td>
-                    <td style="text-align: center" class="td-selisih-minus">
-                        @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi < $itemTertukar->onhand)
-                            Rp.
-                            @if ($itemTertukar->hpp_manual == null)
-                                {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
-                            @else
-                                {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp_manual, 2, ',', '.') }}
-                            @endif
-                        @endif
-                    </td>
-                    <td class="td-content" style="text-align: center"> Rp.
-                        {{ number_format($itemTertukar->pembebanan, 2, ',', '.') }}</td>
-                    <td class="td-content" style="text-align: center">{{ $itemTertukar->nodoc }}</td>
-                    <td class="td-content" style="text-align: center">{{ $itemTertukar->keterangan }}
-                    </td>
                 </tr>
+                @foreach ($dataItemTertukar as $index => $itemTertukar)
+                    <tr class="tr-selisih">
+                        <td class="td-content" style="text-align: center">{{ $index + 1 }}</td>
+                        <td class="td-content" style="padding-left: 5px">{{ $itemTertukar->itemname }}
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            @if ($itemTertukar->keputusan != 0)
+                                {{ $itemTertukar->keputusandesc }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            {{ number_format($itemTertukar->onhand, 2, ',', '.') }}
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            {{ number_format($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi, 2, ',', '.') }}
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi > $itemTertukar->onhand)
+                                {{ number_format($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi - $itemTertukar->onhand, 2, ',', '.') }}
+                            @endif
+                        </td>
+                        <td style="text-align: center" class="td-selisih-minus">
+                            @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi < $itemTertukar->onhand)
+                                {{ number_format($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi), 2, ',', '.') }}
+                            @endif
+                        </td>
+                        <td class="td-content" style="text-align: center">Rp.
+                            @if ($itemTertukar->hpp_manual == null)
+                                {{ number_format($itemTertukar->hpp, 2, ',', '.') }}
+                            @else
+                                {{ number_format($itemTertukar->hpp_manual, 2, ',', '.') }}
+                            @endif
+                        </td>
+                        <td class="td-content" style="text-align: center">
+                            @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi > $itemTertukar->onhand)
+                                Rp.
+                                @if ($itemTertukar->hpp_manual == null)
+                                    {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
+                                @else
+                                    {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp_manual, 2, ',', '.') }}
+                                @endif
+                            @endif
+                        </td>
+                        <td style="text-align: center" class="td-selisih-minus">
+                            @if ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi < $itemTertukar->onhand)
+                                Rp.
+                                @if ($itemTertukar->hpp_manual == null)
+                                    {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp, 2, ',', '.') }}
+                                @else
+                                    {{ number_format(($itemTertukar->onhand - ($itemTertukar->hasilcso + $itemTertukar->koreksi + $itemTertukar->deviasi)) * $itemTertukar->hpp_manual, 2, ',', '.') }}
+                                @endif
+                            @endif
+                        </td>
+                        <td class="td-content" style="text-align: center"> Rp.
+                            {{ number_format($itemTertukar->pembebanan, 2, ',', '.') }}</td>
+                        <td class="td-content" style="text-align: center">{{ $itemTertukar->nodoc }}</td>
+                        <td class="td-content" style="text-align: center">{{ $itemTertukar->keterangan }}
+                        </td>
+                    </tr>
                 @endforeach
-                </tr>
-                <tr class="tr-head">
+                <tr class="tr-head" style="page-break-after: avoid;">
                     <th class="th-content" rowspan="2" style="width: 0.5cm">No</th>
                     <th class="th-content" rowspan="2" style="width: 3cm">Nama Item</th>
                     <th class="th-content" rowspan="2" style="width: 1cm">Keputusan</th>
@@ -446,7 +454,8 @@
                                 -
                             @endif
                         </td>
-                        <td class="td-content" style="text-align: center">{{ number_format($itemSelisih->onhand, 2, ',', '.') }}
+                        <td class="td-content" style="text-align: center">
+                            {{ number_format($itemSelisih->onhand, 2, ',', '.') }}
                         </td>
                         <td class="td-content" style="text-align: center">
                             {{ number_format($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi, 2, ',', '.') }}
@@ -458,7 +467,7 @@
                         </td>
                         <td style="text-align: center" class="td-selisih-minus">
                             @if ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi < $itemSelisih->onhand)
-                                {{number_format($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi), 2, ',', '.') }}
+                                {{ number_format($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi), 2, ',', '.') }}
                             @endif
                         </td>
                         <td class="td-content" style="text-align: center">Rp.
@@ -579,18 +588,18 @@
         </table>
     </div>
     <div style="margin-top: 4cm">
-        <table>
+        <table style="page-break-inside: avoid;">
             <thead>
                 <tr>
                     @if ($type == 1)
-                    <th>Dibuat Oleh</th>
-                    <th colspan="2">Diperiksa Oleh</th>
-                    <th colspan="2">Disetujui Oleh</th>
-                    <th>Diketahui Oleh</th>
+                        <th>Dibuat Oleh</th>
+                        <th colspan="2">Diperiksa Oleh</th>
+                        <th colspan="2">Disetujui Oleh</th>
+                        <th>Diketahui Oleh</th>
                     @else
-                    <th>Dibuat Oleh</th>
-                    <th></th>
-                    <th>Diperiksa Oleh</th>
+                        <th>Dibuat Oleh</th>
+                        <th></th>
+                        <th>Diperiksa Oleh</th>
                     @endif
                 </tr>
             </thead>
@@ -624,9 +633,9 @@
                         <td class="td-persetujuan">Ka Warehouse</td>
                     </tr>
                 @endif
-
-
             </tbody>
         </table>
     </div>
 </body>
+
+</html>
