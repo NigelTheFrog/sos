@@ -7,31 +7,31 @@
 </div>
 @endif
 <div id="warning" class="alert alert-warning d-none"></div>
-<input type="text" name="itembatchid" id="itembatchid" class="d-none" value="{{ $itembatchid }}">
-<input type="text" name="batchno" class="d-none" value="{{ $batchno }}">
-<input type="text" name="trsdetid" id="trsdetidparam" class="d-none" value="{{ $trsdetid }}">
+<input type="text" name="itembatchid" id="itembatchid" class="d-none" value="{{ $data->itembatchid }}">
+<input type="text" name="batchno" class="d-none" value="{{ $data->batchno }}">
+<input type="text" name="trsdetid" id="trsdetidparam" class="d-none" value="{{ $data->trsdetid }}">
 
 <div class="row g-3 mb-3">
     <div class="form-floating col">
-        <input class="form-control text-center bg-primary shadow-sm" value="{{ number_format($onhand, 2, ',', '.') }}" id="onHand"
+        <input class="form-control text-center bg-primary shadow-sm" value="{{ number_format($data->onhand, 2, ',', '.') }}" id="onHand"
             type="text" readonly>
         <label class="fw-bold" for="onHand">On Hand</label>
     </div>
     <div class="form-floating col">
-        <input class="form-control text-center bg-warning shadow-sm" value="{{ number_format($totalcso, 2, ',', '.') }}" type="text"
+        <input class="form-control text-center bg-warning shadow-sm" value="{{ number_format($data->totalcso, 2, ',', '.') }}" type="text"
             readonly>
         <label class="fw-bold">Qty CSO</label>
     </div>
     <div class="form-floating col">
-        <input class="form-control text-center bg-danger shadow-sm" value="{{ number_format($selisih, 2, ',', '.') }}" type="text" readonly>
+        <input class="form-control text-center bg-danger shadow-sm" value="{{ number_format($data->selisih, 2, ',', '.') }}" type="text" readonly>
         <label class="fw-bold" for="vselisih">Selisih</label>
     </div>
     <div class="form-floating col">
-        <input class="form-control text-center shadow-sm" name="koreksi" value="{{  $koreksi }}" type="number">
+        <input class="form-control text-center shadow-sm" name="koreksi" value="{{ $data->koreksi }}" type="number">
         <label class="fw-bold" for="vkoreksi">Input Koreksi</label>
     </div>
     <div class="form-floating col">
-        <input class="form-control text-center shadow-sm" name="deviasi" value="{{ $deviasi }}" type="number">
+        <input class="form-control text-center shadow-sm" name="deviasi" value="{{ $data->deviasi }}" type="number">
         <label class="fw-bold" for="vdeviasi">Input Deviasi</label>
     </div>
 </div>
@@ -120,12 +120,21 @@
         
 
         <button type="button" id="csoulang" onclick="csoUlang(this)" name="csoorder" class="btn btn-info mb-3"
-            @if ($checkCso == 0) disabled @endif>CSO Ulang</button>
+            @if ($checkCso == 0 || $data->statusdoc == "E") disabled @endif>CSO Ulang</button>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="checkkesalahanadmin" name="check_kesalahan_admin"
             @if (count($analisator) > 0 && $analisator[0]->kesalahan_admin == 1) checked @endif>
             <label class="form-check-label small" for="checkkesalahanadmin">
                 Kesalahan Admin
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="checkbatchTertukar" name="check_batch_tertukar"
+                @if ($dataAdminBatch->batch_tertukar == 1) checked @endif 
+                @if (Auth::user()->level != 1 && Auth::user()->level != 2) disabled @endif
+                >
+            <label class="form-check-label small" for="checkbatchTertukar">
+                Beda Batch
             </label>
         </div>
     </div>
@@ -178,7 +187,7 @@
 
 <div class="">
     <label for="vketerangan" class="input-group-text">Keterangan Koreksi</label>
-    <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan">{{$keterangan}}</textarea>
+    <textarea class="form-control form-control-sm" name="keterangan" id="vketerangan">{{$data->keterangan}}</textarea>
 </div>
 
 <script>

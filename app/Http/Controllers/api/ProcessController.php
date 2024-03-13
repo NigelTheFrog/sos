@@ -29,10 +29,18 @@ class ProcessController extends Controller
                     ->where('dbtcsohed.status', '=', 'A')
                     ->orderByDesc('csodetid')
                     ->limit(1);
-
-                $selectdbtcsodet2 = DB::table('dbtcsodet')
-                    ->select(DB::raw("csodetid,csoid,1,'$request->qtycso'"))
+                
+                if($request->statusItem == "R") {
+                    $selectdbtcsodet2 = DB::table('dbtcsodet')
+                    ->join('dbttrsdet','dbttrsdet.itembatchid', '=', 'dbtcsodet.itembatchid')
+                    ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdet.statuscso,'$request->qtycso'"))
                     ->where('csodetid', '=', $csodetid);
+                } else {
+                    $selectdbtcsodet2 = DB::table('dbtcsodet')
+                    ->join('dbttrsdeta','dbttrsdeta.itembatchid', '=', 'dbtcsodet.itembatchid')
+                    ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdeta.statuscso,'$request->qtycso'"))
+                    ->where('csodetid', '=', $csodetid);
+                }                
 
                 $insertdbtcsodet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount', 'qty'], $selectdbtcsodet2);
 
@@ -118,9 +126,17 @@ class ProcessController extends Controller
                 ->orderByDesc('csodetid')
                 ->limit(1);
 
-            $selectdbtcsodet = DB::table('dbtcsodet')
-                ->select(DB::raw("csodetid,csoid,1"))
-                ->where('csodetid', '=', $csodetid);
+                if($request->statusItem == "R") {
+                    $selectdbtcsodet = DB::table('dbtcsodet')
+                    ->join('dbttrsdet','dbttrsdet.itembatchid', '=', 'dbtcsodet.itembatchid')
+                    ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdet.statuscso"))
+                    ->where('csodetid', '=', $csodetid);
+                } else {
+                    $selectdbtcsodet = DB::table('dbtcsodet')
+                    ->join('dbttrsdeta','dbttrsdeta.itembatchid', '=', 'dbtcsodet.itembatchid')
+                    ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdeta.statuscso"))
+                    ->where('csodetid', '=', $csodetid);
+                }      
 
             $insertdbtcsodet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount',], $selectdbtcsodet);
 

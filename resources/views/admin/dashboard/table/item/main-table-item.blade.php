@@ -50,7 +50,7 @@
                 <td class="align-middle text-center">{{ $barang->tolerance }}</td>
                 <td class="align-middle text-center">
                     @if ($barang->status == 1)
-                        <span class='badge rounded-pill text-bg-info text-wrap' style='width: 5rem'>selisih -
+                    <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih -
                         @elseif ($barang->status == 2)
                             <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih +
                             @elseif ($barang->status == 3)

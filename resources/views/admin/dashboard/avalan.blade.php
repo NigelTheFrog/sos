@@ -77,10 +77,7 @@
 
                 <div class="modal-body">
                     <div class="row justify-content-between mb-2">
-                        <div class="col-1">
-                            <button type="submit" class="btn btn-primary" name="simpan"><i class="bi bi-floppy-fill"></i>
-                                Simpan</button>
-                        </div>
+ 
                         <div class="col-1 me-3">
                             <a href="{{ url('admin/dashboard/print-avalan/1') }}"class="btn btn-primary bi bi-printer-fill">
                                 </i>
@@ -108,11 +105,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="row justify-content-between mb-2">
-                        <div class="col-1">
-                            <button type="submit" class="btn btn-primary" name="simpan"><i
-                                    class="bi bi-floppy-fill"></i>
-                                Simpan</button>
-                        </div>
                         <div class="col-1 me-3">
                             <a
                                 href="{{ url('admin/dashboard/print-avalan/3') }}"class="btn btn-primary bi bi-printer-fill">

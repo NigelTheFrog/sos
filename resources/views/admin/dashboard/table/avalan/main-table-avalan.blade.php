@@ -21,44 +21,41 @@
                 @if ($barang->selisih != 0) class="table-danger"
         @else
             class = "table-light" @endif>
-            <td hidden>
-                {{ $barang->itembatchid }}
-            </td>
-            <td hidden>
-                {{ $barang->batchno }}
-            </td>
-            <td hidden>
-                {{ $barang->itemname }}
-            </td>
-            <td class="align-middle">
-                <div class="d-flex my-0 align-items-center">
-                    <div class="mr-3">
-                        <button type="button" class="btn btn-sm" id="detailcsoitem"
-                            onclick="openModalDetailCSOAvalan(this)" style="color: rgb(81, 81, 81)" id="viewlistcso"><i
-                                class="fas fa-eye"></i></button>
+                <td hidden>
+                    {{ $barang->itembatchid }}
+                </td>
+                <td hidden>
+                    {{ $barang->batchno }}
+                </td>
+                <td hidden>
+                    {{ $barang->itemname }}
+                </td>
+                <td class="align-middle">
+                    <div class="d-flex my-0 align-items-center">
+                        <div class="mr-3">
+                            <button type="button" class="btn btn-sm" id="detailcsoitem"
+                                onclick="openModalDetailCSOAvalan(this)" style="color: rgb(81, 81, 81)"
+                                id="viewlistcso"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div>{{ $barang->itemname }} - {{ $barang->batchno }}</div>
                     </div>
-                    <div>{{ $barang->itemname }} - {{$barang->batchno}}</div>
-                </div>
-            </td>
+                </td>
                 <td class="align-middle text-center">{{ $barang->dimension }}</td>
                 <td class="align-middle text-center">{{ $barang->tolerance }}</td>
                 <td class="align-middle text-center">
                     @if ($barang->status == 1)
-                        <span class='badge rounded-pill text-bg-info text-wrap'
-                            style='width: 5rem'>proses
+                        <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih -
                         @elseif ($barang->status == 2)
-                            <span class='badge  rounded-pill text-bg-danger text-wrap'
-                                style='width: 5rem'>selisih +
+                            <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih +
                             @elseif ($barang->status == 3)
-                                <span class='badge rounded-pill text-bg-success text-wrap'
-                                    style='width: 5rem'>selesai
+                                <span class='badge rounded-pill text-bg-success text-wrap' style='width: 5rem'>selesai
                                 @else
-                                    <span class='badge rounded-pill text-bg-warning text-wrap'
-                                        style='width: 5rem'>belum proses
+                                    <span class='badge rounded-pill text-bg-warning text-wrap' style='width: 5rem'>belum
+                                        proses
                     @endif
                     </span>
                 </td>
-                <td class="align-middle text-center">{{number_format($barang->selisih, 2, ',', '.')}}</td>
+                <td class="align-middle text-center">{{ number_format($barang->selisih, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ number_format($barang->onhand, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ number_format($barang->totalcso, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ $barang->koreksi }}</td>

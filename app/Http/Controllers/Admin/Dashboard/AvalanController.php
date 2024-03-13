@@ -166,7 +166,7 @@ class AvalanController extends Controller
                 $getDbtCsoDetOnDbtCsoDet2 = DB::table('dbtcsodet')
                     ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
                     ->select(DB::raw("dbtcsodet.itemid, dbtcsodet.itembatchid, (dbtcsodet2.csocount+1) as count"))
-                    ->where('dbtcsodet.itembatchid', $request->itemid . $request->batchno)
+                    ->where('dbtcsodet.itembatchid', $request->itembatchid)
                     ->where('dbtcsodet.statushslcso', '=', 'C')
                     ->distinct();
 
@@ -217,6 +217,12 @@ class AvalanController extends Controller
             $kesalahan = 0;
         }
 
+        if (!empty($request->check_batch_tertukar)) {
+            $batch_tertukar = 1;
+        } else {
+            $batch_tertukar = 0;
+        }
+
         $updateAvalan = DB::table('dbttrsdeta')
         ->where('dbttrsdeta.itembatchid', '=', $request->itembatchid)
             ->where('dbttrsdeta.trsdetid', '=', $request->trsdetid)
@@ -226,7 +232,8 @@ class AvalanController extends Controller
                 'analisatorid' => $request->analisator,
                 'keterangan' => $request->keterangan,
                 'groupid' => $request->grouping,
-                'kesalahan_admin' => $kesalahan
+                'kesalahan_admin' => $kesalahan,
+                "batch_tertukar" => $batch_tertukar
             ]);        
 
         if ($updateAvalan == true) {
@@ -248,23 +255,22 @@ class AvalanController extends Controller
             ->leftJoin('dbmgroup', 'dbmgroup.groupid', '=', 'dbttrsdeta.groupid')
             ->select(["dbttrsdeta.groupid", "dbttrsdeta.analisatorid", "dbmgroup.groupdesc", "name", "kesalahan_admin"])
             ->where('itembatchid', '=', $request->itembatchid)
-            ->where('dbttrsheda.statusdoc', '=', 'A')
+            ->whereNot('dbttrsheda.statusdoc', '=', 'P')
             ->whereNotNull('analisatorid')
-            ->get();
-        
+            ->get();        
 
         $dataDetailDashboard = DB::table('viewdetaildashbavalan')->distinct()->where('itembatchid', '=', $request->itembatchid)->get();
 
         $dataTotalCso = DB::table('dbttrsdeta')
-            ->leftJoin('totalcso1avalan', 'totalcso1avalan.itembatchid', '=', 'dbttrsdeta.itembatchid')
-            ->leftJoin('totalcso2avalan', 'totalcso2avalan.itembatchid', '=', 'dbttrsdeta.itembatchid')
-            ->leftJoin('totalcso3avalan', 'totalcso3avalan.itembatchid', '=', 'dbttrsdeta.itembatchid')
-            ->leftJoin('totalcso4avalan', 'totalcso4avalan.itembatchid', '=', 'dbttrsdeta.itembatchid')
+            ->leftJoin('totalcso1', 'totalcso1.itembatchid', '=', 'dbttrsdeta.itembatchid')
+            ->leftJoin('totalcso2', 'totalcso2.itembatchid', '=', 'dbttrsdeta.itembatchid')
+            ->leftJoin('totalcso3', 'totalcso3.itembatchid', '=', 'dbttrsdeta.itembatchid')
+            ->leftJoin('totalcso4', 'totalcso4.itembatchid', '=', 'dbttrsdeta.itembatchid')
             ->select('dbttrsdeta.itembatchid')
-            ->selectRaw('ifnull(totalcso1avalan.qtytot,0) as totalcso1')
-            ->selectRaw('ifnull(totalcso2avalan.qtytot,0) as totalcso2')
-            ->selectRaw('ifnull(totalcso3avalan.qtytot,0) as totalcso3')
-            ->selectRaw('ifnull(totalcso4avalan.qtytot,0) as totalcso4')
+            ->selectRaw('ifnull(totalcso1.qtytot,0) as totalcso1')
+            ->selectRaw('ifnull(totalcso2.qtytot,0) as totalcso2')
+            ->selectRaw('ifnull(totalcso3.qtytot,0) as totalcso3')
+            ->selectRaw('ifnull(totalcso4.qtytot,0) as totalcso4')
             ->where('dbttrsdeta.itembatchid', '=', $request->itembatchid)
             ->distinct()
             ->get();
@@ -283,8 +289,12 @@ class AvalanController extends Controller
             ->get();
 
         $dataCsoCount = DB::table('viewdetaildashbavalan')
-            ->select(['name', 'csocount', 'cso1', 'cso2', 'cso3', 'cso4'])
-            ->where('itembatchid', '=', $request->id.$request->batchno)
+            ->select(['name'])
+            ->selectRaw('SUM(cso1) over (partition by name) as cso1')
+            ->selectRaw('SUM(cso2) over (partition by name) as cso2')
+            ->selectRaw('SUM(cso3) over (partition by name) as cso3')
+            ->selectRaw('SUM(cso4) over (partition by name) as cso4')
+            ->where('itembatchid', '=', $request->itembatchid)
             ->distinct()
             ->get();
 
@@ -299,21 +309,18 @@ class AvalanController extends Controller
             ->select('dbttrsdeta.statusitem','dbttrsdeta.trsid')
             ->leftjoin('dbttrsheda', 'dbttrsheda.trsid', '=', 'dbttrsdeta.trsid')
             ->where('dbttrsdeta.itembatchid', '=',  $request->itembatchid)
-            ->where('dbttrsheda.statusdoc', '=', 'A')
-            ->get();        
+            ->whereNot('dbttrsheda.statusdoc', '=', 'P')
+            ->get();  
+            
+        $dataAdminBatch = DB::table('dbttrsdeta')
+            ->join('dbttrsheda', 'dbttrsheda.trsid', '=', 'dbttrsdeta.trsid')
+            ->select(['kesalahan_admin', 'batch_tertukar'])
+            ->where('dbttrsdeta.itembatchid', '=', $request->itembatchid)
+            ->whereNot('dbttrsheda.statusdoc', '=', 'P')
+            ->get(); 
 
         return view('admin.dashboard.table.avalan.detail-cso-avalan', [
-                "itemid" => $data[0]->itemid,
-                "batchno" => $data[0]->batchno,
-                "itembatchid" => $data[0]->itembatchid,
-                "trsdetid" => $data[0]->trsdetid,
-                "tolerance" => $data[0]->tolerance,
-                "onhand" => $data[0]->onhand,
-                "totalcso" => $data[0]->totalcso,
-                "selisih" => $data[0]->selisih,
-                "koreksi" => $data[0]->koreksi,
-                "deviasi" => $data[0]->deviasi,
-                "keterangan" => $data[0]->keterangan,
+                "data" => $data[0],
                 "tableDetailDashboard" => $dataDetailDashboard,
                 "dataCso" => $dataCsoCount,
                 "totalCso" => $dataTotalCso,
@@ -321,6 +328,7 @@ class AvalanController extends Controller
                 "group" => $dataGroup,
                 "dbxJob" => $dataDbxJob,
                 "checkCso" => count($cekCso),
+                "dataAdminBatch" => $dataAdminBatch[0],
                 "checkItemType" => $cekItem[0]
         ]);
     }
@@ -416,9 +424,9 @@ class AvalanController extends Controller
 
                     if ($insertDbttrsdet == true) {
                         $getTrsDet2 = DB::table('dbttrsdeta')
-                            ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdeta.trsid')
+                            ->join('dbttrsheda', 'dbttrsheda.trsid', '=', 'dbttrsdeta.trsid')
                             ->select('trsdetid', 'itemid', 'itembatchid')
-                            ->where('dbttrshed.statusdoc', '=', 'A')
+                            ->where('dbttrsheda.statusdoc', '=', 'A')
                             ->get();
 
                         foreach ($getTrsDet2 as $trsDet2) {
@@ -486,18 +494,14 @@ class AvalanController extends Controller
             ->where('statusdoc', '=', 'A')
             ->update(['endcsodate' => Carbon::now(), 'statusdoc' => 'E']);
 
-        DB::table('dbtcsohed')
-            ->where('status', '=', 'A')
-            ->where('tipecso', '=', 'A')
-            ->update(['status' => 'P',]);
-
         $insertDbtCsoPrsn = DB::insert("INSERT INTO dbtcsoprsn (trsid,userid,username,name,coyid,jobtypeid,status,tipecso)
         SELECT DISTINCT ch.trsid,userid,username,name,j.coyid,jobtypeid,'D','A' as status FROM dbxjob j 
         INNER JOIN dbtcsohed ch ON j.userid = ch.pelakuid 
-        WHERE ch.trsid = (SELECT trsid FROM dbttrsheda WHERE statusdoc='E' ORDER BY trsid DESC LIMIT 1) AND ch.tipecso = 'A'
+        WHERE ch.trsid = (SELECT trsid FROM dbttrsheda WHERE statusdoc='E' ORDER BY trsid DESC LIMIT 1) AND ch.tipecso  = 'A'
         UNION 
         SELECT DISTINCT td.trsid,userid,username,name,j.coyid,jobtypeid,'D','A' as status FROM dbxjob j 
         INNER JOIN dbttrsdet td ON td.analisatorid =j.userid
+        INNER JOIN dbtcsohed ch ON td.analisatorid = ch.pelakuid 
         WHERE td.trsid = (SELECT trsid FROM dbttrsheda WHERE statusdoc='E' ORDER BY trsid DESC LIMIT 1) AND ch.tipecso = 'A'");
 
 

@@ -72,7 +72,7 @@
                                                 @endif      
                                                 </select> </td>
                                             <td>{{ $tertukar->onhand }}</td>
-                                            <td>{{ $tertukar->statuscso }}</td>
+                                            <td>{{ number_format($tertukar->totalcso, 2, ',', '.') }}</td>
                                             <td>{{ number_format($tertukar->selisihplus , 2, ',', '.') }}</td>
                                             <td>{{ number_format($tertukar->selisihmin , 2, ',', '.') }}</td>
                                             <td>Rp. {{ number_format($tertukar->cogs , 2, ',', '.') }}</td>
@@ -186,12 +186,12 @@
                                                     @endif
                                                 </select> </td>
                                             <td>{{ $selisih->onhand }}</td>
-                                            <td>{{ $selisih->statuscso }}</td>
-                                            <td>{{ number_format($selisih->selisihplus, 2, '.', ',') }}</td>
-                                            <td>{{ number_format($selisih->selisihmin, 2, '.', ',') }}</td>
+                                            <td>{{ number_format($selisih->totalcso, 2, ',', '.')}}</td>
+                                            <td>{{ number_format($selisih->selisihplus, 2, ',', '.') }}</td>
+                                            <td>{{ number_format($selisih->selisihmin, 2, ',', '.') }}</td>
                                             <td>
                                                 @if ($selisih->cogs != 0)
-                                                    Rp.{{ number_format($selisih->cogs, 2, '.', ',') }}
+                                                    Rp.{{ number_format($selisih->cogs, 2, ',', '.') }}
                                                 
                                                 @endif
                                             </td>
@@ -206,13 +206,13 @@
                                             </td>
                                             <td>
                                                 @if ($selisih->nominalplus != 0)
-                                                    Rp.{{ number_format($selisih->nominalplus, 2, '.', ',') }}
+                                                    Rp.{{ number_format($selisih->nominalplus, 2, ',', '.') }}
                                                
                                                 @endif
                                             </td>
                                             <td>
                                                 @if ($selisih->nominalmin != 0)
-                                                    Rp.{{ number_format($selisih->nominalmin, 2, '.', ',') }}
+                                                    Rp.{{ number_format($selisih->nominalmin, 2, ',', '.') }}
                                                
                                                 @endif
                                             </td>
@@ -314,12 +314,12 @@
                                                     @endif
                                                 </select> </td>
                                             <td>{{ $admin->onhand }}</td>
-                                            <td>{{ $admin->statuscso }}</td>
-                                            <td>{{ number_format($admin->selisihplus, 2, '.', ',') }}</td>
-                                            <td>{{ number_format($admin->selisihmin, 2, '.', ',') }}</td>
+                                            <td>{{ number_format($admin->totalcso, 2, ',', '.') }}</td>
+                                            <td>{{ number_format($admin->selisihplus, 2, ',', '.') }}</td>
+                                            <td>{{ number_format($admin->selisihmin, 2, ',', '.') }}</td>
                                             <td>
                                                 @if ($admin->cogs != 0)
-                                                    Rp.{{ number_format($admin->cogs, 2, '.', ',') }}
+                                                    Rp.{{ number_format($admin->cogs, 2, ',', '.') }}
                                                 
                                                 @endif
                                             </td>
@@ -334,13 +334,13 @@
                                             </td>
                                             <td>
                                                 @if ($admin->nominalplus != 0)
-                                                    Rp.{{ number_format($admin->nominalplus, 2, '.', ',') }}
+                                                    Rp.{{ number_format($admin->nominalplus, 2, ',', '.') }}
                                                
                                                 @endif
                                             </td>
                                             <td>
                                                 @if ($admin->nominalmin != 0)
-                                                    Rp.{{ number_format($admin->nominalmin, 2, '.', ',') }}
+                                                    Rp.{{ number_format($admin->nominalmin, 2, ',', '.') }}
                                                
                                                 @endif
                                             </td>
