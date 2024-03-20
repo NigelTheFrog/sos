@@ -111,28 +111,72 @@
                                 <h3 class="card-title">{{ $title }}</h3>
                             </div>
                             @if ($dataCso->statusdoc == 'P')
-                                <div class="col-md-4 text-end">
-                                    <div class="d-flex flex-row-reverse">
-                                        <div>
-                                            <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
-                                                @csrf
-                                                <input type="text" name="trsidresume" value="{{ $trsidresume }}" hidden>
-                                                <input type="text" name="type" value="1" hidden>
-                                                <button type="submit" class="btn btn-primary text-white"><i
-                                                        class="fas fa-print pe-2"></i>Print Keseluruhan</button>
-                                            </form>
-                                        </div>
-                                        <div class="me-2">
-                                            <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
-                                                @csrf
-                                                <input type="text" name="trsidresume" value="{{ $trsidresume }}" hidden>
-                                                <input type="text" name="type" value="2" hidden>
-                                                <button type="submit" class="btn btn-primary text-white"><i
-                                                        class="fas fa-print pe-2"></i>Print Warehouse</button>
-                                            </form>
+                            <div class="col-md-4 text-end">
+                                <div class="d-flex flex-row-reverse">
+                                    <div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary text-white dropdown-toggle" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-print pe-2"></i>Print Keseluruhan
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <form method="POST" action="{{ route('cek-stok.store') }}">
+                                                        @csrf
+                                                        <input type="text" name="trsidresume"
+                                                            value="{{ $trsidresume }}" hidden>
+                                                        <input type="text" name="type" value="1" hidden>
+                                                        <input type="text" name="orientation" value="1" hidden>
+                                                        <button class="dropdown-item" type="submit">Potrait</button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form method="POST" action="{{ route('cek-stok.store') }}">
+                                                        @csrf
+                                                        <input type="text" name="trsidresume"
+                                                            value="{{ $trsidresume }}" hidden>
+                                                        <input type="text" name="type" value="1" hidden>
+                                                        <input type="text" name="orientation" value="2" hidden>
+                                                        <button class="dropdown-item" type="submit">Landscape</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
+                                    <div class="me-2">
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary text-white dropdown-toggle" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-print pe-2"></i>Print Warehouse
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
+                                                        @csrf
+                                                        <input type="text" name="trsidresume"
+                                                            value="{{ $trsidresume }}" hidden>
+                                                        <input type="text" name="type" value="2" hidden>
+                                                        <input type="text" name="orientation" value="1" hidden>
+                                                        <button class="dropdown-item" type="submit">Potrait</button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
+                                                        @csrf
+                                                        <input type="text" name="trsidresume"
+                                                            value="{{ $trsidresume }}" hidden>
+                                                        <input type="text" name="type" value="2" hidden>
+                                                        <input type="text" name="orientation" value="2" hidden>
+                                                        <button class="dropdown-item" type="submit">Landscape</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
+                            </div>
+                               
                             @endif
                         </div>
                     </div>

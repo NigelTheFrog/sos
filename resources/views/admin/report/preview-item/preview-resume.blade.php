@@ -110,30 +110,73 @@
                             <div class="col-md-8">
                                 <h3 class="card-title">{{ $title }}</h3>
                             </div>
-                            @if ($dataCso->statusdoc == "P")
-                            <div class="col-md-4 text-end">
-                                <div class="d-flex flex-row-reverse">
-                                    <div>
-                                        <form method="POST" action="{{ route('cek-stok.store') }}">
-                                            @csrf
-                                            <input type="text" name="trsidresume" value="{{$trsidresume}}" hidden>
-                                            <input type="text" name="type" value="1" hidden>
-                                            <button type="submit" class="btn btn-primary text-white"><i
-                                                    class="fas fa-print pe-2"></i>Print Keseluruhan</button>
-                                        </form>
-                                    </div>
-                                    <div class="me-2">
-                                        <form method="POST" action="{{ route('cek-stok.store') }}">
-                                            @csrf
-                                            <input type="text" name="trsidresume" value="{{$trsidresume}}" hidden>
-                                            <input type="text" name="type" value="2" hidden>
-                                            <button type="submit" class="btn btn-primary text-white"><i
-                                                    class="fas fa-print pe-2"></i>Print Warehouse</button>
-                                        </form>
+                            @if ($dataCso->statusdoc == 'P')
+                                <div class="col-md-4 text-end">
+                                    <div class="d-flex flex-row-reverse">
+                                        <div>
+                                            <div class="dropdown">
+                                                <button class="btn btn-primary text-white dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-print pe-2"></i>Print Keseluruhan
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form method="POST" action="{{ route('cek-stok.store') }}">
+                                                            @csrf
+                                                            <input type="text" name="trsidresume"
+                                                                value="{{ $trsidresume }}" hidden>
+                                                            <input type="text" name="type" value="1" hidden>
+                                                            <input type="text" name="orientation" value="1" hidden>
+                                                            <button class="dropdown-item" type="submit">Potrait</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form method="POST" action="{{ route('cek-stok.store') }}">
+                                                            @csrf
+                                                            <input type="text" name="trsidresume"
+                                                                value="{{ $trsidresume }}" hidden>
+                                                            <input type="text" name="type" value="1" hidden>
+                                                            <input type="text" name="orientation" value="2" hidden>
+                                                            <button class="dropdown-item" type="submit">Landscape</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="me-2">
+                                            <div class="dropdown">
+                                                <button class="btn btn-primary text-white dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-print pe-2"></i>Print Warehouse
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form method="POST" action="{{ route('cek-stok.store') }}">
+                                                            @csrf
+                                                            <input type="text" name="trsidresume"
+                                                                value="{{ $trsidresume }}" hidden>
+                                                            <input type="text" name="type" value="2" hidden>
+                                                            <input type="text" name="orientation" value="1" hidden>
+                                                            <button class="dropdown-item" type="submit">Potrait</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form method="POST" action="{{ route('cek-stok.store') }}">
+                                                            @csrf
+                                                            <input type="text" name="trsidresume"
+                                                                value="{{ $trsidresume }}" hidden>
+                                                            <input type="text" name="type" value="2" hidden>
+                                                            <input type="text" name="orientation" value="2" hidden>
+                                                            <button class="dropdown-item" type="submit">Landscape</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            
+                                        </div>
                                     </div>
                                 </div>
-                            </div> 
-                            @endif                             
+                            @endif
                         </div>
                     </div>
                     <div class="card-body" style="background-color: #f8f8f8; max-height: 1330px; overflow: auto;">
@@ -225,14 +268,17 @@
                                 <thead>
                                     <tr class="tr-head">
                                         <th class="th-content" rowspan="2" style="width: 1cm">Total Item </th>
-                                        <th class="th-content" rowspan="2" style="width: 2.5cm">Item yang tidak ada fisik
+                                        <th class="th-content" rowspan="2" style="width: 2.5cm">Item yang tidak ada
+                                            fisik
                                         </th>
-                                        <th class="th-content" rowspan="2" style="width: 2.75cm">Area / Kelompok produk
+                                        <th class="th-content" rowspan="2" style="width: 2.75cm">Area / Kelompok
+                                            produk
                                         </th>
                                         <th class="th-content" rowspan="2" style="width: 2.75cm">Item yang sudah dicek
                                             stok ada </th>
                                         <th class="th-content" colspan="2" style="width: 1.5cm">Hasil CSO</th>
-                                        <th class="th-content" rowspan="2" style="width: 2.5cm ">% Keakuratan Stok</th>
+                                        <th class="th-content" rowspan="2" style="width: 2.5cm ">% Keakuratan Stok
+                                        </th>
                                         <th class="th-content" colspan="4" style="">% Item Selisih</th>
                                         <th class="th-content" rowspan="2"style="width: 2cm">% Selisih</th>
                                     </tr>
@@ -348,7 +394,7 @@
                                             @if (
                                                 $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi >
                                                     $itemKesalahanAdmin->onhand)
-                                                {{ number_format( $itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand, 2, ',', '.') }}
+                                                {{ number_format($itemKesalahanAdmin->hasilcso + $itemKesalahanAdmin->koreksi + $itemKesalahanAdmin->deviasi - $itemKesalahanAdmin->onhand, 2, ',', '.') }}
                                             @endif
                                         </td>
                                         <td style="text-align: center" class="td-selisih-minus">
@@ -523,7 +569,8 @@
                                                     -
                                                 @endif
                                             </td>
-                                            <td class="td-content" style="text-align: center">{{ number_format($itemSelisih->onhand, 2, ',', '.') }}
+                                            <td class="td-content" style="text-align: center">
+                                                {{ number_format($itemSelisih->onhand, 2, ',', '.') }}
                                             </td>
                                             <td class="td-content" style="text-align: center">
                                                 {{ number_format($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi, 2, ',', '.') }}
@@ -535,7 +582,7 @@
                                             </td>
                                             <td style="text-align: center" class="td-selisih-minus">
                                                 @if ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi < $itemSelisih->onhand)
-                                                    {{number_format($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi), 2, ',', '.') }}
+                                                    {{ number_format($itemSelisih->onhand - ($itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi), 2, ',', '.') }}
                                                 @endif
                                             </td>
                                             <td class="td-content" style="text-align: center">Rp.

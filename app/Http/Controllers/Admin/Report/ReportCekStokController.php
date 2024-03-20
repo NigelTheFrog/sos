@@ -187,19 +187,35 @@ class ReportCekStokController extends Controller
                 })
                 ->select('item_ok.monthstart', 'item_ok.csomaterial', 'item_ok.count as item_ok', 'item_ada.count as item_ada')
                 ->get();
-
-            $view = view("admin.report.stok-item.pdf-resume-potrait", [
-                "data3BulanTerakhir" => $data3BulanTerakhir,
-                "dataItemTertukar" => $dataItemSelisihTertukar,
-                "dataItemKesalahanAdmin" => $dataItemKesalahanAdmin,
-                "dataItemSelisih" => $dataItemSelisih,
-                "dataCso" => $dataDbtTrsHed[0],
-                "dataAnalisator" => $dataAnalisator,
-                "dataPelaku" => $dataPelaku,
-                "dataRekapitulasi" => $dataRekapitulasi[0],
-                "type" => $request->type
-            ]);
-            $pdf->loadHTML($view)->setPaper('a4');
+            
+            if($request->orientation == 1) {
+                $view = view("admin.report.stok-item.pdf-resume-potrait", [
+                    "data3BulanTerakhir" => $data3BulanTerakhir,
+                    "dataItemTertukar" => $dataItemSelisihTertukar,
+                    "dataItemKesalahanAdmin" => $dataItemKesalahanAdmin,
+                    "dataItemSelisih" => $dataItemSelisih,
+                    "dataCso" => $dataDbtTrsHed[0],
+                    "dataAnalisator" => $dataAnalisator,
+                    "dataPelaku" => $dataPelaku,
+                    "dataRekapitulasi" => $dataRekapitulasi[0],
+                    "type" => $request->type
+                ]);
+                $pdf->loadHTML($view)->setPaper('a4');
+            } else {
+                $view = view("admin.report.stok-item.pdf-resume", [
+                    "data3BulanTerakhir" => $data3BulanTerakhir,
+                    "dataItemTertukar" => $dataItemSelisihTertukar,
+                    "dataItemKesalahanAdmin" => $dataItemKesalahanAdmin,
+                    "dataItemSelisih" => $dataItemSelisih,
+                    "dataCso" => $dataDbtTrsHed[0],
+                    "dataAnalisator" => $dataAnalisator,
+                    "dataPelaku" => $dataPelaku,
+                    "dataRekapitulasi" => $dataRekapitulasi[0],
+                    "type" => $request->type
+                ]);
+                $pdf->loadHTML($view)->setPaper('a4', 'landscape');
+            } 
+            
         } else {
             $dataDbtTrsHed = DB::table('dbttrshed')->where('trsid', '=', $request->trsidlaporan)->get();
             $dataLaporan = DB::select('CALL GetDataLaporan(?)', [$request->trsidlaporan]);

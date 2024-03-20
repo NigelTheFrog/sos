@@ -181,18 +181,33 @@ class ReportCekStokAvalanController extends Controller
                 ->select('item_ok.monthstart', 'item_ok.csomaterial', 'item_ok.count as item_ok', 'item_ada.count as item_ada')
                 ->get();
 
-            $view = view("admin.report.stok-avalan.pdf-resume", [
-                "data3BulanTerakhir" => $data3BulanTerakhir,
-                "dataItemTertukar" => $dataItemSelisihTertukar,
-                "dataItemKesalahanAdmin" => $dataItemKesalahanAdmin,
-                "dataItemSelisih" => $dataItemSelisih,
-                "dataCso" => $datadbttrsheda[0],
-                "dataAnalisator" => $dataAnalisator,
-                "dataPelaku" => $dataPelaku,
-                "dataRekapitulasi" => $dataRekapitulasi[0],
-                "type" => $request->type
-            ]);
-            $pdf->loadHTML($view)->setPaper('a4');
+            if ($request->orientation == 1) {
+                $view = view("admin.report.stok-avalan.pdf-resume-potrait", [
+                    "data3BulanTerakhir" => $data3BulanTerakhir,
+                    "dataItemTertukar" => $dataItemSelisihTertukar,
+                    "dataItemKesalahanAdmin" => $dataItemKesalahanAdmin,
+                    "dataItemSelisih" => $dataItemSelisih,
+                    "dataCso" => $datadbttrsheda[0],
+                    "dataAnalisator" => $dataAnalisator,
+                    "dataPelaku" => $dataPelaku,
+                    "dataRekapitulasi" => $dataRekapitulasi[0],
+                    "type" => $request->type
+                ]);
+                $pdf->loadHTML($view)->setPaper('a4');
+            } else {
+                $view = view("admin.report.stok-avalan.pdf-resume", [
+                    "data3BulanTerakhir" => $data3BulanTerakhir,
+                    "dataItemTertukar" => $dataItemSelisihTertukar,
+                    "dataItemKesalahanAdmin" => $dataItemKesalahanAdmin,
+                    "dataItemSelisih" => $dataItemSelisih,
+                    "dataCso" => $datadbttrsheda[0],
+                    "dataAnalisator" => $dataAnalisator,
+                    "dataPelaku" => $dataPelaku,
+                    "dataRekapitulasi" => $dataRekapitulasi[0],
+                    "type" => $request->type
+                ]);
+                $pdf->loadHTML($view)->setPaper('a4', 'landscape');
+            }
         } else {
             $dataDbtTrsHed = DB::table('dbttrsheda')->where('trsid', '=', $request->trsidlaporan)->get();
             $dataLaporan = DB::select('CALL GetDataLaporanAvalan(?)', [$request->trsidlaporan]);
@@ -205,7 +220,7 @@ class ReportCekStokAvalanController extends Controller
             $dataWrhQty = DB::table('dbttrsdeta')
                 ->join('dbttrsdet2a', 'dbttrsdeta.trsdetid', '=', 'dbttrsdet2a.trsdetid')
                 ->where('dbttrsdeta.trsid', '=', $request->trsidlaporan)
-                ->select('dbttrsdet2a.wrh','dbttrsdet2a.trsdetid', 'dbttrsdet2a.qty')
+                ->select('dbttrsdet2a.wrh', 'dbttrsdet2a.trsdetid', 'dbttrsdet2a.qty')
                 ->get();
             $view = view("admin.report.stok-item.pdf-laporan-cso", [
                 "dataCso" => $dataDbtTrsHed[0],
@@ -214,7 +229,6 @@ class ReportCekStokAvalanController extends Controller
                 "dataWrhQty" => $dataWrhQty
             ]);
             $pdf->loadHTML($view)->setPaper('a4', 'landscape');
-
         }
         return $pdf->stream();
     }
@@ -413,7 +427,7 @@ class ReportCekStokAvalanController extends Controller
             $dataWrhQty = DB::table('dbttrsdeta')
                 ->join('dbttrsdet2a', 'dbttrsdeta.trsdetid', '=', 'dbttrsdet2a.trsdetid')
                 ->where('dbttrsdeta.trsid', '=', $request->trsidlaporan)
-                ->select('dbttrsdet2a.wrh','dbttrsdet2a.trsdetid', 'dbttrsdet2a.qty')
+                ->select('dbttrsdet2a.wrh', 'dbttrsdet2a.trsdetid', 'dbttrsdet2a.qty')
                 ->get();
             $view = view("admin.report.preview-avalan.preview-laporan-cso", [
                 "title" => "Preview Laporan",

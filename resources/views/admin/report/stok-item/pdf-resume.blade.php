@@ -129,14 +129,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($dataAnalisator as $index => $analisator)
+                @if (count($dataAnalisator) > 0)
+                    @foreach ($dataAnalisator as $index => $analisator)
+                        <tr class="tr-body">
+                            <td class="td-content" style="padding: 8px">{{ $index + 1 }}</td>
+                            <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
+                            <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
+                            <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr class="tr-body">
-                        <th class="td-content">{{ $index + 1 }}</th>
-                        <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
-                        <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
-                        <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
+                        <th class="td-content"></th>
+                        <td class="td-content" style="padding: 8px"></td>
+                        <td class="td-content" style="padding: 8px"></td>
+                        <td class="td-content" style="padding: 8px"></td>
                     </tr>
-                @endforeach
+                @endif
+
             </tbody>
         </table>
         <h5>Pelaku</h5>
@@ -150,14 +160,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($dataPelaku as $index => $pelaku)
+                @if (count($dataPelaku) > 0)
+                    @foreach ($dataPelaku as $index => $pelaku)
+                        <tr class="tr-body">
+                            <td class="td-content" style="padding: 8px">{{ $index + 1 }}</td>
+                            <td class="td-content" style="padding: 8px">{{ $pelaku->name }}</td>
+                            <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
+                            <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr class="tr-body">
-                        <th class="td-content">{{ $index + 1 }}</th>
-                        <td class="td-content" style="padding: 8px">{{ $pelaku->name }}</td>
-                        <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
-                        <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
+                        <th class="td-content"></th>
+                        <td class="td-content" style="padding: 8px"></td>
+                        <td class="td-content" style="padding: 8px"></td>
+                        <td class="td-content" style="padding: 8px"></td>
                     </tr>
-                @endforeach
+                @endif
+
             </tbody>
         </table>
     </div>
@@ -195,12 +215,14 @@
                     <td class="td-content" rowspan="3">{{ $dataRekapitulasi->item_ada }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->item_ok }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->item_selisih }}</td>
-                    <td class="td-content">{{ ($dataRekapitulasi->item_ok / $dataRekapitulasi->item_ada) * 100 }}%</td>
+                    <td class="td-content">{{ ($dataRekapitulasi->item_ok / $dataRekapitulasi->item_ada) * 100 }}%
+                    </td>
                     <td class="td-content">{{ $dataRekapitulasi->item_selisih_plus }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->item_selisih_minus }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->beda_batch }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->tertukar }}</td>
-                    <td class="td-content">{{ ($dataRekapitulasi->item_selisih / $dataRekapitulasi->item_ada) * 100 }}%
+                    <td class="td-content">
+                        {{ ($dataRekapitulasi->item_selisih / $dataRekapitulasi->item_ada) * 100 }}%
                     </td>
                 </tr>
                 <tr class="tr-rekapitulasi-global">
