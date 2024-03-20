@@ -623,6 +623,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if (substr($dataCso->doccsoid, 0, 3) == "CSO")
                         <div style="margin-top: 1cm">
                             <h4>
                                 V. History CSO 3 bulan terakhir
@@ -703,6 +704,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        @endif
                     </div>
                 </div>
 

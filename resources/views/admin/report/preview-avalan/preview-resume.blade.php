@@ -111,72 +111,71 @@
                                 <h3 class="card-title">{{ $title }}</h3>
                             </div>
                             @if ($dataCso->statusdoc == 'P')
-                            <div class="col-md-4 text-end">
-                                <div class="d-flex flex-row-reverse">
-                                    <div>
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary text-white dropdown-toggle" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fas fa-print pe-2"></i>Print Keseluruhan
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <form method="POST" action="{{ route('cek-stok.store') }}">
-                                                        @csrf
-                                                        <input type="text" name="trsidresume"
-                                                            value="{{ $trsidresume }}" hidden>
-                                                        <input type="text" name="type" value="1" hidden>
-                                                        <input type="text" name="orientation" value="1" hidden>
-                                                        <button class="dropdown-item" type="submit">Potrait</button>
-                                                    </form>
-                                                </li>
-                                                <li>
-                                                    <form method="POST" action="{{ route('cek-stok.store') }}">
-                                                        @csrf
-                                                        <input type="text" name="trsidresume"
-                                                            value="{{ $trsidresume }}" hidden>
-                                                        <input type="text" name="type" value="1" hidden>
-                                                        <input type="text" name="orientation" value="2" hidden>
-                                                        <button class="dropdown-item" type="submit">Landscape</button>
-                                                    </form>
-                                                </li>
-                                            </ul>
+                                <div class="col-md-4 text-end">
+                                    <div class="d-flex flex-row-reverse">
+                                        <div>
+                                            <div class="dropdown">
+                                                <button class="btn btn-primary text-white dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-print pe-2"></i>Print Keseluruhan
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form method="POST" action="{{ route('cek-stok.store') }}">
+                                                            @csrf
+                                                            <input type="text" name="trsidresume"
+                                                                value="{{ $trsidresume }}" hidden>
+                                                            <input type="text" name="type" value="1" hidden>
+                                                            <input type="text" name="orientation" value="1" hidden>
+                                                            <button class="dropdown-item" type="submit">Potrait</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form method="POST" action="{{ route('cek-stok.store') }}">
+                                                            @csrf
+                                                            <input type="text" name="trsidresume"
+                                                                value="{{ $trsidresume }}" hidden>
+                                                            <input type="text" name="type" value="1" hidden>
+                                                            <input type="text" name="orientation" value="2" hidden>
+                                                            <button class="dropdown-item" type="submit">Landscape</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="me-2">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary text-white dropdown-toggle" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fas fa-print pe-2"></i>Print Warehouse
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
-                                                        @csrf
-                                                        <input type="text" name="trsidresume"
-                                                            value="{{ $trsidresume }}" hidden>
-                                                        <input type="text" name="type" value="2" hidden>
-                                                        <input type="text" name="orientation" value="1" hidden>
-                                                        <button class="dropdown-item" type="submit">Potrait</button>
-                                                    </form>
-                                                </li>
-                                                <li>
-                                                    <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
-                                                        @csrf
-                                                        <input type="text" name="trsidresume"
-                                                            value="{{ $trsidresume }}" hidden>
-                                                        <input type="text" name="type" value="2" hidden>
-                                                        <input type="text" name="orientation" value="2" hidden>
-                                                        <button class="dropdown-item" type="submit">Landscape</button>
-                                                    </form>
-                                                </li>
-                                            </ul>
+                                        <div class="me-2">
+                                            <div class="dropdown">
+                                                <button class="btn btn-primary text-white dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-print pe-2"></i>Print Warehouse
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
+                                                            @csrf
+                                                            <input type="text" name="trsidresume"
+                                                                value="{{ $trsidresume }}" hidden>
+                                                            <input type="text" name="type" value="2" hidden>
+                                                            <input type="text" name="orientation" value="1" hidden>
+                                                            <button class="dropdown-item" type="submit">Potrait</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
+                                                            @csrf
+                                                            <input type="text" name="trsidresume"
+                                                                value="{{ $trsidresume }}" hidden>
+                                                            <input type="text" name="type" value="2" hidden>
+                                                            <input type="text" name="orientation" value="2" hidden>
+                                                            <button class="dropdown-item" type="submit">Landscape</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
                                         </div>
-                                        
                                     </div>
                                 </div>
-                            </div>
-                               
                             @endif
                         </div>
                     </div>
@@ -271,9 +270,11 @@
                                 <thead>
                                     <tr class="tr-head">
                                         <th class="th-content" rowspan="2" style="width: 1cm">Total Item </th>
-                                        <th class="th-content" rowspan="2" style="width: 2.5cm">Item yang tidak ada fisik
+                                        <th class="th-content" rowspan="2" style="width: 2.5cm">Item yang tidak ada
+                                            fisik
                                         </th>
-                                        <th class="th-content" rowspan="2" style="width: 2.75cm">Area / Kelompok produk
+                                        <th class="th-content" rowspan="2" style="width: 2.75cm">Area / Kelompok
+                                            produk
                                         </th>
                                         <th class="th-content" rowspan="2" style="width: 2.75cm">Item yang sudah dicek
                                             stok ada </th>
@@ -623,89 +624,90 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div style="margin-top: 1cm">
-                            <h4>
-                                V. History CSO 3 bulan terakhir
-                            </h4>
-                            <table>
-                                <thead>
-                                    <tr class="tr-head">
-                                        <th class="th-content" style="width: 2.5cm">Bulan</th>
-                                        <th class="th-content" style="width: 3.5cm">Item</th>
-                                        <th class="th-content" style="width: 1.5cm">Jumlah Item <br> yang di CSO</th>
-                                        <th class="th-content" style="width: 1.5cm">Jumlah Item <br> sesuai</th>
-                                        <th class="th-content" style="width: 1cm">Persentase</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($data3BulanTerakhir as $data)
-                                        <tr style="font-size: 9pt;text-align: center;">
-                                            <td class="td-content">
-                                                @switch($data->monthstart)
-                                                    @case(1)
-                                                        Januari
-                                                    @break
-
-                                                    @case(2)
-                                                        Februari
-                                                    @break
-
-                                                    @case(3)
-                                                        Maret
-                                                    @break
-
-                                                    @case(4)
-                                                        April
-                                                    @break
-
-                                                    @case(5)
-                                                        Mei
-                                                    @break
-
-                                                    @case(6)
-                                                        Juni
-                                                    @break
-
-                                                    @case(7)
-                                                        Juli
-                                                    @break
-
-                                                    @case(8)
-                                                        Agustur
-                                                    @break
-
-                                                    @case(9)
-                                                        September
-                                                    @break
-
-                                                    @case(10)
-                                                        Oktober
-                                                    @break
-
-                                                    @case(11)
-                                                        November
-                                                    @break
-
-                                                    @case(12)
-                                                        Desember
-                                                    @break
-                                                @endswitch
-                                            </td>
-                                            <td class="td-content">
-                                                {{ $data->csomaterial }}
-                                            </td>
-                                            <td class="td-content">{{ $data->item_ok }}</td>
-                                            <td class="td-content">{{ $data->item_ada }}</td>
-                                            <td class="td-content">
-                                                {{ round(($data->item_ada / $data->item_ok) * 100, 2) }}%</td>
+                        @if (substr($dataCso->doccsoid, 0, 3) == 'CSO')
+                            <div style="margin-top: 1cm">
+                                <h4>
+                                    V. History CSO 3 bulan terakhir
+                                </h4>
+                                <table>
+                                    <thead>
+                                        <tr class="tr-head">
+                                            <th class="th-content" style="width: 2.5cm">Bulan</th>
+                                            <th class="th-content" style="width: 3.5cm">Item</th>
+                                            <th class="th-content" style="width: 1.5cm">Jumlah Item <br> yang di CSO</th>
+                                            <th class="th-content" style="width: 1.5cm">Jumlah Item <br> sesuai</th>
+                                            <th class="th-content" style="width: 1cm">Persentase</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($data3BulanTerakhir as $data)
+                                            <tr style="font-size: 9pt;text-align: center;">
+                                                <td class="td-content">
+                                                    @switch($data->monthstart)
+                                                        @case(1)
+                                                            Januari
+                                                        @break
+
+                                                        @case(2)
+                                                            Februari
+                                                        @break
+
+                                                        @case(3)
+                                                            Maret
+                                                        @break
+
+                                                        @case(4)
+                                                            April
+                                                        @break
+
+                                                        @case(5)
+                                                            Mei
+                                                        @break
+
+                                                        @case(6)
+                                                            Juni
+                                                        @break
+
+                                                        @case(7)
+                                                            Juli
+                                                        @break
+
+                                                        @case(8)
+                                                            Agustur
+                                                        @break
+
+                                                        @case(9)
+                                                            September
+                                                        @break
+
+                                                        @case(10)
+                                                            Oktober
+                                                        @break
+
+                                                        @case(11)
+                                                            November
+                                                        @break
+
+                                                        @case(12)
+                                                            Desember
+                                                        @break
+                                                    @endswitch
+                                                </td>
+                                                <td class="td-content">
+                                                    {{ $data->csomaterial }}
+                                                </td>
+                                                <td class="td-content">{{ $data->item_ok }}</td>
+                                                <td class="td-content">{{ $data->item_ada }}</td>
+                                                <td class="td-content">
+                                                    {{ round(($data->item_ada / $data->item_ok) * 100, 2) }}%</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
                     </div>
                 </div>
-
         </section>
     </div>
 @endsection

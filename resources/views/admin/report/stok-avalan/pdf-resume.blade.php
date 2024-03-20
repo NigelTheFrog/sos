@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Resume Item</title>
+    <title>Resume Avalan</title>
     <style>
         .title-info {
             padding-top: 25px;
@@ -96,6 +96,9 @@
             font-family: Arial, sans-serif;
             text-align: center;
         }
+        p,h4,h5 {
+            line-height: 5px;
+        }
     </style>
 </head>
 
@@ -129,14 +132,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($dataAnalisator as $index => $analisator)
+                @if (count($dataAnalisator) > 0)
+                    @foreach ($dataAnalisator as $index => $analisator)
+                        <tr class="tr-body">
+                            <td class="td-content" style="padding-left: 8px; font-size: 10pt">{{ $index + 1 }}</td>
+                            <td class="td-content" style="padding-left: 8px; font-size: 1pt">{{ $analisator->name }}</td>
+                            <td class="td-content" style="padding-left: 8px; font-size: 10pt">{{ $analisator->dept }}</td>
+                            <td class="td-content" style="padding-left: 8px; font-size: 10pt">{{ $analisator->note }}</td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr class="tr-body">
-                        <th class="td-content">{{ $index + 1 }}</th>
-                        <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
-                        <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
-                        <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
+                        <th class="td-content"></th>
+                        <td class="td-content" style="padding-left: 8px;"></td>
+                        <td class="td-content" style="padding-left: 8px;"></td>
+                        <td class="td-content" style="padding-left: 8px;"></td>
                     </tr>
-                @endforeach
+                @endif
+
             </tbody>
         </table>
         <h5>Pelaku</h5>
@@ -150,18 +163,28 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($dataPelaku as $index => $pelaku)
+                @if (count($dataPelaku) > 0)
+                    @foreach ($dataPelaku as $index => $pelaku)
+                        <tr class="tr-body">
+                            <td class="td-content" style="padding-left: 8px; font-size: 10pt">{{ $index + 1 }}</td>
+                            <td class="td-content" style="padding-left: 8px; font-size: 10pt">{{ $pelaku->name }}</td>
+                            <td class="td-content" style="padding-left: 8px; font-size: 10pt">{{ $pelaku->dept }}</td>
+                            <td class="td-content" style="padding-left: 8px; font-size: 10pt">{{ $pelaku->note }}</td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr class="tr-body">
-                        <th class="td-content">{{ $index + 1 }}</th>
-                        <td class="td-content" style="padding: 8px">{{ $pelaku->name }}</td>
-                        <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
-                        <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
+                        <th class="td-content"></th>
+                        <td class="td-content" style="padding-left: 8px;"></td>
+                        <td class="td-content" style="padding-left: 8px;"></td>
+                        <td class="td-content" style="padding-left: 8px;"></td>
                     </tr>
-                @endforeach
+                @endif
+
             </tbody>
         </table>
     </div>
-    <div style="margin-top: 20px">
+    <div style="margin-top: 15px">
         <h4>
             III. REKAPITULASI HASIL CSO GLOBAL
         </h4>
@@ -195,12 +218,14 @@
                     <td class="td-content" rowspan="3">{{ $dataRekapitulasi->item_ada }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->item_ok }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->item_selisih }}</td>
-                    <td class="td-content">{{ ($dataRekapitulasi->item_ok / $dataRekapitulasi->item_ada) * 100 }}%</td>
+                    <td class="td-content">{{ ($dataRekapitulasi->item_ok / $dataRekapitulasi->item_ada) * 100 }}%
+                    </td>
                     <td class="td-content">{{ $dataRekapitulasi->item_selisih_plus }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->item_selisih_minus }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->beda_batch }}</td>
                     <td class="td-content">{{ $dataRekapitulasi->tertukar }}</td>
-                    <td class="td-content">{{ ($dataRekapitulasi->item_selisih / $dataRekapitulasi->item_ada) * 100 }}%
+                    <td class="td-content">
+                        {{ ($dataRekapitulasi->item_selisih / $dataRekapitulasi->item_ada) * 100 }}%
                     </td>
                 </tr>
                 <tr class="tr-rekapitulasi-global">
@@ -226,7 +251,7 @@
             </tbody>
         </table>
     </div>
-    <div style="margin-top: 20px">
+    <div style="margin-top: 15px">
         <h4>
             IV. LIST ITEM BARANG YANG SELISIH
         </h4>
@@ -508,86 +533,89 @@
             </tbody>
         </table>
     </div>
-    <div style="margin-top: 20px">
-        <h4>
-            V. History CSO 3 bulan terakhir
-        </h4>
-        <table>
-            <thead>
-                <tr class="tr-head">
-                    <th class="th-content" style="width: 2.5cm">Bulan</th>
-                    <th class="th-content" style="width: 3.5cm">Item</th>
-                    <th class="th-content" style="width: 1.5cm">Jumlah Item <br> yang di CSO</th>
-                    <th class="th-content" style="width: 1.5cm">Jumlah Item <br> sesuai</th>
-                    <th class="th-content" style="width: 1cm">Persentase</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($data3BulanTerakhir as $data)
-                    <tr style="font-size: 9pt;text-align: center;">
-                        <td class="td-content">
-                            @switch($data->monthstart)
-                                @case(1)
-                                    Januari
-                                @break
+    @if (substr($dataCso->doccsoid, 0, 3) == 'CSO')
 
-                                @case(2)
-                                    Februari
-                                @break
-
-                                @case(3)
-                                    Maret
-                                @break
-
-                                @case(4)
-                                    April
-                                @break
-
-                                @case(5)
-                                    Mei
-                                @break
-
-                                @case(6)
-                                    Juni
-                                @break
-
-                                @case(7)
-                                    Juli
-                                @break
-
-                                @case(8)
-                                    Agustur
-                                @break
-
-                                @case(9)
-                                    September
-                                @break
-
-                                @case(10)
-                                    Oktober
-                                @break
-
-                                @case(11)
-                                    November
-                                @break
-
-                                @case(12)
-                                    Desember
-                                @break
-                            @endswitch
-                        </td>
-                        <td class="td-content">
-                            {{ $data->csomaterial }}
-                        </td>
-                        <td class="td-content">{{ $data->item_ok }}</td>
-                        <td class="td-content">{{ $data->item_ada }}</td>
-                        <td class="td-content">{{ round(($data->item_ada / $data->item_ok) * 100, 2) }}%</td>
+        <div style="margin-top: 15px">
+            <h4>
+                V. History CSO 3 bulan terakhir
+            </h4>
+            <table>
+                <thead>
+                    <tr class="tr-head">
+                        <th class="th-content" style="width: 2.5cm">Bulan</th>
+                        <th class="th-content" style="width: 3.5cm">Item</th>
+                        <th class="th-content" style="width: 1.5cm">Jumlah Item <br> yang di CSO</th>
+                        <th class="th-content" style="width: 1.5cm">Jumlah Item <br> sesuai</th>
+                        <th class="th-content" style="width: 1cm">Persentase</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    <div style="margin-top: 4cm">
+                </thead>
+                <tbody>
+                    @foreach ($data3BulanTerakhir as $data)
+                        <tr style="font-size: 9pt;text-align: center;">
+                            <td class="td-content">
+                                @switch($data->monthstart)
+                                    @case(1)
+                                        Januari
+                                    @break
+
+                                    @case(2)
+                                        Februari
+                                    @break
+
+                                    @case(3)
+                                        Maret
+                                    @break
+
+                                    @case(4)
+                                        April
+                                    @break
+
+                                    @case(5)
+                                        Mei
+                                    @break
+
+                                    @case(6)
+                                        Juni
+                                    @break
+
+                                    @case(7)
+                                        Juli
+                                    @break
+
+                                    @case(8)
+                                        Agustur
+                                    @break
+
+                                    @case(9)
+                                        September
+                                    @break
+
+                                    @case(10)
+                                        Oktober
+                                    @break
+
+                                    @case(11)
+                                        November
+                                    @break
+
+                                    @case(12)
+                                        Desember
+                                    @break
+                                @endswitch
+                            </td>
+                            <td class="td-content">
+                                {{ $data->csomaterial }}
+                            </td>
+                            <td class="td-content">{{ $data->item_ok }}</td>
+                            <td class="td-content">{{ $data->item_ada }}</td>
+                            <td class="td-content">{{ round(($data->item_ada / $data->item_ok) * 100, 2) }}%</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
+    <div style="margin-top: 2cm">
         <table style="page-break-inside: avoid;">
             <thead>
                 <tr>

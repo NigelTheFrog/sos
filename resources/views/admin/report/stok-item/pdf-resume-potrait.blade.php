@@ -117,6 +117,9 @@
             font-family: Arial, sans-serif;
             text-align: center;
         }
+        p,h4,h5 {
+            line-height: 5px;
+        }
     </style>
 </head>
 
@@ -153,10 +156,10 @@
                 @if (count($dataAnalisator) > 0)
                     @foreach ($dataAnalisator as $index => $analisator)
                         <tr class="tr-body">
-                            <td class="td-content" style="padding: 8px">{{ $index + 1 }}</td>
-                            <td class="td-content" style="padding: 8px">{{ $analisator->name }}</td>
-                            <td class="td-content" style="padding: 8px">{{ $analisator->dept }}</td>
-                            <td class="td-content" style="padding: 8px">{{ $analisator->note }}</td>
+                            <td class="td-content" style="padding: 8px; font-size: 9pt">{{ $index + 1 }}</td>
+                            <td class="td-content" style="padding: 8px; font-size: 9pt">{{ $analisator->name }}</td>
+                            <td class="td-content" style="padding: 8px; font-size: 9pt">{{ $analisator->dept }}</td>
+                            <td class="td-content" style="padding: 8px; font-size: 9pt">{{ $analisator->note }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -184,10 +187,10 @@
                 @if (count($dataPelaku) > 0)
                     @foreach ($dataPelaku as $index => $pelaku)
                         <tr class="tr-body">
-                            <td class="td-content" style="padding: 8px">{{ $index + 1 }}</td>
-                            <td class="td-content" style="padding: 8px;">{{ $pelaku->name }}</td>
-                            <td class="td-content" style="padding: 8px">{{ $pelaku->dept }}</td>
-                            <td class="td-content" style="padding: 8px">{{ $pelaku->note }}</td>
+                            <td class="td-content" style="padding: 8px; font-size: 9pt">{{ $index + 1 }}</td>
+                            <td class="td-content" style="padding: 8px; font-size: 9pt">{{ $pelaku->name }}</td>
+                            <td class="td-content" style="padding: 8px; font-size: 9pt">{{ $pelaku->dept }}</td>
+                            <td class="td-content" style="padding: 8px; font-size: 9pt">{{ $pelaku->note }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -201,7 +204,7 @@
             </tbody>
         </table>
     </div>
-    <div style="margin-top: 20px">
+    <div style="margin-top: 15px">
         <h4>
             III. REKAPITULASI HASIL CSO GLOBAL
         </h4>
@@ -268,7 +271,7 @@
             </tbody>
         </table>
     </div>
-    <div style="margin-top: 20px">
+    <div style="margin-top: 15px">
         <h4>
             IV. LIST ITEM BARANG YANG SELISIH
         </h4>
@@ -551,7 +554,9 @@
             </tbody>
         </table>
     </div>
-    <div style="margin-top: 20px">
+    @if (substr($dataCso->doccsoid, 0, 3) == "CSO")
+        
+    <div style="margin-top: 15px">
         <h4>
             V. History CSO 3 bulan terakhir
         </h4>
@@ -630,7 +635,8 @@
             </tbody>
         </table>
     </div>
-    <div style="margin-top: 4cm">
+    @endif
+    <div style="margin-top: 2cm">
         <table style="page-break-inside: avoid;">
             <thead>
                 <tr>
@@ -681,6 +687,7 @@
             </tbody>
         </table>
     </div>
+    
 </body>
 
 </html>
