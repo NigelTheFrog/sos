@@ -1,8 +1,6 @@
-@extends('layouts.master')
+<?php $__env->startSection('title', 'Impor Stok'); ?>
 
-@section('title', 'Impor Stok')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <style>
         .vscomp-toggle-button {
             padding: 10px 30px 10px 10px;
@@ -19,18 +17,18 @@
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
                         <div class="d-flex justify-content-between mb-2" style="width: 25%">
                             <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal"
-                                data-bs-target="#modalImportItem" @if ($csoActive > 0) disabled @endif>
+                                data-bs-target="#modalImportItem" <?php if($csoActive > 0): ?> disabled <?php endif; ?>>
                                 <i class="nav-icon fas fa-file-import"></i> Import Item
                             </button>
                             <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal"
-                                data-bs-target="#modalImportBatch" @if ($csoActive > 0) disabled @endif>
+                                data-bs-target="#modalImportBatch" <?php if($csoActive > 0): ?> disabled <?php endif; ?>>
                                 <i class="nav-icon fas fa-file-import"></i> Import Batch
                             </button>
                         </div>
-                        <form id="deleteform" action="{{ route('import-stok.destroy', 'checkboxDelete') }}" method="POST"
+                        <form id="deleteform" action="<?php echo e(route('import-stok.destroy', 'checkboxDelete')); ?>" method="POST"
                             class="needs-validation mx-3" novalidate>
-                            @csrf
-                            @method('DELETE')
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('DELETE'); ?>
                             <div class="modal fade text-left" id="modalDeleteItem" tabindex="-1">
                                 <div class="modal-dialog modal modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -49,13 +47,13 @@
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div class="form-group form-check ">
-                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete" @if ($csoActive > 0) disabled @endif>
+                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete" <?php if($csoActive > 0): ?> disabled <?php endif; ?>>
                                     <label class="form-check-label" for="cekdelete">
                                         Centang Semua
                                     </label>
                                 </div>
                                 <button type="button" data-bs-toggle="modal" data-bs-target="#modalDeleteItem"
-                                    class="btn btn-danger" title="Hapus Centang" id="btnHapus" data-id=""  @if ($csoActive > 0) disabled @endif><i
+                                    class="btn btn-danger" title="Hapus Centang" id="btnHapus" data-id=""  <?php if($csoActive > 0): ?> disabled <?php endif; ?>><i
                                         class="fas fa-trash-alt"></i>
                                     Hapus Checklist</button>
                             </div>
@@ -76,56 +74,61 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($stok as $index => $stok)
+                                    <?php $__currentLoopData = $stok; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $stok): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr
                                             class="text-center 
-                                        @if ($stok->statusitem == 'T') table-info @endif">
+                                        <?php if($stok->statusitem == 'T'): ?> table-info <?php endif; ?>">
                                             <td class="align-middle">
                                                 <div class="form-check">
                                                     <input type="checkbox" name="checkboxDelete[]"
                                                         class="form-check-input cekboxdelete"
-                                                        value={{ $stok->itembatchid }} @if ($csoActive > 0) disabled @endif>
+                                                        value=<?php echo e($stok->itembatchid); ?> <?php if($csoActive > 0): ?> disabled <?php endif; ?>>
                                                 </div>
                                             </td>
-                                            <td class="align-middle">{{ $index + 1 }}</td>
-                                            <td class="align-middle">{{ $stok->itemcode }}</td>
-                                            <td class="align-middle">{{ $stok->itemname }}</td>
+                                            <td class="align-middle"><?php echo e($index + 1); ?></td>
+                                            <td class="align-middle"><?php echo e($stok->itemcode); ?></td>
+                                            <td class="align-middle"><?php echo e($stok->itemname); ?></td>
                                             <td class="align-middle">
-                                                @if ($stok->heatno == null)
+                                                <?php if($stok->heatno == null): ?>
                                                     -
-                                                @else
-                                                    {{ $stok->heatno }}
-                                                @endif
-                                            </td>
-                                            <td class="align-middle">
-                                                @if ($stok->dimension == null)
-                                                    -
-                                                @else
-                                                    {{ $stok->dimension }}
-                                                @endif
+                                                <?php else: ?>
+                                                    <?php echo e($stok->heatno); ?>
+
+                                                <?php endif; ?>
                                             </td>
                                             <td class="align-middle">
-                                                @if ($stok->tolerance == null)
+                                                <?php if($stok->dimension == null): ?>
                                                     -
-                                                @elseif ($stok->tolerance == '.')
-                                                    -
-                                                @else
-                                                    {{ $stok->tolerance }}
-                                                @endif
+                                                <?php else: ?>
+                                                    <?php echo e($stok->dimension); ?>
+
+                                                <?php endif; ?>
                                             </td>
                                             <td class="align-middle">
-                                                @if ($stok->kondisi == null)
+                                                <?php if($stok->tolerance == null): ?>
                                                     -
-                                                @else
-                                                    {{ $stok->kondisi }}
-                                                @endif
+                                                <?php elseif($stok->tolerance == '.'): ?>
+                                                    -
+                                                <?php else: ?>
+                                                    <?php echo e($stok->tolerance); ?>
+
+                                                <?php endif; ?>
                                             </td>
-                                            <td class="align-middle">{{ number_format((float) $stok->qty, 2, '.', '') }}
+                                            <td class="align-middle">
+                                                <?php if($stok->kondisi == null): ?>
+                                                    -
+                                                <?php else: ?>
+                                                    <?php echo e($stok->kondisi); ?>
+
+                                                <?php endif; ?>
                                             </td>
-                                            <td class="align-middle">{{ $stok->uom }}</td>
+                                            <td class="align-middle"><?php echo e(number_format((float) $stok->qty, 2, '.', '')); ?>
+
+                                            </td>
+                                            <td class="align-middle"><?php echo e($stok->uom); ?></td>
 
                                         </tr>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                             </table>
                         </form>
@@ -148,9 +151,9 @@
                         <h3 class="card-title">Barang Temuan</h3>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('import-stok.store') }}" method="POST" class="needs-validation"
+                        <form action="<?php echo e(route('import-stok.store')); ?>" method="POST" class="needs-validation"
                             novalidate>
-                            @csrf
+                            <?php echo csrf_field(); ?>
                             <input type="text" name="type" value="3" hidden>
                             <div class="form-group">
                                 <div class="input-group">
@@ -256,9 +259,9 @@
                                 <b class="mt-1 me-2">Pilih Gudang:</b>
                                 <select id="itemSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
                                     data-search="true" data-silent-initial-value-set="true">
-                                    @foreach ($response_wrh['data'] as $wrh)
-                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }} - {{ $wrh['NameName'] }}</option>
-                                    @endforeach
+                                    <?php $__currentLoopData = $response_wrh['data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $wrh): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($wrh['WhseCode']); ?>"><?php echo e($wrh['WhseCode']); ?> - <?php echo e($wrh['NameName']); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                         </div>
@@ -277,7 +280,7 @@
                     </div>
                     <hr>
                     <div id="tableItem">
-                        @include('admin.penjadwalan.item.table-pull-import')
+                        <?php echo $__env->make('admin.penjadwalan.item.table-pull-import', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                     </div>
                 </div>
             </div>
@@ -300,9 +303,9 @@
                                 <b class="mt-1 me-2">Pilih Gudang:</b>
                                 <select id="batchSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
                                     data-search="true" data-silent-initial-value-set="true">
-                                    @foreach ($response_wrh['data'] as $wrh)
-                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }} - {{ $wrh['NameName'] }}</option>
-                                    @endforeach
+                                    <?php $__currentLoopData = $response_wrh['data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $wrh): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($wrh['WhseCode']); ?>"><?php echo e($wrh['WhseCode']); ?> - <?php echo e($wrh['NameName']); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                         </div>
@@ -321,7 +324,7 @@
                     </div>
                     <hr>
                     <div id="tableBatch">
-                        @include('admin.penjadwalan.item.table-pull-import-batch')
+                        <?php echo $__env->make('admin.penjadwalan.item.table-pull-import-batch', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                     </div>
                 </div>
             </div>
@@ -344,7 +347,7 @@
             var search = $("#searchItem").val();
             // Make an AJAX request to fetch data from the server
             $.ajax({
-                url: "{{ url('admin/penjadwalan/import-stok/pull-import') }}",
+                url: "<?php echo e(url('admin/penjadwalan/import-stok/pull-import')); ?>",
                 method: "POST",
                 data: {
                     gudang: selectedGudang,
@@ -373,7 +376,7 @@
             var search = $("#searchBatch").val();
             // Make an AJAX request to fetch data from the server
             $.ajax({
-                url: "{{ url('admin/penjadwalan/import-stok/pull-import') }}",
+                url: "<?php echo e(url('admin/penjadwalan/import-stok/pull-import')); ?>",
                 method: "POST",
                 data: {
                     gudang: selectedGudang,
@@ -433,4 +436,6 @@
         });
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/sos-dev/resources/views/admin/penjadwalan/import-stok.blade.php ENDPATH**/ ?>

@@ -1,8 +1,6 @@
-@extends('layouts.master')
+<?php $__env->startSection('title','Area Lokasi'); ?>
 
-@section('title','Area Lokasi')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <div class="container-fluid px-4">
     <h1 class="mt-4">Area Lokasi</h1>   
@@ -24,18 +22,18 @@
                             </tr>
                         </thead>
                         <tbody>                                
-                            @foreach ($lokasi as $index => $loct)
+                            <?php $__currentLoopData = $lokasi; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $loct): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr class="text-center">
-                                <td class="align-middle">{{$index +1}}</td>
-                                <td class="align-middle">{{$loct->locationcode}}</td>
-                                <td class="align-middle">{{$loct->locationname}}</td>
+                                <td class="align-middle"><?php echo e($index +1); ?></td>
+                                <td class="align-middle"><?php echo e($loct->locationcode); ?></td>
+                                <td class="align-middle"><?php echo e($loct->locationname); ?></td>
                                 <td class="align-middle"> 
                                     <button type="button" onclick="openModalEdit(this)" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=""><i class="bi bi-pencil-square"></i></button>
                                     <button type="button" onclick="openModalDelete(this)" class="btn btn-danger btn-sm" title="Hapus User" id="btnHapus" data-id=""><i class="bi bi-trash-fill"></i></button>
                                 </td>
-                                <td hidden>{{$loct->locationid}}</td>
+                                <td hidden><?php echo e($loct->locationid); ?></td>
                             </tr>                                    
-                            @endforeach                                
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>                                
                         </tbody>
                     </table>                                
                 </div>
@@ -47,8 +45,8 @@
                     <h4 class="card-title mx-3 pt-2">Tambah Lokasi</h4>
                 </div>
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                    <form id="forminput" action="{{route("area-lokasi.store")}}" method="POST" class="needs-validation mx-3" novalidate >
-                        @csrf 
+                    <form id="forminput" action="<?php echo e(route("area-lokasi.store")); ?>" method="POST" class="needs-validation mx-3" novalidate >
+                        <?php echo csrf_field(); ?> 
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -89,8 +87,8 @@
             </div>
             <div class="modal-body">
                 <form id="editform" action="" method="POST" class="needs-validation mx-3" novalidate >
-                    @csrf 
-                    @method('PUT')
+                    <?php echo csrf_field(); ?> 
+                    <?php echo method_field('PUT'); ?>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -128,8 +126,8 @@
             </div>
             <div class="modal-body">
                 <form id="deleteform" action="" method="POST" class="needs-validation mx-3" novalidate >
-                    @csrf
-                    @method('DELETE')
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
                     <p id="warning"></p>
                     <button type="submit" class="btn btn-danger" name="simpan"><i class="bx bxs-save"></i>Iya</button>                    
                     <button type="button" onclick="closeModalDelete(this)" class="btn btn-primary" name="simpan"><i class="bx bxs-save"></i>Batal</button>
@@ -145,7 +143,7 @@
         var locationid = row.find('td:nth-child(5)').text();
         $('#editlocationcode').attr('value', row.find('td:nth-child(2)').text());
         $('#editnamalokasi').attr('value', row.find('td:nth-child(3)').text());
-        $('#editform').attr('action',`{{url('admin/master/area-lokasi/${locationid}')}}`);
+        $('#editform').attr('action',`<?php echo e(url('admin/master/area-lokasi/${locationid}')); ?>`);
     }
     function closeModalEdit(button) {
         $('#ModalEditLokasi').modal('hide');
@@ -156,10 +154,11 @@
         var namalokasi = row.find('td:nth-child(3)').text();
         var locationid = row.find('td:nth-child(5)').text();
         document.getElementById("warning").innerText = `Apakah anda akan melanjutkan penghapusan data lokasi ${namalokasi}?`;
-        $('#deleteform').attr('action',`{{url('admin/master/area-lokasi/${locationid}')}}`);    
+        $('#deleteform').attr('action',`<?php echo e(url('admin/master/area-lokasi/${locationid}')); ?>`);    
     }
     function closeModalDelete(button) {
         $('#ModalDeleteLokasi').modal('hide');
     }
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/sos-dev/resources/views/admin/master/area-lokasi.blade.php ENDPATH**/ ?>
