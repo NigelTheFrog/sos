@@ -254,8 +254,7 @@
                         <div class="col">
                             <div class="d-flex flex-row">
                                 <b class="mt-1 me-2">Pilih Gudang:</b>
-                                <select id="itemSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
-                                    data-search="true" data-silent-initial-value-set="true">
+                                <select id="itemSelect" multiple name="gudang[]" placeholder="Daftar Gudang">
                                     @foreach ($response_wrh['data'] as $wrh)
                                         <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }} - {{ $wrh['NameName'] }}</option>
                                     @endforeach

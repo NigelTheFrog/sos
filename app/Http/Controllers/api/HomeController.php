@@ -94,6 +94,7 @@ class HomeController extends Controller
 
         if(count($data) > 0) {
             $checkDbxJob = DB::table('dbxjob')->where('username', '=', $request->username)->get();
+            $checkDbtCsoHed = DB::table('dbtcsohed')->where('pelakuuname', '=', $request->username)->where('status', '=', 'A')->get();
             if(count($checkDbxJob) > 0 ) {
                 return response()->json(['result' => 1, 'trsid' => $data[0]->trsid]);
             } else {

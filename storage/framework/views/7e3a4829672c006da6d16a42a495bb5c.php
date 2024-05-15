@@ -257,8 +257,7 @@
                         <div class="col">
                             <div class="d-flex flex-row">
                                 <b class="mt-1 me-2">Pilih Gudang:</b>
-                                <select id="itemSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
-                                    data-search="true" data-silent-initial-value-set="true">
+                                <select id="itemSelect" multiple name="gudang[]" placeholder="Daftar Gudang">
                                     <?php $__currentLoopData = $response_wrh['data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $wrh): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <option value="<?php echo e($wrh['WhseCode']); ?>"><?php echo e($wrh['WhseCode']); ?> - <?php echo e($wrh['NameName']); ?></option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
