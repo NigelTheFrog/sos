@@ -428,18 +428,22 @@ class ReportCekStokController extends Controller
             ]);
         } else {
             $dataDbtTrsHed = DB::table('dbttrshed')->where('trsid', '=', $request->trsidlaporan)->get();
+
             $dataLaporan = DB::select('CALL GetDataLaporan(?)', [$request->trsidlaporan]);
+            
             $dataWrh = DB::table('dbttrsdet')
                 ->join('dbttrsdet2', 'dbttrsdet.trsdetid', '=', 'dbttrsdet2.trsdetid')
                 ->where('dbttrsdet.trsid', '=', $request->trsidlaporan)
                 ->select('dbttrsdet2.wrh')
                 ->groupBy('dbttrsdet2.wrh')
                 ->get();
+            
             $dataWrhQty = DB::table('dbttrsdet')
             ->join('dbttrsdet2', 'dbttrsdet.trsdetid', '=', 'dbttrsdet2.trsdetid')
             ->where('dbttrsdet.trsid', '=', $request->trsidlaporan)
             ->select('dbttrsdet2.wrh','dbttrsdet2.trsdetid', 'dbttrsdet2.qty')
             ->get();
+
             $view = view("admin.report.preview-item.preview-laporan-cso", [
                 "title" => "Preview Laporan",
                 "trsidlaporan" => $request->trsidlaporan,
