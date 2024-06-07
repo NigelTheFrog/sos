@@ -270,6 +270,72 @@ class ItemController extends Controller
     {
         DB::beginTransaction();
         if ($request->batchno == null || $request->batchno == "") {
+            // $updateLCso = Dbtcsodet::whereHas('dbtcsohed',function($query) {
+            //     $query->where('status', '=', 'A');
+            // })
+            // ->findOrFail($request->itemid)
+            // ->update(['dbtcsodet.statushslcso' => 'C']);
+
+            // $updateLCso->save();
+
+            // if ($updateLCso == true) {
+            //     $getDataDbtCsoDet = Dbtcsodet::whereHas('dbtcsohed',function($query) {
+            //         $query->where('status', '=', 'A');
+            //     })
+            //     ->findOrFail($request->itemid)
+            //     ->select(DB::raw("dbtcsodet.csoid, dbtcsodet.itemid, dbtcsodet.itemid as 'itembatchid', dbtcsodet.color, dbtcsodet.locationid, dbtcsodet.grade, 'R', 'D', 'T'"))
+            //     ->groupBy('dbtcsodet.itemid');
+
+            //     $insertDbtCsoDet = new Dbtcsodet;
+            //     $insertDbtCsoDet->fill($getDataDbtCsoDet);
+            //     $insertDbtCsoDet->save();
+
+            //     if ($insertDbtCsoDet == true) {
+            //         $getDbtCsoDetOnDbtCsoDet2 = Dbtcsodet2::whereHas('dbtcsodet',function($query) {
+            //             $query
+            //             ->where('itemid', '=', $request->itemid)
+            //             ->where('statushslcso', '=', 'C');
+            //         })
+            //         ->select(DB::raw("dbtcsodet.itemid, (dbtcsodet2.csocount+1) as count"))
+            //         ->distinct();
+
+            //         $getDbtCsoDetOnDbtCsoHed = DB::table('dbtcsodet')
+            //             ->leftJoin('dbtcsohed', 'dbtcsohed.csoid', '=', 'dbtcsodet.csoid')
+            //             ->leftJoinSub($getDbtCsoDetOnDbtCsoDet2, 'dbtcsodet2', function ($join) {
+            //                 $join->on('dbtcsodet2.itemid', '=', 'dbtcsodet.itemid');
+            //             })
+            //             ->select(['dbtcsodet.csodetid', 'dbtcsodet.csoid', 'dbtcsodet2.count'])
+            //             ->where('dbtcsodet.itemid', '=', $request->itemid)
+            //             ->where('dbtcsodet.statushslcso', '=', 'T')
+            //             ->where('dbtcsohed.status', '=', 'A')
+            //             // ->distinct();
+            //             ->groupBy('dbtcsodet.itemid');
+
+            //         $insertDbtCsoDet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount'], $getDbtCsoDetOnDbtCsoHed);
+
+            //         if ($insertDbtCsoDet2 == true) {
+            //             $updateDbtTrsDet = DB::table('dbttrsdet')
+            //                 ->where('itemid', $request->itemid)
+            //                 ->increment('statuscso');
+            //             if ($updateDbtTrsDet == true) {
+            //                 DB::commit();
+            //                 return response()->json(['result' => 1]);
+            //             } else {
+            //                 DB::rollBack();
+            //                 return response()->json(['result' => 0]);
+            //             }
+            //         } else {
+            //             DB::rollBack();
+            //             return response()->json(['result' => 0]);
+            //         }
+            //     } else {
+            //         DB::rollBack();
+            //         return response()->json(['result' => 0]);
+            //     }
+            // } else {
+            //     DB::rollBack();
+            //     return response()->json(['result' => 0]);
+            // }
             $updateLCso = DB::table('dbtcsodet')
                 ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
                 ->where('dbtcsodet.itemid', $request->itemid)

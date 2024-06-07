@@ -406,16 +406,16 @@
 
         function openModalBlmProses(button) {
             $('#ModalItemBlmProses').modal('show');
-            intervalItemBlmProses = setInterval(function() {
-                $.ajax({
-                    url: "{{ url('admin/dashboard/banner-item/1') }}",
-                    type: 'GET',
-                    success: function(data) {
-                        $('#itemBlmProses').html(data);
-                        console.log(data);
-                    }
-                });
-            }, 1000);
+            // intervalItemBlmProses = setInterval(function() {
+            //     $.ajax({
+            //         url: "{{ url('admin/dashboard/banner-item/1') }}",
+            //         type: 'GET',
+            //         success: function(data) {
+            //             $('#itemBlmProses').html(data);
+            //             console.log(data);
+            //         }
+            //     });
+            // }, 1000);
         }
 
         function closeModalBlmProses(button) {
@@ -425,16 +425,16 @@
 
         function openModalOk(button) {
             $('#ModalItemOk').modal('show');
-            intervalItemOk = setInterval(function() {
-                $.ajax({
-                    url: "{{ url('admin/dashboard/banner-item/3') }}",
-                    type: 'GET',
-                    success: function(data) {
-                        $('#itemOk').html(data);
-                        console.log(data);
-                    }
-                });
-            }, 1000);
+            // intervalItemOk = setInterval(function() {
+            //     $.ajax({
+            //         url: "{{ url('admin/dashboard/banner-item/3') }}",
+            //         type: 'GET',
+            //         success: function(data) {
+            //             $('#itemOk').html(data);
+            //             console.log(data);
+            //         }
+            //     });
+            // }, 1000);
         }
 
         function closeModalOk(button) {
@@ -444,16 +444,16 @@
 
         function openModalSelisih(button) {
             $('#ModalItemSelisih').modal('show');
-            intervalItemSelisih = setInterval(function() {
-                $.ajax({
-                    url: "{{ url('admin/dashboard/banner-item/4') }}",
-                    type: 'GET',
-                    success: function(data) {
-                        $('#itemSelisih').html(data);
-                        console.log(data);
-                    }
-                });
-            }, 1000);
+            // intervalItemSelisih = 
+            //     $.ajax({
+            //         url: "{{ url('admin/dashboard/banner-item/4') }}",
+            //         type: 'GET',
+            //         success: function(data) {
+            //             $('#itemSelisih').html(data);
+            //             console.log(data);
+            //         }
+            //     });
+           
         }
 
         function closeModalSelisih(button) {

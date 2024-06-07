@@ -24,7 +24,6 @@ Route::get('version-check', function () {
     return ['version' => '2.0.0'];
 });
 
-
 Route::post('login', [AccountController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
