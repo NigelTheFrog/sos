@@ -116,6 +116,7 @@ class UserController extends Controller
                     break;
                 } else {
                     error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE ^ E_DEPRECATED);
+                    $companyID = config('values.companyId');
 
                     //GET TOKEN
                     $url = "http://erpapp.local.sutindo.net/APISutindo/Api/SOS/PosisiStock/getToken";
@@ -141,8 +142,6 @@ class UserController extends Controller
 
                     curl_close($curl);
 
-
-                    $companyID = 'SRM SBY';
 
                     $data = [
                         'companyID' => $companyID,

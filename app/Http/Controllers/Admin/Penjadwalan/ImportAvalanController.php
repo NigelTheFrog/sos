@@ -28,6 +28,7 @@ class ImportAvalanController extends Controller
 
 
         error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE ^ E_DEPRECATED);
+        $companyID = config('values.companyId');
 
         //GET TOKEN
         $url = "http://erpapp.local.sutindo.net/APISutindo/Api/SOS/PosisiStock/getToken";
@@ -55,8 +56,6 @@ class ImportAvalanController extends Controller
 
 
         //GET POSISI STOCK
-        $companyID = 'SRM SBY';
-
         $data = [
             'companyID' => $companyID,
             // 'viewNull' => $filterViewNull,
@@ -107,7 +106,7 @@ class ImportAvalanController extends Controller
         DB::beginTransaction();
 
         if ($request->type == 1) {
-            $companyID = $request->coy;
+            $companyID = config('values.companyId');
             $filterViewNull = $request->filternull;
             $gudangcode = $request->whs;
             $gudangname = '';
@@ -292,7 +291,7 @@ class ImportAvalanController extends Controller
     public function showTable(Request $request)
     {
         $coy = DB::table('dbmcoy')->select('coycode')->where('coyid', '=', '1')->limit(1)->get();
-        $companyID = $coy[0]->coycode;
+        $companyID = config('values.companyId');
         $gudang = $request->gudang;
         $filterViewNull = false;
         $gudangcode = implode(",", $gudang);
